@@ -3,3 +3,5 @@ syntax: glob
 ui/graphics_rc.py
 ui/mainwindow.py
 settings.ini
+.*.swo
+.*.swp
