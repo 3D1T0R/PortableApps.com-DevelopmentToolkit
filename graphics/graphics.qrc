@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/">
+    <file>icon.png</file>
+    <file>sidebar.png</file>
+  </qresource>
+</RCC>

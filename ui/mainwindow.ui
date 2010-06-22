@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>550</width>
+    <height>314</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>PortableApps.com Development Toolkit</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../graphics/graphics.qrc">
+    <normaloff>:/icon.png</normaloff>:/icon.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="margin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QLabel" name="sidebarLogo">
+      <property name="text">
+       <string notr="true"/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="../graphics/graphics.qrc">:/sidebar.png</pixmap>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="pageLayout">
+      <property name="margin">
+       <number>9</number>
+      </property>
+      <item>
+       <widget class="QCommandLinkButton" name="createButton">
+        <property name="text">
+         <string>&amp;Create a new portable app...</string>
+        </property>
+        <property name="description">
+         <string>Start a new portable app package here</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="packageLayout">
+        <item>
+         <widget class="QLabel" name="packageLabel">
+          <property name="text">
+           <string>Package:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="packageText"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="packageButton">
+          <property name="text">
+           <string>Browse...</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QCommandLinkButton" name="formatButton">
+        <property name="text">
+         <string>PortableApps.com &amp;Format</string>
+        </property>
+        <property name="description">
+         <string>Edit the basic app details</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCommandLinkButton" name="launcherButton">
+        <property name="text">
+         <string>PortableApps.com &amp;Launcher</string>
+        </property>
+        <property name="description">
+         <string>Edit the app's launcher</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCommandLinkButton" name="installerButton">
+        <property name="text">
+         <string>PortableApps.com &amp;Installer</string>
+        </property>
+        <property name="description">
+         <string>Generate your installer</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources>
+  <include location="../graphics/graphics.qrc"/>
+ </resources>
+ <connections/>
+</ui>
