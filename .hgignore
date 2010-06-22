@@ -1,0 +1,4 @@
+syntax: glob
+*.pyc
+ui/graphics_rc.py
+ui/mainwindow.py
