@@ -5,6 +5,7 @@ import sys
 from PyQt4 import QtCore, QtGui
 from ui.mainwindow import Ui_MainWindow
 from utils import _
+import config
 
 class Main(QtGui.QMainWindow):
     def __init__(self, parent=None):
@@ -46,14 +47,20 @@ class Main(QtGui.QMainWindow):
 def main():
     app = QtGui.QApplication(sys.argv)
     window = Main()
+
+    window.ui.packageText.setText(config.get('Main', 'Package', ''))
+
     window.center()
     window.show()
     exit_code = app.exec_()
 
-    quit(exit_code)
+    quit(window, exit_code)
     sys.exit(exit_code)
 
-def quit(exit_code):
+def quit(window, exit_code):
+    config.settings.Main.Package = window.ui.packageText.text()
+    config.save()
+
     sys.exit(exit_code)
 
 def not_implemented(window):
