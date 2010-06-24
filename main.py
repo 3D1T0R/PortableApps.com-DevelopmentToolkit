@@ -6,6 +6,8 @@ from PyQt4 import QtCore, QtGui
 from ui.mainwindow import Ui_MainWindow
 from utils import _
 import config
+import warnings
+import warn
 
 class Main(QtGui.QMainWindow):
     def __init__(self, parent=None):
@@ -25,19 +27,19 @@ class Main(QtGui.QMainWindow):
 
     def on_createButton_clicked(self, checked=None):
         if checked == None: return
-        not_implemented(self)
+        not_implemented()
 
     def on_formatButton_clicked(self, checked=None):
         if checked == None: return
-        not_implemented(self)
+        not_implemented()
 
     def on_launcherButton_clicked(self, checked=None):
         if checked == None: return
-        not_implemented(self)
+        not_implemented()
 
     def on_installerButton_clicked(self, checked=None):
         if checked == None: return
-        not_implemented(self)
+        not_implemented()
 
     def center(self):
         screen = QtGui.QDesktopWidget().screenGeometry()
@@ -55,7 +57,6 @@ def main():
     exit_code = app.exec_()
 
     quit(window, exit_code)
-    sys.exit(exit_code)
 
 def quit(window, exit_code):
     config.settings.Main.Package = window.ui.packageText.text()
@@ -63,8 +64,8 @@ def quit(window, exit_code):
 
     sys.exit(exit_code)
 
-def not_implemented(window):
-    QtGui.QMessageBox.information(window, _('PortableApps.com Development Toolkit'), _('Sorry, this is not implemented yet.'), QtGui.QMessageBox.Ok)
+def not_implemented():
+    warnings.warn('Sorry, this is not implemented yet.', UserWarning, stacklevel=2)
 
 if __name__ == "__main__":
     main()
