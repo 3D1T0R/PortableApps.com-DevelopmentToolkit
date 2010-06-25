@@ -4,6 +4,8 @@ import os
 from iniparse import INIConfig, tidy
 from utils import get_ini_str
 
+ROOT_DIR = os.path.dirname(__file__)
+
 def settings_path(filename=None):
     if 'PAL:DataDir' in os.environ and os.path.isdir(os.environ['PAL:DataDir']):
         dirname = os.environ['PAL:DataDir']
