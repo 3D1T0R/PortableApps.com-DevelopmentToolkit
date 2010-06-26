@@ -6,8 +6,6 @@ import config
 from utils import _S as _
 from shutil import copy2 as copy
 
-class PAFException(Exception): pass
-
 class Package:
     current_package = None
 

@@ -4,9 +4,9 @@
 
 from package import Package
 from os.path import isfile, isdir, join
-from utils import ini_defined, _S as _
+from utils import ini_defined, method_of, _S as _
 import iniparse
-from paf import FORMAT_VERSION
+from paf import FORMAT_VERSION, PAFException
 
 __all__ = []
 
@@ -31,17 +31,41 @@ _keys_optional = {
         'Control': frozenset(('ExtractIcon',)), # also ExtractIconN for 1 to Icons if Icons>1
         }
 
+def valid_appinfo(fn):
+    "A decorator to ensure appinfo is set up."
+    def decorate(*args, **kwargs):
+        try:
+            if not self.appinfo_path: raise Exception()
+            if not self.appinfo: raise Exception()
+        except Exception: # Could potentially be Exception or NameError
+            # Naturally though this should never happen.
+            raise PAFException('Package has not been properly initialised.')
+
+        fn(*args, **kwargs)
+
+    return decorate
+
+@method_of(Package)
 def validate_appinfo(self):
     if self.plugin:
-        appinfo_path = self._path('Other', 'Source', 'plugininstaller.ini')
+        self.appinfo_path = self._path('Other', 'Source', 'plugininstaller.ini')
     else:
-        appinfo_path = self._path('App', 'AppInfo', 'appinfo.ini')
+        self.appinfo_path = self._path('App', 'AppInfo', 'appinfo.ini')
 
-    if not isfile(appinfo_path):
-        return # Error has already been added to the list
+    if isfile(self.appinfo_path):
+        fp = open(self.appinfo_path)
+    else:
+        fp = None
 
-    appinfo = iniparse.INIConfig(open(appinfo_path))
+    appinfo = iniparse.INIConfig(open(self.appinfo_path))
     self.appinfo = appinfo
+
+    if not isfile(self.appinfo_path):
+        # If appinfo.ini doesn't exist, we've created an INIConfig which will
+        # be empty, for the fix routine. Then as we don't want to spew a whole
+        # heap of errors given that an error about appinfo.ini being missing
+        # has already been added to the list, we'll give up.
+        return
 
     for missing_section in _sections_required.difference(set(appinfo)):
         self.errors.append(_('appinfo.ini: required section %s is missing') % missing_section)
@@ -49,7 +73,8 @@ def validate_appinfo(self):
     for extra_section in set(appinfo).difference(_sections_required, _sections_optional):
         self.errors.append(_('appinfo.ini: invalid section %s') % extra_section)
 
-    self.info.append(_('Remember that appinfo.ini parsing does not include style validation yet.'))
+    # TODO: true, but no need to remind, really.
+    #self.info.append(_('Remember that appinfo.ini parsing does not include style validation yet.'))
 
     for section in _sections_required.union(_sections_optional).intersection(set(appinfo)):
         # The Control section validation comes later as its required/optional values are based on the value of Icons
@@ -170,49 +195,67 @@ def validate_appinfo(self):
                 except ValueError:
                     self.errors.append(_('appinfo.ini: [Dependencies]:UsesDotNetVersion should be unset or a .NET version like 1.1, 2.0, 3.0 or 3.5'))
 
-        if ini_defined(appinfo.Control):
-            if ini_defined(appinfo.Control.Start):
-                start = appinfo.Control.Start
-                if '/' in start or '\\' in start:
-                    self.warnings.append(_('appinfo.ini: [%(section)s]:%(key)s should not include subdirectories') % dict(section='Control', key='Start'))
-                elif not isfile(self._path(start)):
-                    self.errors.append(_('appinfo.ini: the file specified in [%(section)s]:%(key)s does not exist') % dict(section='Control', key='Start'))
+    if ini_defined(appinfo.Control):
+        if ini_defined(appinfo.Control.Start):
+            start = appinfo.Control.Start
+            if '/' in start or '\\' in start:
+                self.warnings.append(_('appinfo.ini: [%(section)s]:%(key)s should not include subdirectories') % dict(section='Control', key='Start'))
+            elif not isfile(self._path(start)):
+                self.errors.append(_('appinfo.ini: the file specified in [%(section)s]:%(key)s does not exist') % dict(section='Control', key='Start'))
 
-            if ini_defined(appinfo.Control.ExtractIcon) and not isfile(self._path(appinfo.Control.ExtractIcon)):
-                self.errors.append(_('appinfo.ini: the file specified in [%(section)s]:%(key)s does not exist') % dict(section='Control', key='ExtractIcon'))
+        if ini_defined(appinfo.Control.ExtractIcon) and not isfile(self._path(appinfo.Control.ExtractIcon)):
+            self.errors.append(_('appinfo.ini: the file specified in [%(section)s]:%(key)s does not exist') % dict(section='Control', key='ExtractIcon'))
 
-            if ini_defined(appinfo.Control.Icons):
-                control_keys_required = set(_keys_required['Control'])
-                control_keys_optional = set(_keys_optional['Control'])
-                try:
-                    num = int(appinfo.Control.Icons)
-                    if num < 1:
-                        raise ValueError
-                    if num > 1:
-                        for i in xrange(1, num+1):
-                            control_keys_required.add('Start%d' % i)
-                            control_keys_required.add('Name%d' % i)
-                            control_keys_optional.add('ExtractIcon%d' % i)
+        if ini_defined(appinfo.Control.Icons):
+            control_keys_required = set(_keys_required['Control'])
+            control_keys_optional = set(_keys_optional['Control'])
+            try:
+                num = int(appinfo.Control.Icons)
+                if num < 1:
+                    raise ValueError
+                if num > 1:
+                    for i in xrange(1, num+1):
+                        control_keys_required.add('Start%d' % i)
+                        control_keys_required.add('Name%d' % i)
+                        control_keys_optional.add('ExtractIcon%d' % i)
 
-                            if ini_defined(appinfo.Control['Start%d' % i]):
-                                start = appinfo.Control['Start%d' % i]
-                                if '/' in start or '\\' in start:
-                                    self.warnings.append(_('appinfo.ini: [%(section)s]:%(key)s should not include subdirectories') % dict(section='Control', key='Start%d' % i))
-                                elif not isfile(self._path(start)):
-                                    self.errors.append(_('appinfo.ini: the file specified in [%(section)s]:%(key)s does not exist') % dict(section='Control', key='Start%d' % i))
+                        if ini_defined(appinfo.Control['Start%d' % i]):
+                            start = appinfo.Control['Start%d' % i]
+                            if '/' in start or '\\' in start:
+                                self.warnings.append(_('appinfo.ini: [%(section)s]:%(key)s should not include subdirectories') % dict(section='Control', key='Start%d' % i))
+                            elif not isfile(self._path(start)):
+                                self.errors.append(_('appinfo.ini: the file specified in [%(section)s]:%(key)s does not exist') % dict(section='Control', key='Start%d' % i))
 
-                            # NameN: no validation (see [Details]:Name)
+                        # NameN: no validation (see [Details]:Name)
 
-                            if ini_defined(appinfo.Control['ExtractIcon%d' % i]) and not isfile(self._path(appinfo.Control['ExtractIcon%d' % i])):
-                                self.errors.append(_('appinfo.ini: the file specified in [%(section)s]:%(key)s does not exist') % dict(section='Control', key='ExtractIcon%d' % i))
+                        if ini_defined(appinfo.Control['ExtractIcon%d' % i]) and not isfile(self._path(appinfo.Control['ExtractIcon%d' % i])):
+                            self.errors.append(_('appinfo.ini: the file specified in [%(section)s]:%(key)s does not exist') % dict(section='Control', key='ExtractIcon%d' % i))
 
-                except ValueError:
-                    self.errors.append(_('appinfo.ini: [Control]:Icons must be a number greater than 0'))
+            except ValueError:
+                self.errors.append(_('appinfo.ini: [Control]:Icons must be a number greater than 0'))
 
-                for missing_value in control_keys_required.difference(set(appinfo.Control)):
-                    self.errors.append(_('appinfo.ini: [%(section)s], required value %(key)s is missing') % dict(section='Control', key=missing_value))
+            for missing_value in control_keys_required.difference(set(appinfo.Control)):
+                self.errors.append(_('appinfo.ini: [%(section)s], required value %(key)s is missing') % dict(section='Control', key=missing_value))
 
-                for extra_value in set(appinfo.Control).difference(control_keys_required, control_keys_optional):
-                    self.errors.append(_('appinfo.ini: [%(section)s], invalid value %(key)s') % dict(section='Control', key=extra_value))
+            for extra_value in set(appinfo.Control).difference(control_keys_required, control_keys_optional):
+                self.errors.append(_('appinfo.ini: [%(section)s], invalid value %(key)s') % dict(section='Control', key=extra_value))
 
-Package.validate_appinfo = validate_appinfo
+@method_of(Package)
+@valid_appinfo
+def fix_appinfo(self):
+    "Some values in appinfo.ini can be fixed. This fixes such values."
+    self.write_appinfo()
+
+@method_of(Package)
+@valid_appinfo
+def write_appinfo(self):
+    try:
+        if not self.appinfo_path: raise Exception()
+        if not self.appinfo: raise Exception()
+    except Exception: # Could potentially be Exception or NameError
+        # Naturally though this should never happen.
+        raise PAFException('Package has not been properly initialised.')
+
+    fp = open(self.appinfo_path, 'w')
+    fp.write(appinfo)
+    fp.close()
