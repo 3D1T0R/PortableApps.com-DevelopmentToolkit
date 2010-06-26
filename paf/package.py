@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from os.path import exists, isdir, isfile, join
+from os.path import exists, isdir, isfile, join, abspath
 import os
 import config
 from utils import _S as _
@@ -9,48 +9,69 @@ from shutil import copy2 as copy
 class PAFException(Exception): pass
 
 class Package:
-    _mandatory_dirs = (
+    current_package = None
+
+    _mandatory_dirs = [
             ('App',),
             ('App', 'AppInfo'),
             ('Other',),
+            ('Other', 'Source'),
+    ]
+
+    _mandatory_files = [
+            ('help.html',),
+            ('App', 'AppInfo', 'appinfo.ini'),
+            ('App', 'AppInfo', 'appicon.ico'),
+            ('App', 'AppInfo', 'appicon_16.png'),
+            ('App', 'AppInfo', 'appicon_32.png'),
+    ]
+
+    _recommended_dirs = [
             ('Other', 'Help'),
             ('Other', 'Help', 'Images'),
-            ('Other', 'Source'),
-    )
+    ]
 
-    _mandatory_files = (
-            ('help.html',),
-            ('App', 'readme.txt'),
+    _recommended_files = [
+            ('App', 'readme.txt'), # Always used, so recommended, but not in spec so not mandatory
             ('Other', 'Help', 'Images', 'help_logo_top.png'),
             ('Other', 'Help', 'Images', 'favicon.ico'),
             ('Other', 'Help', 'Images', 'donation_button.png'),
             ('Other', 'Help', 'Images', 'help_background_footer.png'),
             ('Other', 'Help', 'Images', 'help_background_header.png'),
-    )
-
-    _recommended_files = (
             ('Other', 'Source', 'Readme.txt'),
             ('Other', 'Source', 'License.txt'),
-            ('Other', 'Source', 'AppNamePortable.ini'),
-    )
+    ]
 
-    _pal_dirs = (
+    _suggested_files = [
+            ('App', 'AppInfo', 'appicon_128.png'),
+    ]
+
+    _pal_dirs = [
             ('App', 'AppInfo', 'Launcher'),
-    )
+    ]
 
-    _pal_files = (
+    _pal_files = [
             ('App', 'AppInfo', 'Launcher', 'splash.jpg'),
-    )
+            ('Other', 'Source', 'AppNamePortable.ini'),
+    ]
 
     def __init__(self, package, launcher_is_pal=None):
+        Package.current_package = self
         self._directory = package
 
-        if package == join(config.ROOT_DIR, 'app-template'):
+        if abspath(package) == join(config.ROOT_DIR, 'app-template'):
             # No-one's meant to know about this ;-)
             raise PAFException("Nice try. That's a skeleton package - it's not *meant* to be valid. Try somethin' else.")
 
         if not isdir(package):
             raise PAFException(_("Package directory does not exist!"))
+
+        # Check if it's a plugin installer
+        if isfile(self._path('Other', 'Source', 'plugininstaller.ini')):
+            self.plugin = True
+            self._mandatory_files[self._mandatory_files.index(('App', 'AppInfo', 'appinfo.ini'))] = ('Other', 'Source', 'plugininstaller.ini')
+        else:
+            self.plugin = False
 
         if launcher_is_pal == None:
             # Auto-detect; new apps: yes. Old apps: no
@@ -70,14 +91,16 @@ class Package:
     def _path(self, *path):
         return join(self._directory, *path)
 
-    def _dirlist(self):
-        dirlist = Package._mandatory_dirs
+    def _dirlist(self, recommended=False):
+        dirlist = self._mandatory_dirs
+        if recommended:
+            filelist += self._recommended_dirs
         if self.launcher_is_pal:
-            dirlist += Package._pal_dirs
+            dirlist += self._pal_dirs
         return dirlist
 
     def fix_missing_directories(self):
-        for dirname in self._dirlist():
+        for dirname in self._dirlist(recommended=True):
             dirpath = self._path(*dirname)
             if exists(dirpath):
                 if isdir(dirpath):
@@ -88,11 +111,11 @@ class Package:
                 os.mkdir(dirpath)
 
     def _filelist(self, recommended=False):
-        filelist = Package._mandatory_files
+        filelist = self._mandatory_files
         if recommended:
-            filelist += Package._recommended_files
+            filelist += self._recommended_files
         if self.launcher_is_pal:
-            filelist += Package._pal_files
+            filelist += self._pal_files
         return filelist
 
     def fix_missing_files(self):
@@ -103,7 +126,7 @@ class Package:
                     pass # File exists, fine.
                 else:
                     raise PAFException(_('%s should be a file but a directory with that name already exists') % join(*filename))
-            else:
+            elif isfile(join(config.ROOT_DIR, 'app-template', *filename)):
                 copy(join(config.ROOT_DIR, 'app-template', *filename), filepath)
 
     def fix(self):
@@ -123,12 +146,22 @@ class Package:
                 self.errors.append(_('Directory %s is missing') % join(*directory))
 
         for filename in self._filelist():
-            if not isfile(self._path(*filename)):
+            if isdir(os.path.dirname(self._path(*filename))) and not isfile(self._path(*filename)):
                 self.errors.append(_('File %s is missing') % join(*filename))
 
-        for filename in Package._recommended_files:
-            if not isfile(self._path(*filename)):
+        for directory in self._recommended_dirs:
+            if not isdir(self._path(*directory)):
+                self.warnings.append(_('Directory %s is missing') % join(*directory))
+
+        for filename in self._recommended_files:
+            if isdir(os.path.dirname(self._path(*filename))) and not isfile(self._path(*filename)):
                 self.warnings.append(_('File %s is missing') % join(*filename))
+
+        for filename in self._suggested_files:
+            if isdir(os.path.dirname(self._path(*filename))) and not isfile(self._path(*filename)):
+                self.info.append(_('Suggested file %s is missing') % join(*filename))
+
+        self.validate_appinfo()
 
 def create_package(path):
     "Create an app package in PortableApps.com Format™"

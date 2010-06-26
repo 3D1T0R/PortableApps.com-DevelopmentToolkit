@@ -28,6 +28,7 @@ class Main(QtGui.QMainWindow):
 
     def on_createButton_clicked(self, checked=None):
         if checked == None: return
+        self.ui.statusBar.showMessage(_("Creating package..."))
         text_box = self.ui.packageText
         current_path = text_box.text()
         while True:
@@ -40,8 +41,11 @@ class Main(QtGui.QMainWindow):
                     continue
 
                 text_box.setText(package)
+                self.ui.statusBar.showMessage(_("Package created successfully."), 2000)
                 # TODO: go straight on to the Format window for AppInfo filling-in
                 #self.on_launcherButton_clicked(False)
+            else:
+                self.ui.statusBar.clearMessage()
             break
 
     def on_formatButton_clicked(self, checked=None):
@@ -82,16 +86,49 @@ def main():
     window.show()
     exit_code = app.exec_()
 
-    quit(window, exit_code)
+    prepare_quit(window)
 
-def quit(window, exit_code):
+    return exit_code
+
+def prepare_quit(window):
     config.settings.Main.Package = window.ui.packageText.text()
     config.save()
 
-    sys.exit(exit_code)
+def cli_help():
+    print "PortableApps.com Development Toolkit"
+    print "Launch without command line arguments to run normally."
+    print
+    print 'Validate a package (GUI):'
+    print '  %s validate <package>' % sys.argv[0]
+    print
+    print 'Validate a package (command line):'
+    print '  %s validate-cli <package>' % sys.argv[0]
+    return 0
+
+def validate_gui():
+    app = QtGui.QApplication(sys.argv)
+    not_implemented()
+    # No app.exec_() as there's no window
+    return 0
+
+def validate_cli():
+    import paf.validate_cli
+    return paf.validate_cli.validate(sys.argv[2])
 
 def not_implemented():
     warnings.warn('Sorry, this is not implemented yet.', UserWarning, stacklevel=2)
 
+if len(sys.argv) > 1:
+    if sys.argv[1] == 'help':
+        action = cli_help
+    elif sys.argv[1] == 'validate':
+        action = len(sys.argv) == 3 and validate_gui or cli_help
+    elif sys.argv[1] == 'validate-cli':
+        action = len(sys.argv) == 3 and validate_cli or cli_help
+    else:
+        action = main
+else:
+    action = main
+
 if __name__ == "__main__":
-    main()
+    sys.exit(action())
