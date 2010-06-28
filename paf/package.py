@@ -5,6 +5,7 @@ import os
 import config
 from utils import _S as _
 from shutil import copy2 as copy
+from paf import PAFException
 
 class Package:
     current_package = None
