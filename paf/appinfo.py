@@ -57,7 +57,7 @@ def validate_appinfo(self):
     else:
         fp = None
 
-    appinfo = iniparse.INIConfig(open(self.appinfo_path))
+    appinfo = iniparse.INIConfig(fp)
     self.appinfo = appinfo
 
     if not isfile(self.appinfo_path):
