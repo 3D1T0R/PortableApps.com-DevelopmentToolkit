@@ -5,6 +5,14 @@ import collections
 
 KEY, PREV, NEXT = range(3)
 
+def multi_property(fnfn): # This decorator is added by Chris Morgan
+    def decorate(self, *args):
+        result = self
+        for i in args:
+            result = fnfn(result)(i)
+        return result
+    return decorate
+
 class OrderedSet(collections.MutableSet):
 
     def __init__(self, iterable=None):
@@ -64,5 +72,20 @@ class OrderedSet(collections.MutableSet):
         return not self.isdisjoint(other)
 
     def __del__(self):
-        self.clear()                    # remove circular references
+        try:
+            self.clear()                    # remove circular references
+        except Exception:
+            pass # TODO: fix this. Without wrapping this in a try block, I often get this:
+        # Exception TypeError: TypeError('list indices must be integers, not NoneType',) in  ignored
+
+    # Below this line are additions by Chris Morgan to get these methods back.
+    difference = multi_property(lambda self: self.__sub__)
+    difference_update = multi_property(lambda self: self.__isub__)
+    intersection = multi_property(lambda self: self.__and__)
+    intersection_update = multi_property(lambda self: self.__iand__)
+    issubset = property(lambda self: self.__le__)
+    issuperset = property(lambda self: self.__ge__)
+    symmetric_difference = property(lambda self: self.__xor__)
+    symmetric_difference_update = property(lambda self: self.__ixor__)
+    union = multi_property(lambda self: self.__or__)
 
