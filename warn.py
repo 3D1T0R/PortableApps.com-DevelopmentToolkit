@@ -1,9 +1,6 @@
 import warnings
-import logging
 from PyQt4.QtGui import QMessageBox
 from utils import _S, _
-
-logging.basicConfig(level=logging.INFO)
 
 def warn_ui(message, category, filename, lineno, file=None, line=None):
     if type(message) == tuple:
