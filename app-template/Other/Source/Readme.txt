@@ -1,8 +1,3 @@
-The base application's source code is available from the portable app's
-homepage listed in the help.html file.
-
-Details of most other things are available there as well.
-
 LICENSE
 =======
 
@@ -10,6 +5,9 @@ This package and its launcher are released under the GPL. The launcher is the
 PortableApps.com Launcher, available with full source and documentation from
 http://portableapps.com/development. We request that developers using the
 PortableApps.com Launcher please leave this directory intact and unchanged.
+
+The base application may be open source; if it is, its source code should be
+available from its homepage listed in the help.html file.
 
 USER CONFIGURATION
 ==================
