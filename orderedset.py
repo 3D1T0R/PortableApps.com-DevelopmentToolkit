@@ -69,7 +69,7 @@ class OrderedSet(collections.MutableSet):
     def __eq__(self, other):
         if isinstance(other, OrderedSet):
             return len(self) == len(other) and list(self) == list(other)
-        return not self.isdisjoint(other)
+        return collections.MutableSet.__eq__(self, other)
 
     def __del__(self):
         try:
