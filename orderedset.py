@@ -3,6 +3,8 @@
 
 import collections
 
+__all__ = ['OrderedSet']
+
 KEY, PREV, NEXT = range(3)
 
 def multi_property(fnfn): # This decorator is added by Chris Morgan

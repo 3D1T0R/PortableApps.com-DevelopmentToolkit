@@ -7,33 +7,34 @@ from os.path import isfile, isdir, join
 from utils import ini_defined, method_of, _S as _
 import iniparse
 from paf import FORMAT_VERSION, PAFException
+from orderedset import OrderedSet
 
 __all__ = []
 
-_sections_required = frozenset(('Format', 'Details', 'License', 'Version', 'Control'))
-_sections_optional = frozenset(('SpecialPaths', 'Dependencies'))
-_keys_required = {
-        'Format': frozenset(('Type', 'Version')),
-        'Details': frozenset(('Name', 'AppID', 'Publisher', 'Homepage', 'Category', 'Description', 'Language')),
-        'License': frozenset(('Shareable', 'OpenSource', 'Freeware', 'CommercialUse')),
-        'Version': frozenset(('PackageVersion', 'DisplayVersion')),
-        'SpecialPaths': frozenset(),
-        'Dependencies': frozenset(),
-        'Control': frozenset(('Icons','Start')), # also StartN and NameN for 1 to Icons if Icons>1
-        }
-_keys_optional = {
-        'Format': frozenset(),
-        'Details': frozenset(('Trademarks', 'InstallType', 'PluginType')), # PluginType is only valid for self.plugin == True, validated later.
-        'License': frozenset(),
-        'Version': frozenset(),
-        'SpecialPaths': frozenset(('Plugins',)),
-        'Dependencies': frozenset(('UsesJava', 'UsesDotNetVersion')),
-        'Control': frozenset(('ExtractIcon',)), # also ExtractIconN for 1 to Icons if Icons>1
-        }
+_sections_required = OrderedSet(('Format', 'Details', 'License', 'Version', 'Control'))
+_sections_optional = OrderedSet(('SpecialPaths', 'Dependencies'))
+_keys_required = dict(
+        Format=OrderedSet(('Type', 'Version')),
+        Details=OrderedSet(('Name', 'AppID', 'Publisher', 'Homepage', 'Category', 'Description', 'Language')),
+        License=OrderedSet(('Shareable', 'OpenSource', 'Freeware', 'CommercialUse')),
+        Version=OrderedSet(('PackageVersion', 'DisplayVersion')),
+        SpecialPaths=OrderedSet(),
+        Dependencies=OrderedSet(),
+        Control=OrderedSet(('Icons','Start')), # also StartN and NameN for 1 to Icons if Icons>1
+        )
+_keys_optional = dict(
+        Format=OrderedSet(),
+        Details=OrderedSet(('Trademarks', 'InstallType', 'PluginType')), # PluginType is only valid for self.plugin == True, validated later.
+        License=OrderedSet(('EULAVersion',)),
+        Version=OrderedSet(),
+        SpecialPaths=OrderedSet(('Plugins',)),
+        Dependencies=OrderedSet(('UsesJava', 'UsesDotNetVersion')),
+        Control=OrderedSet(('ExtractIcon',)), # also ExtractIconN for 1 to Icons if Icons>1
+        )
 
 def valid_appinfo(fn):
     "A decorator to ensure appinfo is set up."
-    def decorate(*args, **kwargs):
+    def decorate(self, *args, **kwargs):
         try:
             if not self.appinfo_path: raise Exception()
             if not self.appinfo: raise Exception()
@@ -41,7 +42,7 @@ def valid_appinfo(fn):
             # Naturally though this should never happen.
             raise PAFException('Package has not been properly initialised.')
 
-        fn(*args, **kwargs)
+        fn(self, *args, **kwargs)
 
     return decorate
 
@@ -67,23 +68,23 @@ def validate_appinfo(self):
         # has already been added to the list, we'll give up.
         return
 
-    for missing_section in _sections_required.difference(set(appinfo)):
+    for missing_section in _sections_required - OrderedSet(appinfo):
         self.errors.append(_('appinfo.ini: required section %s is missing') % missing_section)
 
-    for extra_section in set(appinfo).difference(_sections_required, _sections_optional):
+    for extra_section in OrderedSet(appinfo) - _sections_required - _sections_optional:
         self.errors.append(_('appinfo.ini: invalid section %s') % extra_section)
 
     # TODO: true, but no need to remind, really.
     #self.info.append(_('Remember that appinfo.ini parsing does not include style validation yet.'))
 
-    for section in _sections_required.union(_sections_optional).intersection(set(appinfo)):
+    for section in _sections_required.union(_sections_optional).intersection(OrderedSet(appinfo)):
         # The Control section validation comes later as its required/optional values are based on the value of Icons
         if section == 'Control': continue
 
-        for missing_value in _keys_required[section].difference(set(appinfo[section])):
+        for missing_value in _keys_required[section] - set(appinfo[section]):
             self.errors.append(_('appinfo.ini: [%(section)s], required value %(key)s is missing') % dict(section=section, key=missing_value))
 
-        for extra_value in set(appinfo[section]).difference(_keys_required[section], _keys_optional[section]):
+        for extra_value in OrderedSet(appinfo[section]) - _keys_required[section] - _keys_optional[section]:
             self.errors.append(_('appinfo.ini: [%(section)s], invalid value %(key)s') % dict(section=section, key=extra_value))
 
     if ini_defined(appinfo.Format):
@@ -102,7 +103,7 @@ def validate_appinfo(self):
         # Name: no validation
 
         # AppID
-        if ini_defined(appinfo.Details.AppID) and set(appinfo.Details.AppID).difference('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.-+_'):
+        if ini_defined(appinfo.Details.AppID) and OrderedSet(appinfo.Details.AppID) - 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.-+_':
                 self.errors.append(_('appinfo.ini: [Details]:AppID contains invalid characters; only letters, numbers, and the following punctuation: .-+_ are allowed'))
 
         # Publisher: no validation
@@ -207,8 +208,8 @@ def validate_appinfo(self):
             self.errors.append(_('appinfo.ini: the file specified in [%(section)s]:%(key)s does not exist') % dict(section='Control', key='ExtractIcon'))
 
         if ini_defined(appinfo.Control.Icons):
-            control_keys_required = set(_keys_required['Control'])
-            control_keys_optional = set(_keys_optional['Control'])
+            control_keys_required = OrderedSet(_keys_required['Control'])
+            control_keys_optional = OrderedSet(_keys_optional['Control'])
             try:
                 num = int(appinfo.Control.Icons)
                 if num < 1:
@@ -234,10 +235,10 @@ def validate_appinfo(self):
             except ValueError:
                 self.errors.append(_('appinfo.ini: [Control]:Icons must be a number greater than 0'))
 
-            for missing_value in control_keys_required.difference(set(appinfo.Control)):
+            for missing_value in control_keys_required - appinfo.Control:
                 self.errors.append(_('appinfo.ini: [%(section)s], required value %(key)s is missing') % dict(section='Control', key=missing_value))
 
-            for extra_value in set(appinfo.Control).difference(control_keys_required, control_keys_optional):
+            for extra_value in OrderedSet(appinfo.Control) - control_keys_required - control_keys_optional:
                 self.errors.append(_('appinfo.ini: [%(section)s], invalid value %(key)s') % dict(section='Control', key=extra_value))
 
 @method_of(Package)
