@@ -9,6 +9,30 @@ import paf
 import config
 import warnings
 import warn
+from functools import wraps
+
+def apply_checked_param_fix(fn):
+    """Decorator to handle the 'checked' issue where you need a checked=None
+    parameter because it'll call it twice."""
+    @wraps(fn)
+    def decorate(self, *args, **kwargs):
+        if args == (): return
+        fn(self, *args, **kwargs)
+    return decorate
+
+def assert_valid_package_path(fn):
+    """Decorator to make sure that something which shouldn't ever happen
+    doesn't cause a crash, and to provide a code indication of what's
+    happening."""
+    @wraps(fn)
+    def decorate(self, *args, **kwargs):
+        if not paf.valid_package(unicode(self.ui.packageText.text())):
+            raise Exception, "The package is not valid."
+            #QtGui.QMessageBox.critical(self, _('PortableApps.com Development Toolkit'), "This button should have been disabled. Please report this as a bug.", QtGui.QMessageBox.Ok)
+            return
+
+        fn(self, *args, **kwargs)
+    return decorate
 
 class Main(QtGui.QMainWindow):
     def __init__(self, parent=None):
@@ -48,16 +72,19 @@ class Main(QtGui.QMainWindow):
                 self.ui.statusBar.clearMessage()
             break
 
+    @apply_checked_param_fix
+    @assert_valid_package_path
     def on_formatButton_clicked(self, checked=None):
-        if checked == None: return
         not_implemented()
 
+    @apply_checked_param_fix
+    @assert_valid_package_path
     def on_launcherButton_clicked(self, checked=None):
-        if checked == None: return
         not_implemented()
 
+    @apply_checked_param_fix
+    @assert_valid_package_path
     def on_installerButton_clicked(self, checked=None):
-        if checked == None: return
         not_implemented()
 
     def on_packageText_textChanged(self, string):
