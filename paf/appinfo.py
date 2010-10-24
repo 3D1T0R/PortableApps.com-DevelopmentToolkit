@@ -103,7 +103,7 @@ def validate_appinfo(self):
         # Name: no validation
 
         # AppID
-        if ini_defined(appinfo.Details.AppID) and OrderedSet(appinfo.Details.AppID) - 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.-+_':
+        if ini_defined(appinfo.Details.AppID) and OrderedSet(appinfo.Details.AppID) - 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.-+_':
                 self.errors.append(_('appinfo.ini: [Details]:AppID contains invalid characters; only letters, numbers, and the following punctuation: .-+_ are allowed'))
 
         # Publisher: no validation
