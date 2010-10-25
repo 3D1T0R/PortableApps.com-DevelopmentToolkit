@@ -4,7 +4,7 @@
 import sys
 from PyQt4 import QtCore, QtGui
 from ui.mainwindow import Ui_MainWindow
-from utils import _
+from utils import _, center_window
 import paf
 import config
 import warnings
@@ -98,10 +98,6 @@ class Main(QtGui.QMainWindow):
         self.ui.launcherButton.setEnabled(valid)
         self.ui.installerButton.setEnabled(valid)
 
-    def center(self):
-        screen = QtGui.QDesktopWidget().screenGeometry()
-        size = self.geometry()
-        self.move((screen.width()-size.width())/2, (screen.height()-size.height())/2)
 
 def main():
     app = QtGui.QApplication(sys.argv)
@@ -109,7 +105,7 @@ def main():
 
     window.ui.packageText.setText(config.get('Main', 'Package', ''))
 
-    window.center()
+    center_window(window)
     window.show()
     exit_code = app.exec_()
 
@@ -134,9 +130,11 @@ def cli_help():
 
 def validate_gui():
     app = QtGui.QApplication(sys.argv)
-    not_implemented()
-    # No app.exec_() as there's no window
-    return 0
+    import paf.validate_gui
+    window = paf.validate_gui.validate(sys.argv[2])
+    exit_code = app.exec_()
+
+    return exit_code
 
 def validate_cli():
     import paf.validate_cli

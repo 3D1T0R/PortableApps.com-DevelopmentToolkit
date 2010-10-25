@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ValidationDialog</class>
+ <widget class="QDialog" name="ValidationDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>480</width>
+    <height>640</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Validation results</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../graphics/graphics.qrc">
+    <normaloff>:/icon.png</normaloff>:/icon.png</iconset>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QTextBrowser" name="validationResultsHTML"/>
+   </item>
+   <item>
+    <widget class="QPlainTextEdit" name="validationResultsArea"/>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../graphics/graphics.qrc"/>
+ </resources>
+ <connections/>
+</ui>
