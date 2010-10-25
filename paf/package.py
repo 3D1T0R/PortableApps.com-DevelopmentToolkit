@@ -3,7 +3,7 @@
 from os.path import exists, isdir, isfile, join, abspath
 import os
 import config
-from utils import _S as _
+from utils import ini_defined, path_insensitive, _S as _
 from shutil import copy2 as copy
 from paf import PAFException
 
@@ -30,16 +30,22 @@ class Package:
             ('Other', 'Help', 'Images'),
     ]
 
-    _recommended_files = [
-            ('App', 'readme.txt'), # Always used, so recommended, but not in spec so not mandatory
-            ('Other', 'Help', 'Images', 'help_logo_top.png'),
-            ('Other', 'Help', 'Images', 'favicon.ico'),
-            ('Other', 'Help', 'Images', 'donation_button.png'),
-            ('Other', 'Help', 'Images', 'help_background_footer.png'),
-            ('Other', 'Help', 'Images', 'help_background_header.png'),
-            ('Other', 'Source', 'Readme.txt'),
-            ('Other', 'Source', 'License.txt'),
-    ]
+    @property
+    def _recommended_files(self):
+        files = []
+        if not self.launcher_is_pal:
+            # With PAL we expect to use the app template which includes all of
+            # these values, so we make it errors.
+            files += [
+                ('App', 'readme.txt'), # Always used, so recommended, but not in spec so not mandatory
+                ('Other', 'Help', 'Images', 'help_logo_top.png'),
+                ('Other', 'Help', 'Images', 'favicon.ico'),
+                ('Other', 'Help', 'Images', 'donation_button.png'),
+                ('Other', 'Help', 'Images', 'help_background_footer.png'),
+                ('Other', 'Help', 'Images', 'help_background_header.png'),
+                ('Other', 'Source', 'Readme.txt'),
+                ('Other', 'Source', 'License.txt')]
+        return files
 
     _suggested_files = [
             ('App', 'AppInfo', 'appicon_128.png'),
@@ -49,10 +55,34 @@ class Package:
             ('App', 'AppInfo', 'Launcher'),
     ]
 
-    _pal_files = [
+    @property
+    def _pal_files(self):
+        files = [
+            # Files from the template
             ('App', 'AppInfo', 'Launcher', 'splash.jpg'),
+            ('App', 'readme.txt'),
+            ('Other', 'Help', 'Images', 'donation_button.png'),
+            ('Other', 'Help', 'Images', 'favicon.ico'),
+            ('Other', 'Help', 'Images', 'help_background_footer.png'),
+            ('Other', 'Help', 'Images', 'help_background_header.png'),
+            ('Other', 'Help', 'Images', 'help_logo_top.png'),
             ('Other', 'Source', 'AppNamePortable.ini'),
-    ]
+            ('Other', 'Source', 'License.txt'),
+            ('Other', 'Source', 'Readme.txt')]
+        files.insert(0, ('App', 'AppInfo', 'Launcher', '%s.ini' % self.appid))
+        return files
+
+    @property
+    def appid(self):
+        if hasattr(self, 'appinfo') \
+        and ini_defined(self.appinfo.Details):
+            if ini_defined(self.appinfo.Details.AppID):
+                return self.appinfo.Details.AppID
+            # Compatibility with a former typo in the PAF spec
+            elif ini_defined(self.appinfo.Details.AppId):
+                return self.appinfo.Details.AppId
+        else:
+            return None
 
     def __init__(self, package, launcher_is_pal=None):
         Package.current_package = self
@@ -88,7 +118,7 @@ class Package:
         self.validate()
 
     def _path(self, *path):
-        return join(self._directory, *path)
+        return path_insensitive(join(self._directory, *path))
 
     def _dirlist(self, recommended=False):
         dirlist = self._mandatory_dirs
@@ -136,9 +166,17 @@ class Package:
     def validate(self):
         "Validate or revalidate the package to check PortableApps.com Format™ compliance."
 
+        self.init_appinfo()
+
         self.errors   = []
         self.warnings = []
         self.info     = []
+
+        if self.launcher_is_pal:
+            self.info.append(_('The app uses the PortableApps.com Launcher.'))
+        else:
+            self.info.append(_('The PortableApps.com Launcher is not used. ' +
+                               'Please consider using it.'))
 
         for directory in self._dirlist():
             if not isdir(self._path(*directory)):

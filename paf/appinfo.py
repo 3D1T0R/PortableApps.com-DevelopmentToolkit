@@ -47,7 +47,7 @@ def valid_appinfo(fn):
     return decorate
 
 @method_of(Package)
-def validate_appinfo(self):
+def init_appinfo(self):
     if self.plugin:
         self.appinfo_path = self._path('Other', 'Source', 'plugininstaller.ini')
     else:
@@ -61,12 +61,20 @@ def validate_appinfo(self):
     appinfo = iniparse.INIConfig(fp)
     self.appinfo = appinfo
 
+
+@method_of(Package)
+def validate_appinfo(self):
+    if not hasattr(self, 'appinfo') or not self.appinfo:
+        self.init_appinfo()
+
     if not isfile(self.appinfo_path):
         # If appinfo.ini doesn't exist, we've created an INIConfig which will
         # be empty, for the fix routine. Then as we don't want to spew a whole
         # heap of errors given that an error about appinfo.ini being missing
         # has already been added to the list, we'll give up.
         return
+
+    appinfo = self.appinfo
 
     for missing_section in _sections_required - OrderedSet(appinfo):
         self.errors.append(_('appinfo.ini: required section %s is missing') % missing_section)
@@ -116,7 +124,13 @@ def validate_appinfo(self):
                 'Security', 'Utilities'):
             self.errors.append(_('appinfo.ini: [Details]:Category must be exactly Accessibility, Development, Education, Games, Graphics & Pictures, Internet, Music & Video, Office, Security or Utilities'))
 
-        # Description: no validation
+        # Description: length
+        if ini_defined(appinfo.Details.Description):
+            chars = len(appinfo.Details.Description)
+            if chars > 512:
+                self.errors.append(_('appinfo.ini: [Details]:Description may not be longer than 512 characters.'))
+            elif chars > 150:
+                self.warnings.append(_('appinfo.ini: [Details]:Description should be shorter than %s characters (aim for no more than 150).') % chars)
 
         # Language
         if ini_defined(appinfo.Details.Language) and appinfo.Details.Language not in (
