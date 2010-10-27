@@ -7,7 +7,8 @@ __all__ = ['OrderedSet']
 
 KEY, PREV, NEXT = range(3)
 
-def multi_property(fnfn): # This decorator is added by Chris Morgan
+
+def multi_property(fnfn):  # This decorator is added by Chris Morgan
     def decorate(self, *args):
         result = self
         for i in args:
@@ -15,8 +16,8 @@ def multi_property(fnfn): # This decorator is added by Chris Morgan
         return result
     return decorate
 
-class OrderedSet(collections.MutableSet):
 
+class OrderedSet(collections.MutableSet):
     def __init__(self, iterable=None):
         self.end = end = []
         end += [None, end, end]         # sentinel node for doubly linked list
@@ -76,9 +77,10 @@ class OrderedSet(collections.MutableSet):
     def __del__(self):
         try:
             self.clear()                    # remove circular references
-        except Exception:
-            pass # TODO: fix this. Without wrapping this in a try block, I often get this:
-        # Exception TypeError: TypeError('list indices must be integers, not NoneType',) in  ignored
+        except:
+            pass
+        # TODO: a better fix.  Without the try, often this comes up:
+        # TypeError('list indices must be integers, not NoneType',)
 
     # Below this line are additions by Chris Morgan to get these methods back.
     difference = multi_property(lambda self: self.__sub__)
@@ -90,4 +92,3 @@ class OrderedSet(collections.MutableSet):
     symmetric_difference = property(lambda self: self.__xor__)
     symmetric_difference_update = property(lambda self: self.__ixor__)
     union = multi_property(lambda self: self.__or__)
-

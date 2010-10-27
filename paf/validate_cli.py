@@ -8,6 +8,7 @@ This is loaded from config.py.
 
 import paf
 
+
 def validate(path):
     """
     Validate a package.
@@ -34,15 +35,18 @@ def validate(path):
     errwarn_dict = dict(
             error_count=error_count,
             warning_count=warning_count,
-            str_errors = error_count == 1 and 'error' or 'errors',
-            str_warnings = warning_count == 1 and 'warning' or 'warnings',
+            str_errors=error_count == 1 and 'error' or 'errors',
+            str_warnings=warning_count == 1 and 'warning' or 'warnings',
             )
     if error_count and warning_count:
-        print 'Validation failed with %(error_count)s %(str_errors)s and %(warning_count)s %(str_warnings)s.' % errwarn_dict
+        print ('Validation failed with %(error_count)s %(str_errors)s and ' +
+            '%(warning_count)s %(str_warnings)s.') % errwarn_dict
     elif error_count:
-        print 'Validation failed with %(error_count)s %(str_errors)s.' % errwarn_dict
+        print 'Validation failed with %(error_count)s %(str_errors)s.' \
+                % errwarn_dict
     elif warning_count:
-        print 'Validation passed with %(warning_count)s %(str_warnings)s.' % errwarn_dict
+        print 'Validation passed with %(warning_count)s %(str_warnings)s.' \
+                % errwarn_dict
     else:
         print 'Validation succeeded!'
 

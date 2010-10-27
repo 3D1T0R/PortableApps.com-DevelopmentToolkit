@@ -6,8 +6,10 @@ from utils import get_ini_str
 
 ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 
+
 def settings_path(filename=None):
-    if 'PAL:DataDir' in os.environ and os.path.isdir(os.environ['PAL:DataDir']):
+    if 'PAL:DataDir' in os.environ \
+    and os.path.isdir(os.environ['PAL:DataDir']):
         dirname = os.environ['PAL:DataDir']
     else:
         dirname = os.path.dirname(__file__)
@@ -16,6 +18,7 @@ def settings_path(filename=None):
         return os.path.join(dirname, filename)
     else:
         return dirname
+
 
 def load():
     global settings
@@ -27,11 +30,13 @@ def load():
     else:
         settings = INIConfig()
 
+
 def save():
     f = open(settings_path('settings.ini'), 'w')
     tidy(settings)
     f.write(unicode(settings))
     f.close()
+
 
 def get(section, key, default=None):
     return get_ini_str(settings, section, key, default)

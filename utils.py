@@ -4,18 +4,23 @@ from PyQt4.QtGui import QApplication, QDesktopWidget
 from iniparse.config import Undefined
 import os
 
-_  = lambda x: QApplication.translate("MainWindow", x, None, QApplication.UnicodeUTF8)
+_ = lambda x: QApplication.translate("MainWindow", x, None,
+        QApplication.UnicodeUTF8)
 _S = lambda x: unicode(_(x))
+
 
 def ini_defined(val):
     return not isinstance(val, Undefined)
 
+
 def get_ini_str(iniconfig, section, key, default=None):
-    if not ini_defined(iniconfig[section]) or not ini_defined(iniconfig[section][key]):
+    if not ini_defined(iniconfig[section]) or
+    not ini_defined(iniconfig[section][key]):
         iniconfig[section][key] = default
         return default
     else:
         return iniconfig[section][key]
+
 
 def method_of(cls):
     """
@@ -30,10 +35,11 @@ def method_of(cls):
         # No return value, leaves def as None where it is written
     return decorate
 
+
 def center_window(window):
-    screen = QDesktopWidget().screenGeometry()
-    size = window.geometry()
-    window.move((screen.width()-size.width())/2, (screen.height()-size.height())/2)
+    scr = QDesktopWidget().screenGeometry()
+    g = window.geometry()
+    window.move((scr.width() - g.width()) / 2, (scr.height() - g.height()) / 2)
 
 
 def path_insensitive(path):

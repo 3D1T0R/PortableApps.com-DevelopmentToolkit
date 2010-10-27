@@ -11,14 +11,17 @@ import warnings
 import warn
 from functools import wraps
 
+
 def apply_checked_param_fix(fn):
     """Decorator to handle the 'checked' issue where you need a checked=None
     parameter because it'll call it twice."""
     @wraps(fn)
     def decorate(self, *args, **kwargs):
-        if args == (): return
+        if args == ():
+            return
         fn(self, *args, **kwargs)
     return decorate
+
 
 def assert_valid_package_path(fn):
     """Decorator to make sure that something which shouldn't ever happen
@@ -27,47 +30,51 @@ def assert_valid_package_path(fn):
     @wraps(fn)
     def decorate(self, *args, **kwargs):
         if not paf.valid_package(unicode(self.ui.packageText.text())):
-            raise Exception, "The package is not valid."
-            #QtGui.QMessageBox.critical(self, _('PortableApps.com Development Toolkit'), "This button should have been disabled. Please report this as a bug.", QtGui.QMessageBox.Ok)
+            raise Exception("The package is not valid.")
             return
 
         fn(self, *args, **kwargs)
     return decorate
 
+
 class Main(QtGui.QMainWindow):
     def __init__(self, parent=None):
         super(Main, self).__init__(parent)
-        self.ui=Ui_MainWindow()
+        self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.packageText.setFocus()
 
         # Currently all slots are auto-connected which is a Good Thing.
         # QtCore.QMetaObject.connectSlotsByName(self)
 
+    @apply_checked_param_fix
     def on_packageButton_clicked(self, checked=None):
-        if checked == None: return
         text_box = self.ui.packageText
         current_path = text_box.text()
-        text_box.setText(QtGui.QFileDialog.getExistingDirectory(None, _("Select a portable app package"), current_path) or current_path)
+        text_box.setText(QtGui.QFileDialog.getExistingDirectory(None,
+            _("Select a portable app package"), current_path) or current_path)
 
+    @apply_checked_param_fix
     def on_createButton_clicked(self, checked=None):
-        if checked == None: return
         self.ui.statusBar.showMessage(_("Creating package..."))
         text_box = self.ui.packageText
         current_path = text_box.text()
         while True:
-            package = QtGui.QFileDialog.getExistingDirectory(None, _("Create a directory for the package"))
+            package = QtGui.QFileDialog.getExistingDirectory(None,
+                    _("Create a directory for the package"))
             if package:
                 try:
                     paf.create_package(unicode(package))
                 except paf.PAFException as e:
-                    QtGui.QMessageBox.critical(self, _('PortableApps.com Development Toolkit'), unicode(e), QtGui.QMessageBox.Ok)
+                    QtGui.QMessageBox.critical(self,
+                            _('PortableApps.com Development Toolkit'),
+                            unicode(e), QtGui.QMessageBox.Ok)
                     continue
 
                 text_box.setText(package)
-                self.ui.statusBar.showMessage(_("Package created successfully."), 2000)
-                # TODO: go straight on to the Format window for AppInfo filling-in
-                #self.on_launcherButton_clicked(False)
+                self.ui.statusBar.showMessage(
+                        _("Package created successfully."), 2000)
+                # TODO self.on_formatButton_clicked(False)
             else:
                 self.ui.statusBar.clearMessage()
             break
@@ -113,9 +120,11 @@ def main():
 
     return exit_code
 
+
 def prepare_quit(window):
     config.settings.Main.Package = window.ui.packageText.text()
     config.save()
+
 
 def cli_help():
     print "PortableApps.com Development Toolkit"
@@ -128,6 +137,7 @@ def cli_help():
     print '  %s validate-cli <package>' % sys.argv[0]
     return 0
 
+
 def validate_gui():
     app = QtGui.QApplication(sys.argv)
     import paf.validate_gui
@@ -136,12 +146,16 @@ def validate_gui():
 
     return exit_code
 
+
 def validate_cli():
     import paf.validate_cli
     return paf.validate_cli.validate(sys.argv[2])
 
+
 def not_implemented():
-    warnings.warn('Sorry, this is not implemented yet.', UserWarning, stacklevel=2)
+    warnings.warn('Sorry, this is not implemented yet.',
+            UserWarning, stacklevel=2)
+
 
 if len(sys.argv) > 1:
     if sys.argv[1] == 'help':
