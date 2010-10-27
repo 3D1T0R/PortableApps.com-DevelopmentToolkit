@@ -172,11 +172,11 @@ class Package:
         self.warnings = []
         self.info     = []
 
-        if self.launcher_is_pal:
-            self.info.append(_('The app uses the PortableApps.com Launcher.'))
-        else:
+        if not self.launcher_is_pal:
             self.info.append(_('The PortableApps.com Launcher is not used. ' +
                                'Please consider using it.'))
+        #else:
+            #self.info.append(_('The app uses the PortableApps.com Launcher.'))
 
         for directory in self._dirlist():
             if not isdir(self._path(*directory)):
