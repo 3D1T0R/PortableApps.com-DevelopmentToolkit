@@ -1,0 +1,780 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AppInfoDialog</class>
+ <widget class="QDialog" name="AppInfoDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>883</width>
+    <height>457</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>App details</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../graphics/graphics.qrc">
+    <normaloff>:/icon.png</normaloff>:/icon.png</iconset>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QGridLayout">
+     <item row="0" column="0" rowspan="3">
+      <widget class="QGroupBox" name="DetailsGroupBox">
+       <property name="title">
+        <string>App details</string>
+       </property>
+       <layout class="QFormLayout" name="formLayout_4">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+        </property>
+        <item row="0" column="0">
+         <widget class="QLabel" name="NameLabel">
+          <property name="text">
+           <string>Portable app name</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="Name">
+          <property name="maxLength">
+           <number>128</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="AppIDLabel">
+          <property name="text">
+           <string>App ID</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="AppID">
+          <property name="maxLength">
+           <number>128</number>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="PublisherLabel">
+          <property name="text">
+           <string>Publisher</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="Publisher">
+          <property name="maxLength">
+           <number>128</number>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="HomepageLabel">
+          <property name="text">
+           <string>Homepage</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="Homepage">
+          <property name="maxLength">
+           <number>128</number>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="CategoryLabel">
+          <property name="text">
+           <string>Category</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QComboBox" name="Category">
+          <item>
+           <property name="text">
+            <string>Accessibility</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Development</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Education</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Games</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Graphics &amp; Pictures</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Internet</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Music &amp; Video</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Office</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Security</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Utilities</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="DescriptionLabel">
+          <property name="text">
+           <string>Description</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLineEdit" name="Description">
+          <property name="maxLength">
+           <number>512</number>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QLabel" name="LanguageLabel">
+          <property name="text">
+           <string>Language</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QComboBox" name="Language">
+          <item>
+           <property name="text">
+            <string>Multilingual</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>English</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Afrikaans</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Albanian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Arabic</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Armenian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Basque</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Belarusian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Bosnian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Breton</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Bulgarian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Catalan</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Cibemba</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Croatian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Czech</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Danish</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Dutch</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Efik</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Estonian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Farsi</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Finnish</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>French</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Galician</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Georgian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>German</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Greek</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Hebrew</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Hungarian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Icelandic</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Igbo</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Indonesian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Irish</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Italian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Japanese</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Khmer</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Korean</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Kurdish</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Latvian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Lithuanian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Luxembourgish</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Macedonian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Malagasy</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Malay</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Mongolian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Norwegian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>NorwegianNynorsk</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Pashto</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Polish</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Portuguese</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>PortugueseBR</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Romanian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Russian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Serbian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>SerbianLatin</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>SimpChinese</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Slovak</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Slovenian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Spanish</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>SpanishInternational</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Swahili</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Swedish</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Thai</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TradChinese</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Turkish</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Ukranian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Uzbek</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Valencian</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Vietnamese</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Welsh</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Yoruba</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="7" column="0">
+         <widget class="QLabel" name="TrademarksLabel">
+          <property name="text">
+           <string>Trademarks</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="1">
+         <widget class="QLineEdit" name="Trademarks">
+          <property name="maxLength">
+           <number>512</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QGroupBox" name="VersionGroupBox">
+       <property name="title">
+        <string>Version</string>
+       </property>
+       <layout class="QFormLayout" name="formLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="DisplayVersionLabel">
+          <property name="text">
+           <string>Display version</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLineEdit" name="DisplayVersionBase">
+            <property name="maxLength">
+             <number>20</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="DisplayVersionType">
+            <item>
+             <property name="text">
+              <string>Development Test</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Pre-Release</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>New Item</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>(official release)</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Revision</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="spinBox">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="PackageVersionLabel">
+          <property name="text">
+           <string>Package version</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="PackageVersion">
+          <property name="inputMask">
+           <string>000.000.000.000; </string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QGroupBox" name="LicenseGroupBox">
+       <property name="title">
+        <string>License</string>
+       </property>
+       <layout class="QFormLayout" name="formLayout_5">
+        <item row="0" column="0">
+         <widget class="QCheckBox" name="Shareable">
+          <property name="text">
+           <string>Shareable</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QCheckBox" name="OpenSource">
+          <property name="text">
+           <string>Open source</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QCheckBox" name="Freeware">
+          <property name="text">
+           <string>Freeware</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QCheckBox" name="CommercialUse">
+          <property name="text">
+           <string>Commercial use</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QGroupBox" name="AdvancedGroupBox">
+       <property name="title">
+        <string>Advanced</string>
+       </property>
+       <layout class="QFormLayout" name="formLayout_7">
+        <item row="0" column="0">
+         <widget class="QLabel" name="PluginsPathLabel">
+          <property name="text">
+           <string>Plugins path</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="PluginsPath">
+          <property name="maxLength">
+           <number>256</number>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Requires .NET version</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="comboBox">
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <item>
+           <property name="text">
+            <string>None</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>1.1</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>2.0</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>3.0</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>3.5</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>4.0</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QCheckBox" name="UsesJava">
+          <property name="text">
+           <string>Uses Java</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../graphics/graphics.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>AppInfoDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>AppInfoDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
