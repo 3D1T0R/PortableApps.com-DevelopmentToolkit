@@ -574,11 +574,6 @@
             </item>
             <item>
              <property name="text">
-              <string>New Item</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
               <string>(official release)</string>
              </property>
             </item>

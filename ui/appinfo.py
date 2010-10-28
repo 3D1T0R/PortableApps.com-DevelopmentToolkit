@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/appinfo.ui'
 #
-# Created: Mon Oct 25 14:31:47 2010
+# Created: Thu Oct 28 13:09:48 2010
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -179,7 +179,6 @@ class Ui_AppInfoDialog(object):
         self.DisplayVersionType.addItem("")
         self.DisplayVersionType.addItem("")
         self.DisplayVersionType.addItem("")
-        self.DisplayVersionType.addItem("")
         self.horizontalLayout.addWidget(self.DisplayVersionType)
         self.spinBox = QtGui.QSpinBox(self.VersionGroupBox)
         self.spinBox.setMinimum(1)
@@ -345,9 +344,8 @@ class Ui_AppInfoDialog(object):
         self.DisplayVersionLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "Display version", None, QtGui.QApplication.UnicodeUTF8))
         self.DisplayVersionType.setItemText(0, QtGui.QApplication.translate("AppInfoDialog", "Development Test", None, QtGui.QApplication.UnicodeUTF8))
         self.DisplayVersionType.setItemText(1, QtGui.QApplication.translate("AppInfoDialog", "Pre-Release", None, QtGui.QApplication.UnicodeUTF8))
-        self.DisplayVersionType.setItemText(2, QtGui.QApplication.translate("AppInfoDialog", "New Item", None, QtGui.QApplication.UnicodeUTF8))
-        self.DisplayVersionType.setItemText(3, QtGui.QApplication.translate("AppInfoDialog", "(official release)", None, QtGui.QApplication.UnicodeUTF8))
-        self.DisplayVersionType.setItemText(4, QtGui.QApplication.translate("AppInfoDialog", "Revision", None, QtGui.QApplication.UnicodeUTF8))
+        self.DisplayVersionType.setItemText(2, QtGui.QApplication.translate("AppInfoDialog", "(official release)", None, QtGui.QApplication.UnicodeUTF8))
+        self.DisplayVersionType.setItemText(3, QtGui.QApplication.translate("AppInfoDialog", "Revision", None, QtGui.QApplication.UnicodeUTF8))
         self.PackageVersionLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "Package version", None, QtGui.QApplication.UnicodeUTF8))
         self.PackageVersion.setInputMask(QtGui.QApplication.translate("AppInfoDialog", "000.000.000.000; ", None, QtGui.QApplication.UnicodeUTF8))
         self.LicenseGroupBox.setTitle(QtGui.QApplication.translate("AppInfoDialog", "License", None, QtGui.QApplication.UnicodeUTF8))
