@@ -96,52 +96,52 @@
          <widget class="QComboBox" name="Category">
           <item>
            <property name="text">
-            <string>Accessibility</string>
+            <string notr="true">Accessibility</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Development</string>
+            <string notr="true">Development</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Education</string>
+            <string notr="true">Education</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Games</string>
+            <string notr="true">Games</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Graphics &amp; Pictures</string>
+            <string notr="true">Graphics &amp; Pictures</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Internet</string>
+            <string notr="true">Internet</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Music &amp; Video</string>
+            <string notr="true">Music &amp; Video</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Office</string>
+            <string notr="true">Office</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Security</string>
+            <string notr="true">Security</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Utilities</string>
+            <string notr="true">Utilities</string>
            </property>
           </item>
          </widget>
@@ -171,352 +171,352 @@
          <widget class="QComboBox" name="Language">
           <item>
            <property name="text">
-            <string>Multilingual</string>
+            <string notr="true">Multilingual</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>English</string>
+            <string notr="true">English</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Afrikaans</string>
+            <string notr="true">Afrikaans</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Albanian</string>
+            <string notr="true">Albanian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Arabic</string>
+            <string notr="true">Arabic</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Armenian</string>
+            <string notr="true">Armenian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Basque</string>
+            <string notr="true">Basque</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Belarusian</string>
+            <string notr="true">Belarusian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Bosnian</string>
+            <string notr="true">Bosnian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Breton</string>
+            <string notr="true">Breton</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Bulgarian</string>
+            <string notr="true">Bulgarian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Catalan</string>
+            <string notr="true">Catalan</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Cibemba</string>
+            <string notr="true">Cibemba</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Croatian</string>
+            <string notr="true">Croatian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Czech</string>
+            <string notr="true">Czech</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Danish</string>
+            <string notr="true">Danish</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Dutch</string>
+            <string notr="true">Dutch</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Efik</string>
+            <string notr="true">Efik</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Estonian</string>
+            <string notr="true">Estonian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Farsi</string>
+            <string notr="true">Farsi</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Finnish</string>
+            <string notr="true">Finnish</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>French</string>
+            <string notr="true">French</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Galician</string>
+            <string notr="true">Galician</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Georgian</string>
+            <string notr="true">Georgian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>German</string>
+            <string notr="true">German</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Greek</string>
+            <string notr="true">Greek</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Hebrew</string>
+            <string notr="true">Hebrew</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Hungarian</string>
+            <string notr="true">Hungarian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Icelandic</string>
+            <string notr="true">Icelandic</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Igbo</string>
+            <string notr="true">Igbo</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Indonesian</string>
+            <string notr="true">Indonesian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Irish</string>
+            <string notr="true">Irish</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Italian</string>
+            <string notr="true">Italian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Japanese</string>
+            <string notr="true">Japanese</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Khmer</string>
+            <string notr="true">Khmer</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Korean</string>
+            <string notr="true">Korean</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Kurdish</string>
+            <string notr="true">Kurdish</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Latvian</string>
+            <string notr="true">Latvian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Lithuanian</string>
+            <string notr="true">Lithuanian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Luxembourgish</string>
+            <string notr="true">Luxembourgish</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Macedonian</string>
+            <string notr="true">Macedonian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Malagasy</string>
+            <string notr="true">Malagasy</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Malay</string>
+            <string notr="true">Malay</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Mongolian</string>
+            <string notr="true">Mongolian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Norwegian</string>
+            <string notr="true">Norwegian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>NorwegianNynorsk</string>
+            <string notr="true">NorwegianNynorsk</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Pashto</string>
+            <string notr="true">Pashto</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Polish</string>
+            <string notr="true">Polish</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Portuguese</string>
+            <string notr="true">Portuguese</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>PortugueseBR</string>
+            <string notr="true">PortugueseBR</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Romanian</string>
+            <string notr="true">Romanian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Russian</string>
+            <string notr="true">Russian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Serbian</string>
+            <string notr="true">Serbian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>SerbianLatin</string>
+            <string notr="true">SerbianLatin</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>SimpChinese</string>
+            <string notr="true">SimpChinese</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Slovak</string>
+            <string notr="true">Slovak</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Slovenian</string>
+            <string notr="true">Slovenian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Spanish</string>
+            <string notr="true">Spanish</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>SpanishInternational</string>
+            <string notr="true">SpanishInternational</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Swahili</string>
+            <string notr="true">Swahili</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Swedish</string>
+            <string notr="true">Swedish</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Thai</string>
+            <string notr="true">Thai</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>TradChinese</string>
+            <string notr="true">TradChinese</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Turkish</string>
+            <string notr="true">Turkish</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Ukranian</string>
+            <string notr="true">Ukranian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Uzbek</string>
+            <string notr="true">Uzbek</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Valencian</string>
+            <string notr="true">Valencian</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Vietnamese</string>
+            <string notr="true">Vietnamese</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Welsh</string>
+            <string notr="true">Welsh</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Yoruba</string>
+            <string notr="true">Yoruba</string>
            </property>
           </item>
          </widget>
@@ -564,28 +564,28 @@
            <widget class="QComboBox" name="DisplayVersionType">
             <item>
              <property name="text">
-              <string>Development Test</string>
+              <string notr="true">Development Test</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>Pre-Release</string>
+              <string notr="true">Pre-Release</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>(official release)</string>
+              <string notr="true">(official release)</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>Revision</string>
+              <string notr="true">Revision</string>
              </property>
             </item>
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="spinBox">
+           <widget class="QSpinBox" name="DisplayVersionNum">
             <property name="minimum">
              <number>1</number>
             </property>
@@ -668,45 +668,45 @@
          </widget>
         </item>
         <item row="2" column="0">
-         <widget class="QLabel" name="label">
+         <widget class="QLabel" name="UsesDotNetVersionLabel">
           <property name="text">
            <string>Requires .NET version</string>
           </property>
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QComboBox" name="comboBox">
+         <widget class="QComboBox" name="UsesDotNetVerson">
           <property name="editable">
            <bool>true</bool>
           </property>
           <item>
            <property name="text">
-            <string>None</string>
+            <string notr="true">None</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>1.1</string>
+            <string notr="true">1.1</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>2.0</string>
+            <string notr="true">2.0</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>3.0</string>
+            <string notr="true">3.0</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>3.5</string>
+            <string notr="true">3.5</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>4.0</string>
+            <string notr="true">4.0</string>
            </property>
           </item>
          </widget>
