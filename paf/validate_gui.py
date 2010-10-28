@@ -10,6 +10,7 @@ from PyQt4.QtGui import QDialog
 import paf
 from ui.validationsimple import Ui_ValidationDialog
 from utils import center_window
+from languages import lng
 
 
 class ValidationDialog(QDialog):
@@ -27,14 +28,13 @@ def validate(path):
     window = ValidationDialog()
     center_window(window)
 
-    out = u'<p>PortableApps.com Format validation <strong>'
-
     try:
         app = paf.Package(path)
     except paf.PAFException as msg:
-        out += u'failed</strong> with a critical error: %s</p>' % unicode(msg)
+        out = lng.VALIDATION_CRITICAL_HTML % msg
         window.ui.validationResultsHTML.setHtml(out)
         window.ui.validationResultsArea.setPlainText(out)
+        window.setWindowTitle(lng.VALIDATION_WINDOW_TITLE_CRITICAL)
         window.show()
         return
 
@@ -43,41 +43,42 @@ def validate(path):
     params = {
             'numerrors': error_count,
             'numwarnings': warning_count,
-            'strerrors':  error_count == 1 and 'error' or 'errors',
+            'strerrors': error_count == 1 and 'error' or 'errors',
             'strwarnings': warning_count == 1 and 'warning' or 'warnings',
             }
     if error_count and warning_count:
-        out += ('failed</strong> with %(numerrors)s %(strerrors)s and ' +
-            '%(numwarnings)s %(strwarnings)s.') % params
-        window.setWindowTitle('Validation results: fail')
+        out = lng.VALIDATION_ERRORS_WARNINGS_HTML % params
+        window.setWindowTitle(lng.VALIDATION_WINDOW_TITLE_FAIL)
     elif error_count:
-        out += 'failed</strong> with %(numerrors)s %(strerrors)s.' % params
-        window.setWindowTitle('Validation results: fail')
+        out = lng.VALIDATION_ERRORS_HTML % params
+        window.setWindowTitle(lng.VALIDATION_WINDOW_TITLE_FAIL)
     elif warning_count:
-        out += 'passed</strong> with %(numwarnings)s %(strwarnings)s.' % params
-        window.setWindowTitle('Validation results: pass with warnings')
+        out = lng.VALIDATION_WARNINGS_HTML % params
+        window.setWindowTitle(lng.VALIDATION_WINDOW_TITLE_WARNINGS)
     else:
-        out += 'succeeded</strong>.'
-        window.setWindowTitle('Validation results: pass')
+        out = lng.VALIDATION_PASS_HTML
+        window.setWindowTitle(lng.VALIDATION_WINDOW_TITLE_PASS)
 
-    out += '</p>\n\n'
+    out = '<p>' + out + '</p>\n\n'
 
     if error_count:
-        out += '<p><strong>Errors:</strong></p>\n<ul>\n'
-        for error in app.errors:
-            out += '<li>' + error + '</li>\n'
+        out += '<p><strong>%s</strong></p>\n<ul>\n' % lng.VALIDATION_STR_ERRORS
+        for item in app.errors:
+            out += '<li>%s</li>\n' % item
         out += '</ul>\n'
 
     if warning_count:
-        out += '<p><strong>Warnings:</strong></p>\n<ul>\n'
-        for warning in app.warnings:
-            out += '<li>' + warning + '</li>\n'
+        out += '<p><strong>%s</strong></p>\n<ul>\n' % \
+            lng.VALIDATION_STR_WARNINGS
+        for item in app.warnings:
+            out += '<li>%s</li>\n' % item
         out += '</ul>\n'
 
     if len(app.info):
-        out += '<p><strong>Information:</strong></p>\n<ul>\n'
-        for info in app.info:
-            out += '<li>' + info + '</li>\n'
+        out += '<p><strong>%s</strong></p>\n<ul>\n' % \
+            lng.VALIDATION_STR_INFORMATION
+        for item in app.info:
+            out += '<li>%s</li>\n' % item
         out += '</ul>\n'
 
     window.ui.validationResultsHTML.setHtml(out)

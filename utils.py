@@ -14,7 +14,7 @@ def ini_defined(val):
 
 
 def get_ini_str(iniconfig, section, key, default=None):
-    if not ini_defined(iniconfig[section]) or
+    if not ini_defined(iniconfig[section]) or \
     not ini_defined(iniconfig[section][key]):
         iniconfig[section][key] = default
         return default

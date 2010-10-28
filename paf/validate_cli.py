@@ -7,6 +7,7 @@ This is loaded from config.py.
 """
 
 import paf
+from languages import lng
 
 
 def validate(path):
@@ -27,50 +28,47 @@ def validate(path):
     try:
         app = paf.Package(path)
     except paf.PAFException as msg:
-        print 'Validation failed with a critical error: %s' % unicode(msg)
+        print lng.VALIDATION_CRITICAL % msg
         return 3
 
     error_count = len(app.errors)
     warning_count = len(app.warnings)
-    errwarn_dict = dict(
-            error_count=error_count,
-            warning_count=warning_count,
-            str_errors=error_count == 1 and 'error' or 'errors',
-            str_warnings=warning_count == 1 and 'warning' or 'warnings',
-            )
+    params = {
+            'numerrors': error_count,
+            'numwarnings': warning_count,
+            'strerrors': error_count == 1 and 'error' or 'errors',
+            'strwarnings': warning_count == 1 and 'warning' or 'warnings',
+            }
     if error_count and warning_count:
-        print ('Validation failed with %(error_count)s %(str_errors)s and ' +
-            '%(warning_count)s %(str_warnings)s.') % errwarn_dict
+        print lng.VALIDATION_ERRORS_WARNINGS % params
     elif error_count:
-        print 'Validation failed with %(error_count)s %(str_errors)s.' \
-                % errwarn_dict
+        print lng.VALIDATION_ERRORS % params
     elif warning_count:
-        print 'Validation passed with %(warning_count)s %(str_warnings)s.' \
-                % errwarn_dict
+        print lng.VALIDATION_WARNINGS % params
     else:
-        print 'Validation succeeded!'
+        print lng.VALIDATION_PASS
 
     print
 
     if error_count:
-        print 'Errors:'
-        print '======='
-        for error in app.errors:
-            print error
+        print lng.VALIDATION_STR_ERRORS + ':'
+        print '=' * (len(lng.VALIDATION_STR_ERRORS) + 1)
+        for item in app.errors:
+            print item
         print
 
     if warning_count:
-        print 'Warnings:'
-        print '========='
-        for warning in app.warnings:
-            print warning
+        print lng.VALIDATION_STR_WARNINGS + ':'
+        print '=' * (len(lng.VALIDATION_STR_WARNINGS) + 1)
+        for item in app.warnings:
+            print item
         print
 
     if len(app.info):
-        print 'Information:'
-        print '============'
-        for info in app.info:
-            print info
+        print lng.VALIDATION_STR_INFORMATION + ':'
+        print '=' * (len(lng.VALIDATION_STR_INFORMATION) + 1)
+        for item in app.info:
+            print item
         print
 
     if error_count:

@@ -4,6 +4,7 @@ from os.path import exists, isdir, isfile, join, abspath
 import os
 import config
 from utils import ini_defined, path_insensitive, _S as _
+from languages import lng
 from shutil import copy2 as copy
 from paf import PAFException
 
@@ -187,36 +188,30 @@ class Package:
         self.info = []
 
         if not self.launcher_is_pal:
-            self.info.append(_('The PortableApps.com Launcher is not used. ' +
-                               'Please consider using it.'))
-        #else:
-            #self.info.append(_('The app uses the PortableApps.com Launcher.'))
+            self.info.append(lng.NOT_USING_PAL)
 
         for directory in self._dirlist():
             if not isdir(self._path(*directory)):
-                self.errors.append(_('Directory %s is missing') %
-                        join(*directory))
+                self.errors.append(lng.DIRECTORY_MISSING % join(*directory))
 
         for filename in self._filelist():
-            if isdir(os.path.dirname(self._path(*filename))) and
+            if isdir(os.path.dirname(self._path(*filename))) and \
             not isfile(self._path(*filename)):
-                self.errors.append(_('File %s is missing') % join(*filename))
+                self.errors.append(lng.FILE_MISSING % join(*filename))
 
         for directory in self._recommended_dirs:
             if not isdir(self._path(*directory)):
-                self.warnings.append(_('Directory %s is missing') %
-                        join(*directory))
+                self.warnings.append(lng.DIRECTORY_MISSING % join(*directory))
 
         for filename in self._recommended_files:
-            if isdir(os.path.dirname(self._path(*filename))) and
+            if isdir(os.path.dirname(self._path(*filename))) and \
             not isfile(self._path(*filename)):
-                self.warnings.append(_('File %s is missing') % join(*filename))
+                self.warnings.append(lng.FILE_MISSING % join(*filename))
 
         for filename in self._suggested_files:
-            if isdir(os.path.dirname(self._path(*filename))) and
+            if isdir(os.path.dirname(self._path(*filename))) and \
             not isfile(self._path(*filename)):
-                self.info.append(_('Suggested file %s is missing') %
-                        join(*filename))
+                self.info.append(lng.SUGGESTED_FILE_MISSING % join(*filename))
 
         self.validate_appinfo()
 
@@ -227,14 +222,12 @@ def create_package(path):
         if isdir(path):
             pass  # Directory exists, fine.
         else:
-            raise PAFException(_('You provided a file rather than a ' +
-                'directory!'))
+            raise PAFException(lng.FILE_NOT_DIRECTORY)
     else:
-        raise PAFException(_('Package directory does not exist!'))
+        raise PAFException(lng.DIRECTORY_NOT_EXIST)
 
     if os.listdir(path):
-        raise PAFException(_('The directory you specified is not empty. ' +
-        'Please specify an empty directory.'))
+        raise PAFException(lng.DIRECTORY_NOT_EMPTY)
 
     package = Package(path)
     package.fix()
