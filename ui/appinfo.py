@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/appinfo.ui'
 #
-# Created: Sat Oct 30 21:05:21 2010
+# Created: Sat Oct 30 23:23:18 2010
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -386,10 +386,9 @@ class Ui_AppInfoDialog(object):
         self.verticalLayout_2.addWidget(self.AdvancedGroupBox)
         self.gridLayout.addLayout(self.verticalLayout_2, 0, 1, 1, 1)
         self.buttonBox = QtGui.QDialogButtonBox(AppInfoDialog)
-        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Close|QtGui.QDialogButtonBox.Save)
         self.buttonBox.setObjectName("buttonBox")
-        self.gridLayout.addWidget(self.buttonBox, 1, 1, 1, 1)
+        self.gridLayout.addWidget(self.buttonBox, 1, 0, 1, 2)
         self.NameLabel.setBuddy(self.Name)
         self.AppIDLabel.setBuddy(self.AppID)
         self.PublisherLabel.setBuddy(self.Publisher)
@@ -427,7 +426,7 @@ class Ui_AppInfoDialog(object):
         self.PackageVersionDot2.setText(QtGui.QApplication.translate("AppInfoDialog", ".", None, QtGui.QApplication.UnicodeUTF8))
         self.PackageVersionDot3.setText(QtGui.QApplication.translate("AppInfoDialog", ".", None, QtGui.QApplication.UnicodeUTF8))
         self.LicenseGroupBox.setTitle(QtGui.QApplication.translate("AppInfoDialog", "License", None, QtGui.QApplication.UnicodeUTF8))
-        self.Shareable.setText(QtGui.QApplication.translate("AppInfoDialog", "&Shareable", None, QtGui.QApplication.UnicodeUTF8))
+        self.Shareable.setText(QtGui.QApplication.translate("AppInfoDialog", "Sharea&ble", None, QtGui.QApplication.UnicodeUTF8))
         self.OpenSource.setText(QtGui.QApplication.translate("AppInfoDialog", "Op&en source", None, QtGui.QApplication.UnicodeUTF8))
         self.Freeware.setText(QtGui.QApplication.translate("AppInfoDialog", "&Freeware", None, QtGui.QApplication.UnicodeUTF8))
         self.CommercialUse.setText(QtGui.QApplication.translate("AppInfoDialog", "Co&mmercial use", None, QtGui.QApplication.UnicodeUTF8))

@@ -2,7 +2,8 @@
 
 # This file is for App/AppInfo/appinfo.ini validation
 
-from os.path import isfile, isdir
+from os import makedirs
+from os.path import exists, isfile, isdir
 from utils import ini_defined
 from languages import LANG
 import iniparse
@@ -270,7 +271,7 @@ class AppInfo(object):
                         dict(section='Control', key='Start'))
                 elif not isfile(self.package.path(start)):
                     self.errors.append(
-                            LANG.APPINFO_CONTROL_START_FILE_NOT_EXIST %
+                            LANG.APPINFO_CONTROL_FILE_NOT_EXIST %
                             dict(section='Control', key='Start'))
 
             if ini_defined(appinfo.Control.ExtractIcon) and \
@@ -335,6 +336,17 @@ class AppInfo(object):
     @_valid_appinfo
     def save(self):
         "Save the current state in appinfo.ini"
+
+        # Make sure the directory exists (Package.fix might potentially not
+        # have been called?)
+        if self.package.plugin:
+            appinfo_dir = self.package.path('Other', 'Source')
+        else:
+            appinfo_dir = self.package.path('App', 'AppInfo')
+        if not exists(appinfo_dir):
+            makedirs(appinfo_dir)
+
+        # Now write it
         appinfo = open(self._path, 'w')
-        appinfo.write(self.appinfo)
+        appinfo.write(unicode(self.appinfo))
         appinfo.close()

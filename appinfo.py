@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 from PyQt4 import QtGui
@@ -11,16 +12,14 @@ class AppInfoDialog(QtGui.QDialog):
         self.ui = Ui_AppInfoDialog()
         self.ui.setupUi(self)
 
-    def on_AppInfoDialog_accepted(self, *args):
-        print 'on_AppInfoDialog_accepted', args
-
-    def on_accepted(self, *args):
-        print 'on_accepted', args
-
-    def accepted(self, *args):
-        print 'accepted', args
+    def accept(self):
+        "User submits the form (presses Save). No validation at the moment."
+        self.save()
+        # Two buttons, Save and Close, let them press Close manually
+        #self.close()
 
     def on_DisplayVersionType_currentIndexChanged(self, value):
+        "Disable the DT/PR/revision number field for an official release."
         # Gets called twice: once with the index, once with a QString.
         if type(value) == int:
             return
@@ -34,21 +33,20 @@ class AppInfoDialog(QtGui.QDialog):
         self.package = package
         self.appinfo = appinfo = package.appinfo.appinfo
         if ini_defined(appinfo.Details):
-            self._load_set_value(self.ui.Name, appinfo.Details.Name)
-            self._load_set_value(self.ui.AppID, appinfo.Details.AppID)
-            self._load_set_value(self.ui.Publisher, appinfo.Details.Publisher)
-            self._load_set_value(self.ui.Homepage, appinfo.Details.Homepage)
-            self._load_set_value(self.ui.Category, appinfo.Details.Category)
-            self._load_set_value(self.ui.Description, appinfo.Details.Description)
-            self._load_set_value(self.ui.Language, appinfo.Details.Language)
-            self._load_set_value(self.ui.Trademarks, appinfo.Details.Trademarks)
+            self._fill(self.ui.Name, appinfo.Details.Name)
+            self._fill(self.ui.AppID, appinfo.Details.AppID)
+            self._fill(self.ui.Publisher, appinfo.Details.Publisher)
+            self._fill(self.ui.Homepage, appinfo.Details.Homepage)
+            self._fill(self.ui.Category, appinfo.Details.Category)
+            self._fill(self.ui.Description, appinfo.Details.Description)
+            self._fill(self.ui.Language, appinfo.Details.Language)
+            self._fill(self.ui.Trademarks, appinfo.Details.Trademarks)
 
         if ini_defined(appinfo.License):
-            self._load_set_value(self.ui.Shareable, appinfo.License.Shareable)
-            self._load_set_value(self.ui.OpenSource, appinfo.License.OpenSource)
-            self._load_set_value(self.ui.Freeware, appinfo.License.Freeware)
-            self._load_set_value(self.ui.CommercialUse,
-                    appinfo.License.CommercialUse)
+            self._fill(self.ui.Shareable, appinfo.License.Shareable)
+            self._fill(self.ui.OpenSource, appinfo.License.OpenSource)
+            self._fill(self.ui.Freeware, appinfo.License.Freeware)
+            self._fill(self.ui.CommercialUse, appinfo.License.CommercialUse)
 
         if ini_defined(appinfo.Version):
             if ini_defined(appinfo.Version.PackageVersion):
@@ -59,10 +57,10 @@ class AppInfoDialog(QtGui.QDialog):
                     pass
                 else:
                     if len(pv) == 4:
-                        self._load_set_value(self.ui.PackageVersion1, pv[0])
-                        self._load_set_value(self.ui.PackageVersion2, pv[1])
-                        self._load_set_value(self.ui.PackageVersion3, pv[2])
-                        self._load_set_value(self.ui.PackageVersion4, pv[3])
+                        self._fill(self.ui.PackageVersion1, pv[0])
+                        self._fill(self.ui.PackageVersion2, pv[1])
+                        self._fill(self.ui.PackageVersion3, pv[2])
+                        self._fill(self.ui.PackageVersion4, pv[3])
 
             # Split DisplayVersion into chunks
             if ini_defined(appinfo.Version.DisplayVersion):
@@ -85,37 +83,40 @@ class AppInfoDialog(QtGui.QDialog):
                         except ValueError:
                             split[1] = 0
 
-                        self._load_set_value(self.ui.DisplayVersionBase, split[0])
-                        self._load_set_value(self.ui.DisplayVersionType, target)
-                        self._load_set_value(self.ui.DisplayVersionNum, split[1])
+                        self._fill(self.ui.DisplayVersionBase, split[0])
+                        self._fill(self.ui.DisplayVersionType, target)
+                        self._fill(self.ui.DisplayVersionNum, split[1])
                         break
                 else:
-                    self._load_set_value(self.ui.DisplayVersionBase, dv)
-                    self._load_set_value(self.ui.DisplayVersionType,
+                    self._fill(self.ui.DisplayVersionBase, dv)
+                    self._fill(self.ui.DisplayVersionType,
                             '(official release)')
                     # TODO: this may not be necessary
                     self.ui.DisplayVersionNum.setEnabled(False)
 
-            if not package.eula_exists:
+            if not package.eula:
                 self.ui.EULAVersion.setEnabled(False)
-            self._load_set_value(self.ui.EULAVersion,
-                    appinfo.Version.EULAVersion)
+            self._fill(self.ui.EULAVersion, appinfo.Version.EULAVersion)
 
         # TODO: no Control section
         #if ini_defined(appinfo.Control):
 
         if ini_defined(appinfo.SpecialPaths):
-            self._load_set_value(self.ui.PluginsPath,
-                    appinfo.SpecialPaths.Plugins)
+            self._fill(self.ui.PluginsPath, appinfo.SpecialPaths.Plugins)
 
         if ini_defined(appinfo.Dependencies):
-            self._load_set_value(self.ui.UsesJava,
-                    appinfo.Dependencies.UsesJava)
-            self._load_set_value(self.ui.UsesDotNetVersion,
+            self._fill(self.ui.UsesJava, appinfo.Dependencies.UsesJava)
+            self._fill(self.ui.UsesDotNetVersion,
                     appinfo.Dependencies.UsesDotNetVersion)
 
-    def save_appinfo(self):
-        package = self.package
+    def save(self):
+        "Loads the values from the GUI and saves them to appinfo.ini."
+        self.update()
+        self.package.appinfo.save()
+
+    def update(self):
+        "Updates the stored appinfo based on the values in the GUI."
+
         appinfo = self.appinfo
 
         appinfo.Format.Type = 'PortableApps.comFormat'
@@ -166,16 +167,11 @@ class AppInfoDialog(QtGui.QDialog):
             appinfo.Dependencies.UsesDotNetVersion = \
                     self.ui.UsesDotNetVersion.currentText()
 
-        print 'Not saving appinfo, but here it is:'
-        print '-----'
-        print appinfo
-        print '-----'
-
-    def _load_set_value(self, field, value):
+    def _fill(self, field, value):
         if ini_defined(value):
             if isinstance(field, QtGui.QComboBox):
                 index = field.findText(value)
-                if index > -1:  # TODO: I've assumed invalid is -1?
+                if index > -1:
                     field.setCurrentIndex(index)
                 elif field.isEditable():
                     field.setEditText(index)
@@ -207,12 +203,14 @@ def show():
     window.show()
     return window
 
+
+def main(argv):
+    import paf
+    app = QtGui.QApplication(argv)
+    window = show()
+    window.load_package(paf.Package(argv[1]))
+    return app.exec_()
+
 if __name__ == '__main__':
     import sys
-    import paf
-    app = QtGui.QApplication(sys.argv)
-    window = show()
-    window.load_package(paf.Package(sys.argv[1]))
-    exit_code = app.exec_()
-    window.save_appinfo()
-    sys.exit(exit_code)
+    sys.exit(main(sys.argv))

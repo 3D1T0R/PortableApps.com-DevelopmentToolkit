@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/validationsimple.ui'
 #
-# Created: Sat Oct 30 21:05:21 2010
+# Created: Sat Oct 30 23:23:18 2010
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
