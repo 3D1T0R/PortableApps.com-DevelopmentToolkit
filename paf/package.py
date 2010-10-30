@@ -6,10 +6,15 @@ import config
 from utils import ini_defined, path_insensitive, _S as _
 from languages import lng
 from shutil import copy2 as copy
+import paf
 from paf import PAFException
 
 
-class Package:
+class Package(object):
+    """
+    Manages all the details of a package in (or not in!) PortableApps.com
+    Format.
+    """
     current_package = None
 
     _mandatory_dirs = [
@@ -77,13 +82,13 @@ class Package:
 
     @property
     def appid(self):
-        if hasattr(self, 'appinfo') \
-        and ini_defined(self.appinfo.Details):
-            if ini_defined(self.appinfo.Details.AppID):
-                return self.appinfo.Details.AppID
+        "Get the AppID of the package."
+        if ini_defined(self.appinfo.appinfo.Details):
+            if ini_defined(self.appinfo.appinfo.Details.AppID):
+                return self.appinfo.appinfo.Details.AppID
             # Compatibility with a former typo in the PAF spec
-            elif ini_defined(self.appinfo.Details.AppId):
-                return self.appinfo.Details.AppId
+            elif ini_defined(self.appinfo.appinfo.Details.AppId):
+                return self.appinfo.appinfo.Details.AppId
         else:
             return None
 
@@ -100,7 +105,7 @@ class Package:
             raise PAFException(_("Package directory does not exist!"))
 
         # Check if it's a plugin installer
-        if isfile(self._path('Other', 'Source', 'plugininstaller.ini')):
+        if isfile(self.path('Other', 'Source', 'plugininstaller.ini')):
             self.plugin = True
             self._mandatory_files[self._mandatory_files.index(('App',
                 'AppInfo', 'appinfo.ini'))] = \
@@ -110,9 +115,9 @@ class Package:
 
         if launcher_is_pal == None:
             # Auto-detect; new apps: yes. Old apps: no
-            if isdir(self._path('App', 'AppInfo')):
+            if isdir(self.path('App', 'AppInfo')):
                 # App/AppInfo exists, what about App/AppInfo/Launcher?
-                self.launcher_is_pal = isdir(self._path('App', 'AppInfo',
+                self.launcher_is_pal = isdir(self.path('App', 'AppInfo',
                     'Launcher'))
             else:
                 # New app, so use PAL.
@@ -123,22 +128,29 @@ class Package:
             raise PAFException("Invalid value given for launcher_is_pal, " +
                 "must be None, True or False.")
 
+        self.appinfo = paf.AppInfo(self)
+
         self.validate()
 
-    def _path(self, *path):
+    def path(self, *path):
+        """
+        Get the absolute path to a package-relative path. When given multiple
+        arguments, it joins them with the system directory separator.
+        """
         return path_insensitive(join(self._directory, *path))
 
     def _dirlist(self, recommended=False):
         dirlist = self._mandatory_dirs
         if recommended:
-            filelist += self._recommended_dirs
+            dirlist += self._recommended_dirs
         if self.launcher_is_pal:
             dirlist += self._pal_dirs
         return dirlist
 
     def fix_missing_directories(self):
+        "Create required directories that are missing in the package."
         for dirname in self._dirlist(recommended=True):
-            dirpath = self._path(*dirname)
+            dirpath = self.path(*dirname)
             if exists(dirpath):
                 if isdir(dirpath):
                     pass  # Directory exists, fine.
@@ -157,8 +169,9 @@ class Package:
         return filelist
 
     def fix_missing_files(self):
+        "Create required files that are missing in the package."
         for filename in self._filelist(recommended=True):
-            filepath = self._path(*filename)
+            filepath = self.path(*filename)
             if exists(filepath):
                 if isfile(filepath):
                     pass  # File exists, fine.
@@ -171,6 +184,7 @@ class Package:
                         filepath)
 
     def fix(self):
+        "Fix everything possible in the package."
         self.fix_missing_directories()
         self.fix_missing_files()
         self.validate()
@@ -181,7 +195,7 @@ class Package:
         compliance.
         """
 
-        self.init_appinfo()
+        self.appinfo.load()
 
         self.errors = []
         self.warnings = []
@@ -191,29 +205,29 @@ class Package:
             self.info.append(lng.NOT_USING_PAL)
 
         for directory in self._dirlist():
-            if not isdir(self._path(*directory)):
+            if not isdir(self.path(*directory)):
                 self.errors.append(lng.DIRECTORY_MISSING % join(*directory))
 
         for filename in self._filelist():
-            if isdir(os.path.dirname(self._path(*filename))) and \
-            not isfile(self._path(*filename)):
+            if isdir(os.path.dirname(self.path(*filename))) and \
+            not isfile(self.path(*filename)):
                 self.errors.append(lng.FILE_MISSING % join(*filename))
 
         for directory in self._recommended_dirs:
-            if not isdir(self._path(*directory)):
+            if not isdir(self.path(*directory)):
                 self.warnings.append(lng.DIRECTORY_MISSING % join(*directory))
 
         for filename in self._recommended_files:
-            if isdir(os.path.dirname(self._path(*filename))) and \
-            not isfile(self._path(*filename)):
+            if isdir(os.path.dirname(self.path(*filename))) and \
+            not isfile(self.path(*filename)):
                 self.warnings.append(lng.FILE_MISSING % join(*filename))
 
         for filename in self._suggested_files:
-            if isdir(os.path.dirname(self._path(*filename))) and \
-            not isfile(self._path(*filename)):
+            if isdir(os.path.dirname(self.path(*filename))) and \
+            not isfile(self.path(*filename)):
                 self.info.append(lng.SUGGESTED_FILE_MISSING % join(*filename))
 
-        self.validate_appinfo()
+        self.appinfo.validate()
 
     @property
     def eula(self):
@@ -234,7 +248,7 @@ class Package:
             eula_path = join('Other', 'Source', 'EULA')
 
         for extension in ('rtf', 'txt'):
-            if isfile(self._path('%s.%s' % (eula_path, extension))):
+            if isfile(self.path('%s.%s' % (eula_path, extension))):
                 return '%s.%s' % (eula_path, extension)
 
         return None
