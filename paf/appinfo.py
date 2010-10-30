@@ -196,16 +196,9 @@ def validate_appinfo(self):
                 self.errors.append(lng.APPINFO_BOOL_BAD %
                 dict(section='License', key=key))
 
-        if self.plugin:
-            eula_path = join('Other', 'Source', 'PluginEULA')
-        else:
-            eula_path = join('Other', 'Source', 'EULA')
-
-        if ini_defined(appinfo.License.EULAVersion) and \
-        not isfile(self._path('%s.rtf' % eula_path)) and \
-        not isfile(self._path('%s.txt' % eula_path)):
+        if ini_defined(appinfo.License.EULAVersion) and not self.eula:
             self.errors.append(lng.APPINFO_LICENSE_EULAVERSION_NO_EULA
-            % dict(eula=eula_path))
+            % dict(eula=self.eula))
 
     if ini_defined(appinfo.Version):
         if ini_defined(appinfo.Version.PackageVersion):

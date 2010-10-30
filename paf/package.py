@@ -215,6 +215,30 @@ class Package:
 
         self.validate_appinfo()
 
+    @property
+    def eula(self):
+        """
+        Checks if an EULA exists and returns the path (relative to the package
+        directory). If there is no EULA, returns None.
+
+        For a normal package, the EULA will be Other\Source\EULA.rtf or
+        Other\Source\EULA.txt.
+
+        For a plugin package, the EULA will be Other\Source\PluginEULA.rtf or
+        Other\Source\PluginEULA.txt.
+        """
+
+        if self.plugin:
+            eula_path = join('Other', 'Source', 'PluginEULA')
+        else:
+            eula_path = join('Other', 'Source', 'EULA')
+
+        for extension in ('rtf', 'txt'):
+            if isfile(self._path('%s.%s' % (eula_path, extension))):
+                return '%s.%s' % (eula_path, extension)
+
+        return None
+
 
 def create_package(path):
     "Create an app package in PortableApps.com Format™"
