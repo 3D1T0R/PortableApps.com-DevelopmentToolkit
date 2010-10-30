@@ -7,7 +7,7 @@ This is loaded from config.py.
 """
 
 import paf
-from languages import lng
+from languages import LANG
 
 
 def validate(path):
@@ -28,7 +28,7 @@ def validate(path):
     try:
         app = paf.Package(path)
     except paf.PAFException as msg:
-        print lng.VALIDATION_CRITICAL % msg
+        print LANG.VALIDATION_CRITICAL % msg
         return 3
 
     error_count = len(app.errors)
@@ -40,33 +40,33 @@ def validate(path):
             'strwarnings': warning_count == 1 and 'warning' or 'warnings',
             }
     if error_count and warning_count:
-        print lng.VALIDATION_ERRORS_WARNINGS % params
+        print LANG.VALIDATION_ERRORS_WARNINGS % params
     elif error_count:
-        print lng.VALIDATION_ERRORS % params
+        print LANG.VALIDATION_ERRORS % params
     elif warning_count:
-        print lng.VALIDATION_WARNINGS % params
+        print LANG.VALIDATION_WARNINGS % params
     else:
-        print lng.VALIDATION_PASS
+        print LANG.VALIDATION_PASS
 
     print
 
     if error_count:
-        print lng.VALIDATION_STR_ERRORS + ':'
-        print '=' * (len(lng.VALIDATION_STR_ERRORS) + 1)
+        print LANG.VALIDATION_STR_ERRORS + ':'
+        print '=' * (len(LANG.VALIDATION_STR_ERRORS) + 1)
         for item in app.errors:
             print item
         print
 
     if warning_count:
-        print lng.VALIDATION_STR_WARNINGS + ':'
-        print '=' * (len(lng.VALIDATION_STR_WARNINGS) + 1)
+        print LANG.VALIDATION_STR_WARNINGS + ':'
+        print '=' * (len(LANG.VALIDATION_STR_WARNINGS) + 1)
         for item in app.warnings:
             print item
         print
 
     if len(app.info):
-        print lng.VALIDATION_STR_INFORMATION + ':'
-        print '=' * (len(lng.VALIDATION_STR_INFORMATION) + 1)
+        print LANG.VALIDATION_STR_INFORMATION + ':'
+        print '=' * (len(LANG.VALIDATION_STR_INFORMATION) + 1)
         for item in app.info:
             print item
         print

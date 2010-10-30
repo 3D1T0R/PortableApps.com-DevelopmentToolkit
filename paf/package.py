@@ -4,7 +4,7 @@ from os.path import exists, isdir, isfile, join, abspath
 import os
 import config
 from utils import ini_defined, path_insensitive, _S as _
-from languages import lng
+from languages import LANG
 from shutil import copy2 as copy
 import paf
 from paf import PAFException
@@ -202,30 +202,30 @@ class Package(object):
         self.info = []
 
         if not self.launcher_is_pal:
-            self.info.append(lng.NOT_USING_PAL)
+            self.info.append(LANG.NOT_USING_PAL)
 
         for directory in self._dirlist():
             if not isdir(self.path(*directory)):
-                self.errors.append(lng.DIRECTORY_MISSING % join(*directory))
+                self.errors.append(LANG.DIRECTORY_MISSING % join(*directory))
 
         for filename in self._filelist():
             if isdir(os.path.dirname(self.path(*filename))) and \
             not isfile(self.path(*filename)):
-                self.errors.append(lng.FILE_MISSING % join(*filename))
+                self.errors.append(LANG.FILE_MISSING % join(*filename))
 
         for directory in self._recommended_dirs:
             if not isdir(self.path(*directory)):
-                self.warnings.append(lng.DIRECTORY_MISSING % join(*directory))
+                self.warnings.append(LANG.DIRECTORY_MISSING % join(*directory))
 
         for filename in self._recommended_files:
             if isdir(os.path.dirname(self.path(*filename))) and \
             not isfile(self.path(*filename)):
-                self.warnings.append(lng.FILE_MISSING % join(*filename))
+                self.warnings.append(LANG.FILE_MISSING % join(*filename))
 
         for filename in self._suggested_files:
             if isdir(os.path.dirname(self.path(*filename))) and \
             not isfile(self.path(*filename)):
-                self.info.append(lng.SUGGESTED_FILE_MISSING % join(*filename))
+                self.info.append(LANG.SUGGESTED_FILE_MISSING % join(*filename))
 
         self.appinfo.validate()
 
@@ -260,12 +260,12 @@ def create_package(path):
         if isdir(path):
             pass  # Directory exists, fine.
         else:
-            raise PAFException(lng.FILE_NOT_DIRECTORY)
+            raise PAFException(LANG.FILE_NOT_DIRECTORY)
     else:
-        raise PAFException(lng.DIRECTORY_NOT_EXIST)
+        raise PAFException(LANG.DIRECTORY_NOT_EXIST)
 
     if os.listdir(path):
-        raise PAFException(lng.DIRECTORY_NOT_EMPTY)
+        raise PAFException(LANG.DIRECTORY_NOT_EMPTY)
 
     package = Package(path)
     package.fix()

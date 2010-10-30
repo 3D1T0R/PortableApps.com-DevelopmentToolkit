@@ -4,7 +4,7 @@
 
 from os.path import isfile, isdir
 from utils import ini_defined
-from languages import lng
+from languages import LANG
 import iniparse
 from paf import FORMAT_VERSION, PAFException
 from orderedset import OrderedSet
@@ -22,7 +22,7 @@ def _valid_appinfo(func):
                 raise Exception()
         except:  # Could potentially be Exception or NameError
             # Naturally though this should never happen.
-            raise PAFException(lng.PACKAGE_NOT_INITIALISED)
+            raise PAFException(LANG.PACKAGE_NOT_INITIALISED)
 
         func(self, *args, **kwargs)
 
@@ -98,11 +98,11 @@ class AppInfo(object):
         # TODO: style validation
 
         for missing in self._sections_required - OrderedSet(appinfo):
-            self.errors.append(lng.APPINFO_SECTION_MISSING % missing)
+            self.errors.append(LANG.APPINFO_SECTION_MISSING % missing)
 
         for extra in OrderedSet(appinfo) \
         - self._sections_required - self._sections_optional:
-            self.errors.append(lng.APPINFO_SECTION_EXTRA % extra)
+            self.errors.append(LANG.APPINFO_SECTION_EXTRA % extra)
 
         for section in (self._sections_required | self._sections_optional) & \
                 appinfo:
@@ -112,45 +112,45 @@ class AppInfo(object):
                 continue
 
             for missing in self._keys_required[section] - appinfo[section]:
-                self.errors.append(lng.APPINFO_VALUE_MISSING %
+                self.errors.append(LANG.APPINFO_VALUE_MISSING %
                     dict(section=section, key=missing))
 
             for extra in OrderedSet(appinfo[section]) \
             - self._keys_required[section] - self._keys_optional[section]:
-                self.errors.append(lng.APPINFO_VALUE_EXTRA %
+                self.errors.append(LANG.APPINFO_VALUE_EXTRA %
                     dict(section=section, key=extra))
 
         if ini_defined(appinfo.Format):
             if appinfo.Format.Type != 'PortableApps.comFormat':
-                self.errors.append(lng.APPINFO_BAD_FORMAT_TYPE)
+                self.errors.append(LANG.APPINFO_BAD_FORMAT_TYPE)
 
             if appinfo.Format.Version != FORMAT_VERSION:
                 if appinfo.Format.Version in ('0.90', '0.91', '1.0'):
-                    self.warnings.append(lng.APPINFO_OLD_FORMAT_VERSION
+                    self.warnings.append(LANG.APPINFO_OLD_FORMAT_VERSION
                     % dict(old_version=appinfo.Format.Version,
                         current_version=FORMAT_VERSION))
                 else:
-                    self.errors.append(lng.APPINFO_BAD_FORMAT_VERSION
+                    self.errors.append(LANG.APPINFO_BAD_FORMAT_VERSION
                             % FORMAT_VERSION)
 
         if ini_defined(appinfo.Details):
             # Name: no real validation
             if ini_defined(appinfo.Details.Name) and \
                     '&' in appinfo.Details.Name:
-                self.warnings.append(lng.APPINFO_DETAILS_NAME_AMP)
+                self.warnings.append(LANG.APPINFO_DETAILS_NAME_AMP)
 
             # AppID
             if ini_defined(appinfo.Details.AppID) and \
             OrderedSet(appinfo.Details.AppID) - '0123456789.-+_' - \
             'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz':
-                self.errors.append(lng.APPINFO_DETAILS_APPID_BAD)
+                self.errors.append(LANG.APPINFO_DETAILS_APPID_BAD)
 
             # Publisher: no validation
 
             # Homepage: no validation
             if ini_defined(appinfo.Details.Homepage) and \
             appinfo.Details.Homepage.lower().startswith('http://'):
-                self.info.append(lng.APPINFO_DETAILS_HOMEPAGE_HTTP)
+                self.info.append(LANG.APPINFO_DETAILS_HOMEPAGE_HTTP)
 
             # Category
             if ini_defined(appinfo.Details.Category) and \
@@ -158,17 +158,17 @@ class AppInfo(object):
                             'Development', 'Education', 'Games',
                             'Graphics & Pictures', 'Internet', 'Music & Video',
                             'Office', 'Security', 'Utilities'):
-                self.errors.append(lng.APPINFO_DETAILS_CATEGORY_BAD)
+                self.errors.append(LANG.APPINFO_DETAILS_CATEGORY_BAD)
 
             # Description: length
             if ini_defined(appinfo.Details.Description):
                 chars = len(appinfo.Details.Description)
                 if chars > 512:
                     self.errors.append(
-                            lng.APPINFO_DETAILS_DESCRIPTION_TOO_LONG)
+                            LANG.APPINFO_DETAILS_DESCRIPTION_TOO_LONG)
                 elif chars > 150:
-                    self.warnings.append(lng.APPINFO_DETAILS_DESCRIPTION_LONG %
-                            chars)
+                    self.warnings.append(LANG.APPINFO_DETAILS_DESCRIPTION_LONG
+                            % chars)
 
             # Language
             if ini_defined(appinfo.Details.Language) and \
@@ -189,7 +189,7 @@ class AppInfo(object):
                     'TradChinese', 'Turkish', 'Ukranian', 'Uzbek', 'Valencian',
                     'Vietnamese', 'Welsh', 'Yoruba'):
                 # Language names omitted, it would be too long otherwise.
-                self.errors.append(lng.APPINFO_DETAILS_LANGUAGE_BAD)
+                self.errors.append(LANG.APPINFO_DETAILS_LANGUAGE_BAD)
 
             # Trademarks: no validation
 
@@ -199,22 +199,22 @@ class AppInfo(object):
             if ini_defined(appinfo.Details.PluginType):
                 if not self.package.plugin:
                     self.errors.append(
-                            lng.APPINFO_DETAILS_PLUGINTYPE_NOT_PLUGIN)
+                            LANG.APPINFO_DETAILS_PLUGINTYPE_NOT_PLUGIN)
                 elif appinfo.Details.PluginType != 'CommonFiles':
                     self.errors.append(
-                            lng.APPINFO_DETAILS_PLUGINTYPE_BAD)
+                            LANG.APPINFO_DETAILS_PLUGINTYPE_BAD)
 
         if ini_defined(appinfo.License):
             for key in ('Shareable', 'OpenSource', 'Freeware',
                     'CommercialUse'):
                 if ini_defined(appinfo.License[key]) and \
                 appinfo.License[key] not in ('true', 'false'):
-                    self.errors.append(lng.APPINFO_BOOL_BAD %
+                    self.errors.append(LANG.APPINFO_BOOL_BAD %
                     dict(section='License', key=key))
 
             eula = self.package.eula
             if ini_defined(appinfo.License.EULAVersion) and not eula:
-                self.errors.append(lng.APPINFO_LICENSE_EULAVERSION_NO_EULA
+                self.errors.append(LANG.APPINFO_LICENSE_EULAVERSION_NO_EULA
                 % dict(eula=eula))
 
         if ini_defined(appinfo.Version):
@@ -224,58 +224,58 @@ class AppInfo(object):
                             appinfo.Version.PackageVersion.split('.'))) != 4:
                         raise ValueError
                 except ValueError:
-                    self.errors.append(lng.APPINFO_VERSION_PACKAGEVERSION_BAD)
+                    self.errors.append(LANG.APPINFO_VERSION_PACKAGEVERSION_BAD)
             # DisplayVersion: no validation yet (TODO)
 
         if ini_defined(appinfo.SpecialPaths):
             if not ini_defined(appinfo.SpecialPaths.Plugins):
-                self.warnings.append(lng.APPINFO_SPECIALPATHS_OMIT)
+                self.warnings.append(LANG.APPINFO_SPECIALPATHS_OMIT)
             elif appinfo.SpecialPaths.Plugins == 'NONE':
-                self.warnings.append(lng.APPINFO_OMIT_DEFAULT % dict(
+                self.warnings.append(LANG.APPINFO_OMIT_DEFAULT % dict(
                     section='SpecialPaths', key='Plugins', default='NONE'))
             elif not isdir(self.package.path(appinfo.SpecialPaths.Plugins)):
-                self.errors.append(lng.APPINFO_SPECIALPATHS_PLUGINS_BAD)
+                self.errors.append(LANG.APPINFO_SPECIALPATHS_PLUGINS_BAD)
 
         if ini_defined(appinfo.Dependencies):
             if ini_defined(appinfo.Dependencies.UsesJava):
                 if appinfo.Dependencies.UsesJava == 'false':
-                    self.warnings.append(lng.APPINFO_OMIT_DEFAULT %
+                    self.warnings.append(LANG.APPINFO_OMIT_DEFAULT %
                             dict(section='Dependencies', key='UsesJava',
                                 default='false'))
                 elif appinfo.Dependencies.UsesJava != 'true':
-                    self.errors.append(lng.APPINFO_DEPENDENCIES_JAVA_BAD)
+                    self.errors.append(LANG.APPINFO_DEPENDENCIES_JAVA_BAD)
 
             if ini_defined(appinfo.Dependencies.UsesDotNetVersion):
                 if appinfo.Dependencies.UsesDotNetVersion == '':
-                    self.warnings.append(lng.APPINFO_OMIT_EMPTY %
+                    self.warnings.append(LANG.APPINFO_OMIT_EMPTY %
                         dict(section='Dependencies', key='UsesDotNetVersion'))
                 elif appinfo.Dependencies.UsesDotNetVersion \
                 not in ('1.1', '2.0', '3.0', '3.5'):
                     self.warnings.append(
-                    lng.APPINFO_DEPENDENCIES_USESDOTNETVERSION_PROBABLY_BAD)
+                    LANG.APPINFO_DEPENDENCIES_USESDOTNETVERSION_PROBABLY_BAD)
                 else:
                     try:
                         map(int,
                             appinfo.Dependencies.UsesDotNetVersion.split('.'))
                     except ValueError:
                         self.errors.append(
-                            lng.APPINFO_DEPENDENCIES_USESDOTNETVERSION_BAD)
+                            LANG.APPINFO_DEPENDENCIES_USESDOTNETVERSION_BAD)
 
         if ini_defined(appinfo.Control):
             if ini_defined(appinfo.Control.Start):
                 start = appinfo.Control.Start
                 if '/' in start or '\\' in start:
                     self.warnings.append(
-                        lng.APPINFO_CONTROL_START_NO_SUBDIRECTORIES %
+                        LANG.APPINFO_CONTROL_START_NO_SUBDIRS %
                         dict(section='Control', key='Start'))
                 elif not isfile(self.package.path(start)):
                     self.errors.append(
-                            lng.APPINFO_CONTROL_START_FILE_NOT_EXIST %
+                            LANG.APPINFO_CONTROL_START_FILE_NOT_EXIST %
                             dict(section='Control', key='Start'))
 
             if ini_defined(appinfo.Control.ExtractIcon) and \
             not isfile(self.package.path(appinfo.Control.ExtractIcon)):
-                self.errors.append(lng.APPINFO_CONTROL_FILE_NOT_EXIST %
+                self.errors.append(LANG.APPINFO_CONTROL_FILE_NOT_EXIST %
                     dict(section='Control', key='ExtractIcon'))
 
             if ini_defined(appinfo.Control.Icons):
@@ -295,12 +295,12 @@ class AppInfo(object):
                                 start = appinfo.Control['Start%d' % i]
                                 if '/' in start or '\\' in start:
                                     self.warnings.append(
-                                    lng.APPINFO_CONTROL_START_NO_SUBDIRECTORIES
+                                    LANG.APPINFO_CONTROL_START_NO_SUBDIRS
                                     %
                                     dict(section='Control', key='Start%d' % i))
                                 elif not isfile(self.package.path(start)):
                                     self.errors.append(
-                                        lng.APPINFO_CONTROL_FILE_NOT_EXIST %
+                                        LANG.APPINFO_CONTROL_FILE_NOT_EXIST %
                                         dict(section='Control', key='Start%d' %
                                             i))
 
@@ -310,20 +310,20 @@ class AppInfo(object):
                                 % i]) and not isfile(self.package.path(
                                     appinfo.Control['ExtractIcon%d' % i])):
                                 self.errors.append(
-                                lng.APPINFO_CONTROL_FILE_NOT_EXIST %
+                                LANG.APPINFO_CONTROL_FILE_NOT_EXIST %
                                 dict(section='Control',
                                     key='ExtractIcon%d' % i))
 
                 except ValueError:
-                    self.errors.append(lng.APPINFO_CONTROL_ICONS_BAD)
+                    self.errors.append(LANG.APPINFO_CONTROL_ICONS_BAD)
 
                 for missing in control_required - appinfo.Control:
-                    self.errors.append(lng.APPINFO_VALUE_MISSING %
+                    self.errors.append(LANG.APPINFO_VALUE_MISSING %
                         dict(section='Control', key=missing))
 
                 for extra in OrderedSet(appinfo.Control) \
                 - control_required - control_optional:
-                    self.errors.append(lng.APPINFO_VALUE_EXTRA %
+                    self.errors.append(LANG.APPINFO_VALUE_EXTRA %
                         dict(section='Control', key=extra))
 
     @_valid_appinfo

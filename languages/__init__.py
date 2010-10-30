@@ -1,17 +1,17 @@
 """
-Language handling and i18n. With the exception of language files, ``lng`` is
+Language handling and i18n. With the exception of language files, ``LANG`` is
 the only thing from this class which should be used. It's a proxy object which
 gives the strings in the currently selected language.
 
 Usage::
 
-    from languages import lng
-    print lng.SOME_STRING
+    from languages import LANG
+    print LANG.SOME_STRING
 """
 
 import config
 
-__all__ = ['lng']
+__all__ = ['LANG']
 
 
 class Language(object):
@@ -81,7 +81,7 @@ class Language(object):
     APPINFO_DEPENDENCIES_USESDOTNETVERSION_PROBABLY_BAD = 'appinfo.ini: [Dependencies]:UsesDotNetVersion should probably be unset or 1.1, 2.0, 3.0 or 3.5; you probably have an invalid value'
 
     # [Control]
-    APPINFO_CONTROL_START_NO_SUBDIRECTORIES = 'appinfo.ini: [%(section)s]:%(key)s should not include subdirectories'
+    APPINFO_CONTROL_START_NO_SUBDIRS = 'appinfo.ini: [%(section)s]:%(key)s should not include subdirectories'
     APPINFO_CONTROL_FILE_NOT_EXIST = 'appinfo.ini: the file specified in [%(section)s]:%(key)s does not exist'
     APPINFO_CONTROL_ICONS_BAD = 'appinfo.ini: [Control]:Icons must be a number greater than 0'
 
@@ -143,4 +143,4 @@ class _LanguagesController(object):
 
         config.settings.Main.Language = lang
 
-lng = _LanguagesController()
+LANG = _LanguagesController()

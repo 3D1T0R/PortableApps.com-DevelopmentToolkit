@@ -10,7 +10,7 @@ from PyQt4.QtGui import QDialog
 import paf
 from ui.validationsimple import Ui_ValidationDialog
 from utils import center_window
-from languages import lng
+from languages import LANG
 
 
 class ValidationDialog(QDialog):
@@ -31,10 +31,10 @@ def validate(path):
     try:
         app = paf.Package(path)
     except paf.PAFException as msg:
-        out = lng.VALIDATION_CRITICAL_HTML % msg
+        out = LANG.VALIDATION_CRITICAL_HTML % msg
         window.ui.validationResultsHTML.setHtml(out)
         window.ui.validationResultsArea.setPlainText(out)
-        window.setWindowTitle(lng.VALIDATION_WINDOW_TITLE_CRITICAL)
+        window.setWindowTitle(LANG.VALIDATION_WINDOW_TITLE_CRITICAL)
         window.show()
         return
 
@@ -47,36 +47,36 @@ def validate(path):
             'strwarnings': warning_count == 1 and 'warning' or 'warnings',
             }
     if error_count and warning_count:
-        out = lng.VALIDATION_ERRORS_WARNINGS_HTML % params
-        window.setWindowTitle(lng.VALIDATION_WINDOW_TITLE_FAIL)
+        out = LANG.VALIDATION_ERRORS_WARNINGS_HTML % params
+        window.setWindowTitle(LANG.VALIDATION_WINDOW_TITLE_FAIL)
     elif error_count:
-        out = lng.VALIDATION_ERRORS_HTML % params
-        window.setWindowTitle(lng.VALIDATION_WINDOW_TITLE_FAIL)
+        out = LANG.VALIDATION_ERRORS_HTML % params
+        window.setWindowTitle(LANG.VALIDATION_WINDOW_TITLE_FAIL)
     elif warning_count:
-        out = lng.VALIDATION_WARNINGS_HTML % params
-        window.setWindowTitle(lng.VALIDATION_WINDOW_TITLE_WARNINGS)
+        out = LANG.VALIDATION_WARNINGS_HTML % params
+        window.setWindowTitle(LANG.VALIDATION_WINDOW_TITLE_WARNINGS)
     else:
-        out = lng.VALIDATION_PASS_HTML
-        window.setWindowTitle(lng.VALIDATION_WINDOW_TITLE_PASS)
+        out = LANG.VALIDATION_PASS_HTML
+        window.setWindowTitle(LANG.VALIDATION_WINDOW_TITLE_PASS)
 
     out = '<p>' + out + '</p>\n\n'
 
     if error_count:
-        out += '<p><strong>%s</strong></p>\n<ul>\n' % lng.VALIDATION_STR_ERRORS
+        out += '<p><strong>%s</strong></p>\n<ul>\n' % LANG.VALIDATION_STR_ERRORS
         for item in app.errors:
             out += '<li>%s</li>\n' % item
         out += '</ul>\n'
 
     if warning_count:
         out += '<p><strong>%s</strong></p>\n<ul>\n' % \
-            lng.VALIDATION_STR_WARNINGS
+            LANG.VALIDATION_STR_WARNINGS
         for item in app.warnings:
             out += '<li>%s</li>\n' % item
         out += '</ul>\n'
 
     if len(app.info):
         out += '<p><strong>%s</strong></p>\n<ul>\n' % \
-            lng.VALIDATION_STR_INFORMATION
+            LANG.VALIDATION_STR_INFORMATION
         for item in app.info:
             out += '<li>%s</li>\n' % item
         out += '</ul>\n'
