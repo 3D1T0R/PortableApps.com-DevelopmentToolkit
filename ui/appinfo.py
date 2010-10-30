@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/appinfo.ui'
 #
-# Created: Thu Oct 28 15:19:36 2010
+# Created: Sat Oct 30 21:05:21 2010
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,6 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_AppInfoDialog(object):
     def setupUi(self, AppInfoDialog):
         AppInfoDialog.setObjectName("AppInfoDialog")
+        AppInfoDialog.resize(856, 453)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         AppInfoDialog.setWindowIcon(icon)
@@ -389,6 +390,19 @@ class Ui_AppInfoDialog(object):
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.gridLayout.addWidget(self.buttonBox, 1, 1, 1, 1)
+        self.NameLabel.setBuddy(self.Name)
+        self.AppIDLabel.setBuddy(self.AppID)
+        self.PublisherLabel.setBuddy(self.Publisher)
+        self.HomepageLabel.setBuddy(self.Homepage)
+        self.CategoryLabel.setBuddy(self.Category)
+        self.DescriptionLabel.setBuddy(self.Description)
+        self.LanguageLabel.setBuddy(self.Language)
+        self.TrademarksLabel.setBuddy(self.Trademarks)
+        self.DisplayVersionLabel.setBuddy(self.DisplayVersionBase)
+        self.PackageVersionLabel.setBuddy(self.PackageVersion1)
+        self.PluginsPathLabel.setBuddy(self.PluginsPath)
+        self.UsesDotNetVersionLabel.setBuddy(self.UsesDotNetVersion)
+        self.EULAVersionLabel.setBuddy(self.EULAVersion)
 
         self.retranslateUi(AppInfoDialog)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("accepted()"), AppInfoDialog.accept)
@@ -398,29 +412,29 @@ class Ui_AppInfoDialog(object):
     def retranslateUi(self, AppInfoDialog):
         AppInfoDialog.setWindowTitle(QtGui.QApplication.translate("AppInfoDialog", "App details", None, QtGui.QApplication.UnicodeUTF8))
         self.DetailsGroupBox.setTitle(QtGui.QApplication.translate("AppInfoDialog", "App details", None, QtGui.QApplication.UnicodeUTF8))
-        self.NameLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "Portable app name", None, QtGui.QApplication.UnicodeUTF8))
-        self.AppIDLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "App ID", None, QtGui.QApplication.UnicodeUTF8))
-        self.PublisherLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "Publisher", None, QtGui.QApplication.UnicodeUTF8))
-        self.HomepageLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "Homepage", None, QtGui.QApplication.UnicodeUTF8))
-        self.CategoryLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "Category", None, QtGui.QApplication.UnicodeUTF8))
-        self.DescriptionLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "Description", None, QtGui.QApplication.UnicodeUTF8))
-        self.LanguageLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "Language", None, QtGui.QApplication.UnicodeUTF8))
-        self.TrademarksLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "Trademarks", None, QtGui.QApplication.UnicodeUTF8))
+        self.NameLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "Portable app &name", None, QtGui.QApplication.UnicodeUTF8))
+        self.AppIDLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "&App ID", None, QtGui.QApplication.UnicodeUTF8))
+        self.PublisherLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "&Publisher", None, QtGui.QApplication.UnicodeUTF8))
+        self.HomepageLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "&Homepage", None, QtGui.QApplication.UnicodeUTF8))
+        self.CategoryLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "Cate&gory", None, QtGui.QApplication.UnicodeUTF8))
+        self.DescriptionLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "&Description", None, QtGui.QApplication.UnicodeUTF8))
+        self.LanguageLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "&Language", None, QtGui.QApplication.UnicodeUTF8))
+        self.TrademarksLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "&Trademarks", None, QtGui.QApplication.UnicodeUTF8))
         self.VersionGroupBox.setTitle(QtGui.QApplication.translate("AppInfoDialog", "Version", None, QtGui.QApplication.UnicodeUTF8))
-        self.DisplayVersionLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "Display version", None, QtGui.QApplication.UnicodeUTF8))
-        self.PackageVersionLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "Package version", None, QtGui.QApplication.UnicodeUTF8))
+        self.DisplayVersionLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "Display &version", None, QtGui.QApplication.UnicodeUTF8))
+        self.PackageVersionLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "Pac&kage version", None, QtGui.QApplication.UnicodeUTF8))
         self.PackageVersionDot1.setText(QtGui.QApplication.translate("AppInfoDialog", ".", None, QtGui.QApplication.UnicodeUTF8))
         self.PackageVersionDot2.setText(QtGui.QApplication.translate("AppInfoDialog", ".", None, QtGui.QApplication.UnicodeUTF8))
         self.PackageVersionDot3.setText(QtGui.QApplication.translate("AppInfoDialog", ".", None, QtGui.QApplication.UnicodeUTF8))
         self.LicenseGroupBox.setTitle(QtGui.QApplication.translate("AppInfoDialog", "License", None, QtGui.QApplication.UnicodeUTF8))
-        self.Shareable.setText(QtGui.QApplication.translate("AppInfoDialog", "Shareable", None, QtGui.QApplication.UnicodeUTF8))
-        self.OpenSource.setText(QtGui.QApplication.translate("AppInfoDialog", "Open source", None, QtGui.QApplication.UnicodeUTF8))
-        self.Freeware.setText(QtGui.QApplication.translate("AppInfoDialog", "Freeware", None, QtGui.QApplication.UnicodeUTF8))
-        self.CommercialUse.setText(QtGui.QApplication.translate("AppInfoDialog", "Commercial use", None, QtGui.QApplication.UnicodeUTF8))
+        self.Shareable.setText(QtGui.QApplication.translate("AppInfoDialog", "&Shareable", None, QtGui.QApplication.UnicodeUTF8))
+        self.OpenSource.setText(QtGui.QApplication.translate("AppInfoDialog", "Op&en source", None, QtGui.QApplication.UnicodeUTF8))
+        self.Freeware.setText(QtGui.QApplication.translate("AppInfoDialog", "&Freeware", None, QtGui.QApplication.UnicodeUTF8))
+        self.CommercialUse.setText(QtGui.QApplication.translate("AppInfoDialog", "Co&mmercial use", None, QtGui.QApplication.UnicodeUTF8))
         self.AdvancedGroupBox.setTitle(QtGui.QApplication.translate("AppInfoDialog", "Advanced", None, QtGui.QApplication.UnicodeUTF8))
-        self.PluginsPathLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "Plugins path", None, QtGui.QApplication.UnicodeUTF8))
-        self.UsesDotNetVersionLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "Requires .NET version", None, QtGui.QApplication.UnicodeUTF8))
-        self.UsesJava.setText(QtGui.QApplication.translate("AppInfoDialog", "Uses Java", None, QtGui.QApplication.UnicodeUTF8))
-        self.EULAVersionLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "EULA version", None, QtGui.QApplication.UnicodeUTF8))
+        self.PluginsPathLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "P&lugins path", None, QtGui.QApplication.UnicodeUTF8))
+        self.UsesDotNetVersionLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "&Requires .NET version", None, QtGui.QApplication.UnicodeUTF8))
+        self.UsesJava.setText(QtGui.QApplication.translate("AppInfoDialog", "Uses &Java", None, QtGui.QApplication.UnicodeUTF8))
+        self.EULAVersionLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "E&ULA version", None, QtGui.QApplication.UnicodeUTF8))
 
 import graphics_rc

@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>AppInfoDialog</class>
  <widget class="QDialog" name="AppInfoDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>856</width>
+    <height>453</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>App details</string>
   </property>
@@ -30,7 +38,10 @@
         <item row="0" column="0">
          <widget class="QLabel" name="NameLabel">
           <property name="text">
-           <string>Portable app name</string>
+           <string>Portable app &amp;name</string>
+          </property>
+          <property name="buddy">
+           <cstring>Name</cstring>
           </property>
          </widget>
         </item>
@@ -44,7 +55,10 @@
         <item row="1" column="0">
          <widget class="QLabel" name="AppIDLabel">
           <property name="text">
-           <string>App ID</string>
+           <string>&amp;App ID</string>
+          </property>
+          <property name="buddy">
+           <cstring>AppID</cstring>
           </property>
          </widget>
         </item>
@@ -58,7 +72,10 @@
         <item row="2" column="0">
          <widget class="QLabel" name="PublisherLabel">
           <property name="text">
-           <string>Publisher</string>
+           <string>&amp;Publisher</string>
+          </property>
+          <property name="buddy">
+           <cstring>Publisher</cstring>
           </property>
          </widget>
         </item>
@@ -72,7 +89,10 @@
         <item row="3" column="0">
          <widget class="QLabel" name="HomepageLabel">
           <property name="text">
-           <string>Homepage</string>
+           <string>&amp;Homepage</string>
+          </property>
+          <property name="buddy">
+           <cstring>Homepage</cstring>
           </property>
          </widget>
         </item>
@@ -86,7 +106,10 @@
         <item row="4" column="0">
          <widget class="QLabel" name="CategoryLabel">
           <property name="text">
-           <string>Category</string>
+           <string>Cate&amp;gory</string>
+          </property>
+          <property name="buddy">
+           <cstring>Category</cstring>
           </property>
          </widget>
         </item>
@@ -147,7 +170,10 @@
         <item row="5" column="0">
          <widget class="QLabel" name="DescriptionLabel">
           <property name="text">
-           <string>Description</string>
+           <string>&amp;Description</string>
+          </property>
+          <property name="buddy">
+           <cstring>Description</cstring>
           </property>
          </widget>
         </item>
@@ -161,7 +187,10 @@
         <item row="6" column="0">
          <widget class="QLabel" name="LanguageLabel">
           <property name="text">
-           <string>Language</string>
+           <string>&amp;Language</string>
+          </property>
+          <property name="buddy">
+           <cstring>Language</cstring>
           </property>
          </widget>
         </item>
@@ -522,7 +551,10 @@
         <item row="7" column="0">
          <widget class="QLabel" name="TrademarksLabel">
           <property name="text">
-           <string>Trademarks</string>
+           <string>&amp;Trademarks</string>
+          </property>
+          <property name="buddy">
+           <cstring>Trademarks</cstring>
           </property>
          </widget>
         </item>
@@ -545,7 +577,10 @@
         <item row="0" column="0">
          <widget class="QLabel" name="DisplayVersionLabel">
           <property name="text">
-           <string>Display version</string>
+           <string>Display &amp;version</string>
+          </property>
+          <property name="buddy">
+           <cstring>DisplayVersionBase</cstring>
           </property>
          </widget>
         </item>
@@ -594,7 +629,10 @@
         <item row="1" column="0">
          <widget class="QLabel" name="PackageVersionLabel">
           <property name="text">
-           <string>Package version</string>
+           <string>Pac&amp;kage version</string>
+          </property>
+          <property name="buddy">
+           <cstring>PackageVersion1</cstring>
           </property>
          </widget>
         </item>
@@ -688,28 +726,28 @@
         <item row="0" column="0">
          <widget class="QCheckBox" name="Shareable">
           <property name="text">
-           <string>Shareable</string>
+           <string>&amp;Shareable</string>
           </property>
          </widget>
         </item>
         <item row="1" column="0">
          <widget class="QCheckBox" name="OpenSource">
           <property name="text">
-           <string>Open source</string>
+           <string>Op&amp;en source</string>
           </property>
          </widget>
         </item>
         <item row="2" column="0">
          <widget class="QCheckBox" name="Freeware">
           <property name="text">
-           <string>Freeware</string>
+           <string>&amp;Freeware</string>
           </property>
          </widget>
         </item>
         <item row="3" column="0">
          <widget class="QCheckBox" name="CommercialUse">
           <property name="text">
-           <string>Commercial use</string>
+           <string>Co&amp;mmercial use</string>
           </property>
          </widget>
         </item>
@@ -728,7 +766,10 @@
         <item row="0" column="0">
          <widget class="QLabel" name="PluginsPathLabel">
           <property name="text">
-           <string>Plugins path</string>
+           <string>P&amp;lugins path</string>
+          </property>
+          <property name="buddy">
+           <cstring>PluginsPath</cstring>
           </property>
          </widget>
         </item>
@@ -742,7 +783,10 @@
         <item row="2" column="0">
          <widget class="QLabel" name="UsesDotNetVersionLabel">
           <property name="text">
-           <string>Requires .NET version</string>
+           <string>&amp;Requires .NET version</string>
+          </property>
+          <property name="buddy">
+           <cstring>UsesDotNetVersion</cstring>
           </property>
          </widget>
         </item>
@@ -786,14 +830,17 @@
         <item row="3" column="0">
          <widget class="QCheckBox" name="UsesJava">
           <property name="text">
-           <string>Uses Java</string>
+           <string>Uses &amp;Java</string>
           </property>
          </widget>
         </item>
         <item row="4" column="0">
          <widget class="QLabel" name="EULAVersionLabel">
           <property name="text">
-           <string>EULA version</string>
+           <string>E&amp;ULA version</string>
+          </property>
+          <property name="buddy">
+           <cstring>EULAVersion</cstring>
           </property>
          </widget>
         </item>
