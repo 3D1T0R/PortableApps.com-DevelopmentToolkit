@@ -1,14 +1,21 @@
-import string
+"""
+Language handling and i18n. With the exception of language files, ``lng`` is
+the only thing from this class which should be used. It's a proxy object which
+gives the strings in the currently selected language.
+
+Usage::
+
+    from languages import lng
+    print lng.SOME_STRING
+"""
+
 import config
 
 __all__ = ['lng']
 
-languages = {}
-
-current_language = None
-
 
 class Language(object):
+    "Base class for languages, with all strings defined (in English)."
     LANGUAGE_NAME = 'Unset'
     LANGUAGE_NAME_NATIVE = 'Unset'
 
@@ -105,33 +112,35 @@ class Language(object):
     VALIDATION_STR_INFORMATION = 'Information'
 
 
-class _CurrentLanguage(object):
+class _LanguagesController(object):
     """
-    A simple proxy class to get strings from the current language, regardless
-    of what it was earlier.
+    The manager for languages. It acts as a simple way to load languages and
+    access strings from the current language.
     """
 
-    def __getattribute__(self, attr):
-        return getattr(current_language, attr)
+    def __init__(self):
+        self._languages = {}
+        self._current_language = None
+        self.load_language()
 
-lng = _CurrentLanguage()
+    def __getattr__(self, attr):
+        return getattr(self._current_language, attr)
 
+    def load_language(self, lang=None):
+        "Load the specified language or the language from the user's settings."
+        if not lang:
+            lang = config.get('Main', 'Language', 'english')
 
-def load_language(lang=None):
-    if not lang:
-        lang = config.get('Main', 'Language', 'english')
+        if not lang.isalpha():
+            raise ValueError('Language "%s" contains invalid characters' % lang)
 
-    if any(c not in string.letters for c in lang):
-        raise ValueError('Language "%s" contains invalid characters' % lang)
+        try:
+            self._current_language = __import__('languages.%s' % lang.lower(),
+                    fromlist=[None]).language  # non-empty fromlist so it works
+            self._languages[lang.lower()] = self._current_language
+        except (ImportError, AttributeError):
+            raise ValueError('Language "%s" does not exist' % lang)
 
-    try:
-        global current_language
-        current_language = __import__('languages.%s' % lang.lower(),
-                fromlist=[None]).language  # non-empty fromlist so it works
-        languages[lang.lower()] = current_language
-    except ImportError, AttributeError:
-        raise ValueError('Language "%s" does not exist' % lang)
+        config.settings.Main.Language = lang
 
-    config.settings.Main.Language = lang
-
-load_language()
+lng = _LanguagesController()
