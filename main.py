@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from PyQt4 import QtCore, QtGui
+from PyQt4 import QtGui
 from ui.mainwindow import Ui_MainWindow
 from utils import _, center_window
 import paf
@@ -13,28 +13,27 @@ import appinfo
 from functools import wraps
 
 
-def apply_checked_param_fix(fn):
+def apply_checked_param_fix(func):
     """Decorator to handle the 'checked' issue where you need a checked=None
     parameter because it'll call it twice."""
-    @wraps(fn)
+    @wraps(func)
     def decorate(self, *args, **kwargs):
         if args == ():
             return
-        fn(self, *args, **kwargs)
+        func(self, *args, **kwargs)
     return decorate
 
 
-def assert_valid_package_path(fn):
+def assert_valid_package_path(func):
     """Decorator to make sure that something which shouldn't ever happen
     doesn't cause a crash, and to provide a code indication of what's
     happening."""
-    @wraps(fn)
+    @wraps(func)
     def decorate(self, *args, **kwargs):
         if not paf.valid_package(unicode(self.ui.packageText.text())):
             raise Exception("The package is not valid.")
-            return
 
-        fn(self, *args, **kwargs)
+        func(self, *args, **kwargs)
     return decorate
 
 
@@ -45,11 +44,9 @@ class Main(QtGui.QMainWindow):
         self.ui.setupUi(self)
         self.ui.packageText.setFocus()
 
-        # Currently all slots are auto-connected which is a Good Thing.
-        # QtCore.QMetaObject.connectSlotsByName(self)
-
     @apply_checked_param_fix
     def on_packageButton_clicked(self, checked=None):
+        "Select a package."
         text_box = self.ui.packageText
         current_path = text_box.text()
         text_box.setText(QtGui.QFileDialog.getExistingDirectory(None,
@@ -57,6 +54,7 @@ class Main(QtGui.QMainWindow):
 
     @apply_checked_param_fix
     def on_createButton_clicked(self, checked=None):
+        "Create a package."
         self.ui.statusBar.showMessage(_("Creating package..."))
         text_box = self.ui.packageText
         current_path = text_box.text()
@@ -75,7 +73,7 @@ class Main(QtGui.QMainWindow):
                 text_box.setText(package)
                 self.ui.statusBar.showMessage(
                         _("Package created successfully."), 2000)
-                # TODO self.on_formatButton_clicked(False)
+                self.on_formatButton_clicked(False)
             else:
                 self.ui.statusBar.clearMessage()
             break
@@ -83,6 +81,7 @@ class Main(QtGui.QMainWindow):
     @apply_checked_param_fix
     @assert_valid_package_path
     def on_formatButton_clicked(self, checked=None):
+        "Edit PortableApps.com Format details."
         appinfo_dialog = appinfo.AppInfoDialog()
         center_window(appinfo_dialog)
         appinfo_dialog.load_package(paf.Package(
@@ -95,11 +94,13 @@ class Main(QtGui.QMainWindow):
     @apply_checked_param_fix
     @assert_valid_package_path
     def on_launcherButton_clicked(self, checked=None):
+        "Edit PortableApps.com Launcher details."
         not_implemented()
 
     @apply_checked_param_fix
     @assert_valid_package_path
     def on_installerButton_clicked(self, checked=None):
+        "Edit PortableApps.com Installer details."
         not_implemented()
 
     def on_packageText_textChanged(self, string):
@@ -122,6 +123,7 @@ def main():
 
     center_window(window)
     window.show()
+    warn.set_warnings_qt()
     exit_code = app.exec_()
 
     prepare_quit(window)

@@ -3,7 +3,8 @@ from PyQt4.QtGui import QMessageBox
 from utils import _S, _
 
 
-def warn_ui(message, category, filename, lineno, file=None, line=None):
+def warn_qt(message, category, filename, lineno, file_=None, line=None):
+    "Warning handler to show a Qt QMessageBox."
     if type(message) == tuple:
         window, message = message
     else:
@@ -18,6 +19,9 @@ def warn_ui(message, category, filename, lineno, file=None, line=None):
     QMessageBox.warning(window, _('PortableApps.com Development Toolkit'), msg,
             QMessageBox.Ok)
 
-#old_showwarning = warnings.showwarning
-warnings.showwarning = warn_ui
-warnings.simplefilter('always')  # Always warn, not just first time
+
+def set_warnings_qt():
+    "Set warnings to trigger warn_qt."
+    #old_showwarning = warnings.showwarning
+    warnings.showwarning = warn_qt
+    warnings.simplefilter('always')  # Always warn, not just first time
