@@ -9,6 +9,7 @@ import paf
 import config
 import warnings
 import warn
+import appinfo
 from functools import wraps
 
 
@@ -82,7 +83,14 @@ class Main(QtGui.QMainWindow):
     @apply_checked_param_fix
     @assert_valid_package_path
     def on_formatButton_clicked(self, checked=None):
-        not_implemented()
+        appinfo_dialog = appinfo.AppInfoDialog()
+        center_window(appinfo_dialog)
+        appinfo_dialog.load_package(paf.Package(
+            unicode(self.ui.packageText.text())))
+        appinfo_dialog.setModal(True)
+        appinfo_dialog.show()
+        # Keep a reference to it so it doesn't get cleaned up
+        self.dialog = appinfo_dialog
 
     @apply_checked_param_fix
     @assert_valid_package_path
