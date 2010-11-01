@@ -9,12 +9,14 @@ from languages import LANG
 import iniparse
 from paf import FORMAT_VERSION, PAFException
 from orderedset import OrderedSet
+from functools import wraps
 
-__all__ = ['AppInfo']
+__all__ = ['AppInfo', 'valid_appid']
 
 
 def _valid_appinfo(func):
     "A decorator to ensure appinfo is set up."
+    @wraps(func)
     def decorate(self, *args, **kwargs):
         try:
             if not self._path:
@@ -354,3 +356,43 @@ class AppInfo(object):
         appinfo = open(self._path, 'w')
         appinfo.write(unicode(self.appinfo))
         appinfo.close()
+
+def valid_appid(appid):
+    "Check if an AppID is valid and correct it. Returns (valid, appid)."
+
+    valid_characters = set('0123456789.-+_ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
+            'abcdefghijklmnopqrstuvwxyz')
+
+    new = appid.replace(' ', '')
+    new = new.replace('(', '')
+    new = new.replace(')', '')
+    new = new.replace('[', '')
+    new = new.replace(']', '')
+    new = new.replace('~', '-')
+    new = new.replace('&', '+')
+    new = new.replace('#', '+')
+    new = new.replace('"', '')
+    new = new.replace('*', '+')
+    new = new.replace('/', '_')
+    new = new.replace('\\', '_')
+    new = new.replace(':', '.')
+    new = new.replace('<', '-')
+    new = new.replace('>', '-')
+    new = new.replace('?', '')
+    new = new.replace('|', '-')
+    new = new.replace('=', '-')
+    new = new.replace(',', '.')
+    new = new.replace(';', '.')
+
+    i = 0
+    while i < len(new):
+        if new[i] not in valid_characters:
+            # Cut out the character
+            new = new[:i] + new[i + 1:]
+        else:
+            i += 1
+
+    if appid != new:
+        return False, new
+    else:
+        return True, appid

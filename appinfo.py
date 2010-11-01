@@ -4,6 +4,7 @@
 from PyQt4 import QtGui
 from ui.appinfo import Ui_AppInfoDialog
 from utils import center_window, ini_defined
+from paf.appinfo import valid_appid
 
 
 class AppInfoDialog(QtGui.QDialog):
@@ -11,6 +12,7 @@ class AppInfoDialog(QtGui.QDialog):
         super(AppInfoDialog, self).__init__(parent)
         self.ui = Ui_AppInfoDialog()
         self.ui.setupUi(self)
+        self.ui.AppID.setValidator(AppIDValidator())
 
     def accept(self):
         "User submits the form (presses Save). No validation at the moment."
@@ -28,6 +30,92 @@ class AppInfoDialog(QtGui.QDialog):
             self.ui.DisplayVersionNum.setEnabled(False)
         else:
             self.ui.DisplayVersionNum.setEnabled(True)
+
+    def on_Name_textChanged(self, value):
+        "Auto-fill some fields when the Name is changed."
+
+        if hasattr(self.ui.Name, 'matched'):
+            return
+        value = unicode(value)
+        if hasattr(self.ui.Name, 'backspacing'):
+            self.ui.Name.last_value = value
+            return
+
+        # Deal with backspace and this auto-complete thing
+        if hasattr(self.ui.Name, 'last_value') and \
+                not hasattr(self.ui.Name, 'backspacing') and \
+                value == self.ui.Name.last_value:
+            self.ui.Name.backspacing = True
+            # This does make Delete act as Backspace sometimes, but never mind.
+            self.ui.Name.backspace()
+            del self.ui.Name.backspacing
+            return
+        self.ui.Name.last_value = value
+
+        # If the cursor is at the end of the line, and nothing is selected
+        if self.ui.Name.cursorPosition() == len(value) and \
+                not self.ui.Name.hasSelectedText():
+            self.ui.Name.matched = False
+            for suffix in ', Portable Edition', ' Portable':
+                for end in [suffix[:i] for i in xrange(len(suffix), 0, -1)]:
+                    if value.endswith(end):
+                        self.ui.Name.matched = True
+                        self.ui.Name.insert(suffix[len(end):])
+                        # Unfortunately setCursorPosition doesn't make it so
+                        # the cursor can be at the start of the selection
+                        self.ui.Name.setSelection(len(value),
+                                len(suffix) - len(end))
+                        value = value + suffix[len(end):]
+                        break
+                if self.ui.Name.matched:
+                    break
+            #if not self.ui.Name.matched:
+            #    self.ui.Name.matched = True
+            #    end = ' Portable'
+            #    self.ui.Name.insert(end)
+            #    self.ui.Name.setSelection(len(value), len(end))
+            #    value = value + end
+            del self.ui.Name.matched
+
+        for suffix in ', Portable Edition', ' Portable':
+            if value.endswith(suffix):
+                name = value[:-len(suffix)]
+                break
+        else:
+            name = value
+
+        # AppID for Whatever, Portable Edition is still WhateverPortable
+        appid = value
+        if appid.endswith(', Portable Edition'):
+            appid = appid[:-len(', Portable Edition')] + ' Portable'
+
+        # Correct it (don't care about whether it was valid)
+        appid = valid_appid(appid)[1]
+
+        if not (ini_defined(self.appinfo.Details) and
+                ini_defined(self.appinfo.Details.AppID)) and \
+        not self.ui.AppID.isModified():
+            self.ui.AppID.setText(appid)
+
+        if not (ini_defined(self.appinfo.Details) and
+                ini_defined(self.appinfo.Details.Publisher)) and \
+        not self.ui.Publisher.isModified():
+            self.ui.Publisher.setText('%s team & PortableApps.com' % name)
+
+        # Homepage: done by on_AppID_textChanged
+
+        if not (ini_defined(self.appinfo.Details) and
+                ini_defined(self.appinfo.Details.Description)) and \
+        not self.ui.Description.isModified():
+            self.ui.Description.setText('%s is a ___' % name)
+
+    def on_AppID_textChanged(self, value):
+        "Auto-fill Homepage when the Name is changed."
+
+        if not (ini_defined(self.appinfo.Details) and
+                ini_defined(self.appinfo.Details.Homepage)) and \
+        not self.ui.Homepage.isModified():
+            self.ui.Homepage.setText('PortableApps.com/%s' % unicode(value))
 
     def load_package(self, package):
         self.package = package
@@ -208,6 +296,18 @@ class AppInfoDialog(QtGui.QDialog):
             else:
                 raise TypeError("Field %s type %s is invalid." % (field,
                     type(field)))
+
+
+class AppIDValidator(QtGui.QValidator):
+    "A QValidator for the AppID."
+    def validate(self, input, pos):
+        "Validate the AppID."
+
+        valid, appid = valid_appid(unicode(input))
+        if valid:
+            return QtGui.QValidator.Acceptable, pos
+        else:
+            return QtGui.QValidator.Invalid, pos
 
 
 def show():
