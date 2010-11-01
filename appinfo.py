@@ -152,20 +152,33 @@ class AppInfoDialog(QtGui.QDialog):
             appinfo.Version.DisplayVersion += ' ' + dvtype + ' ' + \
                     str(self.ui.DisplayVersionNum.value())
 
-        # TODO: no proper control of the Control section, dummy code
-        if not ini_defined(appinfo.Control):
-            appinfo.Control.Icons = 1
-            appinfo.Control.Start = '%s.exe' % appinfo.Details.AppID
-
         if self.ui.PluginsPath.text():
             appinfo.SpecialPaths.Plugins = self.ui.PluginsPath.text()
 
         if self.ui.UsesJava.isChecked():
             appinfo.Dependencies.UsesJava = 'true'
+        # If it was ticked before, remove it
+        elif ini_defined(appinfo.Dependencies) and \
+                ini_defined(appinfo.Dependencies.UsesJava):
+            del appinfo.Dependencies.UsesJava
 
         if self.ui.UsesDotNetVersion.currentText() != 'None':
             appinfo.Dependencies.UsesDotNetVersion = \
                     self.ui.UsesDotNetVersion.currentText()
+        # If it was set before, remove it
+        elif ini_defined(appinfo.Dependencies) and \
+                ini_defined(appinfo.Dependencies.UsesDotNetVersion):
+            del appinfo.Dependencies.UsesDotNetVersion
+
+        # Deleting the last value in the section doesn't delete the section at
+        # the moment, so delete it manually
+        if len(list(appinfo.Dependencies)) == 0:
+            del appinfo.Dependencies
+
+        # TODO: no proper control of the Control section, dummy code
+        if not ini_defined(appinfo.Control):
+            appinfo.Control.Icons = 1
+            appinfo.Control.Start = '%s.exe' % appinfo.Details.AppID
 
     def _fill(self, field, value):
         if ini_defined(value):

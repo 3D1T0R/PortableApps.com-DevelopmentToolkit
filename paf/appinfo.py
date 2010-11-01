@@ -337,6 +337,10 @@ class AppInfo(object):
     def save(self):
         "Save the current state in appinfo.ini"
 
+        # Tidy it so when sections get added and removed and whatnot it looks
+        # generally decent (no multiple blank lines, EOL at EOF)
+        iniparse.tidy(self.appinfo)
+
         # Make sure the directory exists (Package.fix might potentially not
         # have been called?)
         if self.package.plugin:
