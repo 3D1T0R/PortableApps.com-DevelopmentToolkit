@@ -202,30 +202,34 @@ class Package(object):
         self.info = []
 
         if not self.launcher_is_pal:
-            self.info.append(LANG.NOT_USING_PAL)
+            self.info.append(LANG.GENERAL.NOT_USING_PAL)
 
         for directory in self._dirlist():
             if not isdir(self.path(*directory)):
-                self.errors.append(LANG.DIRECTORY_MISSING % join(*directory))
+                self.errors.append(LANG.GENERAL.DIRECTORY_MISSING %
+                        join(*directory))
 
         for filename in self._filelist():
             if isdir(os.path.dirname(self.path(*filename))) and \
             not isfile(self.path(*filename)):
-                self.errors.append(LANG.FILE_MISSING % join(*filename))
+                self.errors.append(LANG.GENERAL.FILE_MISSING % join(*filename))
 
         for directory in self._recommended_dirs:
             if not isdir(self.path(*directory)):
-                self.warnings.append(LANG.DIRECTORY_MISSING % join(*directory))
+                self.warnings.append(LANG.GENERAL.DIRECTORY_MISSING %
+                        join(*directory))
 
         for filename in self._recommended_files:
             if isdir(os.path.dirname(self.path(*filename))) and \
             not isfile(self.path(*filename)):
-                self.warnings.append(LANG.FILE_MISSING % join(*filename))
+                self.warnings.append(LANG.GENERAL.FILE_MISSING %
+                        join(*filename))
 
         for filename in self._suggested_files:
             if isdir(os.path.dirname(self.path(*filename))) and \
             not isfile(self.path(*filename)):
-                self.info.append(LANG.SUGGESTED_FILE_MISSING % join(*filename))
+                self.info.append(LANG.GENERAL.SUGGESTED_FILE_MISSING %
+                        join(*filename))
 
         self.appinfo.validate()
 
@@ -260,12 +264,12 @@ def create_package(path):
         if isdir(path):
             pass  # Directory exists, fine.
         else:
-            raise PAFException(LANG.FILE_NOT_DIRECTORY)
+            raise PAFException(LANG.GENERAL.FILE_NOT_DIRECTORY)
     else:
-        raise PAFException(LANG.DIRECTORY_NOT_EXIST)
+        raise PAFException(LANG.GENERAL.DIRECTORY_NOT_EXIST)
 
     if os.listdir(path):
-        raise PAFException(LANG.DIRECTORY_NOT_EMPTY)
+        raise PAFException(LANG.GENERAL.DIRECTORY_NOT_EMPTY)
 
     package = Package(path)
     package.fix()

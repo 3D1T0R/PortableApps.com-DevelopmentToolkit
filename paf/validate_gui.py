@@ -31,10 +31,10 @@ def validate(path):
     try:
         app = paf.Package(path)
     except paf.PAFException as msg:
-        out = LANG.VALIDATION_CRITICAL_HTML % msg
+        out = LANG.VALIDATION.CRITICAL_HTML % msg
         window.ui.validationResultsHTML.setHtml(out)
         window.ui.validationResultsArea.setPlainText(out)
-        window.setWindowTitle(LANG.VALIDATION_WINDOW_TITLE_CRITICAL)
+        window.setWindowTitle(LANG.VALIDATION.WINDOW_TITLE_CRITICAL)
         window.show()
         return
 
@@ -47,36 +47,36 @@ def validate(path):
             'strwarnings': warning_count == 1 and 'warning' or 'warnings',
             }
     if error_count and warning_count:
-        out = LANG.VALIDATION_ERRORS_WARNINGS_HTML % params
-        window.setWindowTitle(LANG.VALIDATION_WINDOW_TITLE_FAIL)
+        out = LANG.VALIDATION.ERRORS_WARNINGS_HTML % params
+        window.setWindowTitle(LANG.VALIDATION.WINDOW_TITLE_FAIL)
     elif error_count:
-        out = LANG.VALIDATION_ERRORS_HTML % params
-        window.setWindowTitle(LANG.VALIDATION_WINDOW_TITLE_FAIL)
+        out = LANG.VALIDATION.ERRORS_HTML % params
+        window.setWindowTitle(LANG.VALIDATION.WINDOW_TITLE_FAIL)
     elif warning_count:
-        out = LANG.VALIDATION_WARNINGS_HTML % params
-        window.setWindowTitle(LANG.VALIDATION_WINDOW_TITLE_WARNINGS)
+        out = LANG.VALIDATION.WARNINGS_HTML % params
+        window.setWindowTitle(LANG.VALIDATION.WINDOW_TITLE_WARNINGS)
     else:
-        out = LANG.VALIDATION_PASS_HTML
-        window.setWindowTitle(LANG.VALIDATION_WINDOW_TITLE_PASS)
+        out = LANG.VALIDATION.PASS_HTML
+        window.setWindowTitle(LANG.VALIDATION.WINDOW_TITLE_PASS)
 
     out = '<p>' + out + '</p>\n\n'
 
     if error_count:
-        out += '<p><strong>%s</strong></p>\n<ul>\n' % LANG.VALIDATION_STR_ERRORS
+        out += '<p><strong>%s</strong></p>\n<ul>\n' % LANG.VALIDATION.STR_ERRORS
         for item in app.errors:
             out += '<li>%s</li>\n' % item
         out += '</ul>\n'
 
     if warning_count:
         out += '<p><strong>%s</strong></p>\n<ul>\n' % \
-            LANG.VALIDATION_STR_WARNINGS
+            LANG.VALIDATION.STR_WARNINGS
         for item in app.warnings:
             out += '<li>%s</li>\n' % item
         out += '</ul>\n'
 
     if len(app.info):
         out += '<p><strong>%s</strong></p>\n<ul>\n' % \
-            LANG.VALIDATION_STR_INFORMATION
+            LANG.VALIDATION.STR_INFORMATION
         for item in app.info:
             out += '<li>%s</li>\n' % item
         out += '</ul>\n'
