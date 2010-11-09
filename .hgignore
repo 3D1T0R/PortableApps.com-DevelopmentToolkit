@@ -3,3 +3,5 @@ syntax: glob
 settings.ini
 .*.swo
 .*.swp
+build/
+dist/

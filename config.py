@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 from iniparse import INIConfig, tidy
 from utils import get_ini_str
 
-ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
+ROOT_DIR = os.path.abspath(os.path.dirname(unicode(sys.executable
+    if hasattr(sys, 'frozen') else __file__, sys.getfilesystemencoding())))
 
 
 def settings_path(filename=None):
@@ -12,7 +14,7 @@ def settings_path(filename=None):
     and os.path.isdir(os.environ['PAL:DataDir']):
         dirname = os.environ['PAL:DataDir']
     else:
-        dirname = os.path.dirname(__file__)
+        dirname = ROOT_DIR
 
     if filename:
         return os.path.join(dirname, filename)
