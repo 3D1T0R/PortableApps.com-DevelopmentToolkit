@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from PyQt4 import QtGui
+from qt import QtGui
 from ui.mainwindow import Ui_MainWindow
 from utils import _, center_window
 import paf

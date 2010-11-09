@@ -2,12 +2,12 @@
 
 # Form implementation generated from reading ui file 'ui/validationsimple.ui'
 #
-# Created: Sat Oct 30 23:23:18 2010
-#      by: PyQt4 UI code generator 4.7.4
+
+#      by: PySide uic UI code generator
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui
+from qt import QtCore, QtGui
 
 class Ui_ValidationDialog(object):
     def setupUi(self, ValidationDialog):

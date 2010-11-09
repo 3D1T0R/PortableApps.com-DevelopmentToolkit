@@ -6,7 +6,7 @@ Validate an app package in PortableApps.com Format and produce HTML.
 This is loaded from config.py.
 """
 
-from PyQt4.QtGui import QDialog
+from qt.QtGui import QDialog
 import paf
 from ui.validationsimple import Ui_ValidationDialog
 from utils import center_window

@@ -2,12 +2,12 @@
 
 # Form implementation generated from reading ui file 'ui/mainwindow.ui'
 #
-# Created: Sat Oct 30 23:23:18 2010
-#      by: PyQt4 UI code generator 4.7.4
+
+#      by: PySide uic UI code generator
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui
+from qt import QtCore, QtGui
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -24,7 +24,6 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setMargin(0)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.sidebarLogo = QtGui.QLabel(self.centralWidget)
-        self.sidebarLogo.setText("None")
         self.sidebarLogo.setPixmap(QtGui.QPixmap(":/sidebar.png"))
         self.sidebarLogo.setObjectName("sidebarLogo")
         self.horizontalLayout.addWidget(self.sidebarLogo)

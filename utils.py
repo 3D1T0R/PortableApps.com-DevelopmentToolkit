@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from PyQt4.QtGui import QApplication, QDesktopWidget
+from qt.QtGui import QApplication, QDesktopWidget
 from iniparse.config import Undefined
 import os
 
