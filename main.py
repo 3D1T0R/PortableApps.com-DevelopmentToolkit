@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from qt import QtGui
+from qt import QtCore, QtGui
 from ui.mainwindow import Ui_MainWindow
 from utils import _, center_window
 import paf
@@ -11,17 +11,6 @@ import warnings
 import warn
 import appinfo
 from functools import wraps
-
-
-def apply_checked_param_fix(func):
-    """Decorator to handle the 'checked' issue where you need a checked=None
-    parameter because it'll call it twice."""
-    @wraps(func)
-    def decorate(self, *args, **kwargs):
-        if args == ():
-            return
-        func(self, *args, **kwargs)
-    return decorate
 
 
 def assert_valid_package_path(func):
@@ -44,16 +33,16 @@ class Main(QtGui.QMainWindow):
         self.ui.setupUi(self)
         self.ui.packageText.setFocus()
 
-    @apply_checked_param_fix
-    def on_packageButton_clicked(self, checked=None):
+    @QtCore.Slot(bool)
+    def on_packageButton_clicked(self, checked):
         "Select a package."
         text_box = self.ui.packageText
         current_path = text_box.text()
         text_box.setText(QtGui.QFileDialog.getExistingDirectory(None,
             _("Select a portable app package"), current_path) or current_path)
 
-    @apply_checked_param_fix
-    def on_createButton_clicked(self, checked=None):
+    @QtCore.Slot(bool)
+    def on_createButton_clicked(self, checked):
         "Create a package."
         self.ui.statusBar.showMessage(_("Creating package..."))
         text_box = self.ui.packageText
@@ -78,9 +67,9 @@ class Main(QtGui.QMainWindow):
                 self.ui.statusBar.clearMessage()
             break
 
-    @apply_checked_param_fix
+    @QtCore.Slot(bool)
     @assert_valid_package_path
-    def on_formatButton_clicked(self, checked=None):
+    def on_formatButton_clicked(self, checked):
         "Edit PortableApps.com Format details."
         appinfo_dialog = appinfo.AppInfoDialog()
         center_window(appinfo_dialog)
@@ -91,13 +80,13 @@ class Main(QtGui.QMainWindow):
         # Keep a reference to it so it doesn't get cleaned up
         self.dialog = appinfo_dialog
 
-    @apply_checked_param_fix
+    @QtCore.Slot(bool)
     @assert_valid_package_path
     def on_launcherButton_clicked(self, checked=None):
         "Edit PortableApps.com Launcher details."
         not_implemented()
 
-    @apply_checked_param_fix
+    @QtCore.Slot(bool)
     @assert_valid_package_path
     def on_installerButton_clicked(self, checked=None):
         "Edit PortableApps.com Installer details."

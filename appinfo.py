@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from qt import QtGui
+from qt import QtCore, QtGui
 from ui.appinfo import Ui_AppInfoDialog
 from utils import center_window, ini_defined
 from paf.appinfo import valid_appid
@@ -20,17 +20,16 @@ class AppInfoDialog(QtGui.QDialog):
         # Two buttons, Save and Close, let them press Close manually
         #self.close()
 
+    @QtCore.Slot(unicode)
     def on_DisplayVersionType_currentIndexChanged(self, value):
         "Disable the DT/PR/revision number field for an official release."
-        # Gets called twice: once with the index, once with a QString.
-        if type(value) == int:
-            return
 
-        if str(value) == '(official release)':
+        if value == '(official release)':
             self.ui.DisplayVersionNum.setEnabled(False)
         else:
             self.ui.DisplayVersionNum.setEnabled(True)
 
+    @QtCore.Slot(unicode)
     def on_Name_textChanged(self, value):
         "Auto-fill some fields when the Name is changed."
 
@@ -109,6 +108,7 @@ class AppInfoDialog(QtGui.QDialog):
         not self.ui.Description.isModified():
             self.ui.Description.setText('%s is a ___' % name)
 
+    @QtCore.Slot(unicode)
     def on_AppID_textChanged(self, value):
         "Auto-fill Homepage when the Name is changed."
 
@@ -303,11 +303,11 @@ class AppIDValidator(QtGui.QValidator):
     def validate(self, input, pos):
         "Validate the AppID."
 
-        valid, appid = valid_appid(unicode(input))
+        valid, appid = valid_appid(input)
         if valid:
-            return QtGui.QValidator.Acceptable, pos
+            return QtGui.QValidator.Acceptable, appid, pos
         else:
-            return QtGui.QValidator.Invalid, pos
+            return QtGui.QValidator.Invalid, appid, pos
 
 
 def show():
