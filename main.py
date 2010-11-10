@@ -62,14 +62,14 @@ class Main(QtGui.QMainWindow):
                 text_box.setText(package)
                 self.ui.statusBar.showMessage(
                         _("Package created successfully."), 2000)
-                self.on_formatButton_clicked(False)
+                self.on_detailsButton_clicked(False)
             else:
                 self.ui.statusBar.clearMessage()
             break
 
     @QtCore.Slot(bool)
     @assert_valid_package_path
-    def on_formatButton_clicked(self, checked):
+    def on_detailsButton_clicked(self, checked):
         "Edit PortableApps.com Format details."
         appinfo_dialog = appinfo.AppInfoDialog()
         center_window(appinfo_dialog)
@@ -82,7 +82,7 @@ class Main(QtGui.QMainWindow):
 
     @QtCore.Slot(bool)
     @assert_valid_package_path
-    def on_launcherButton_clicked(self, checked=None):
+    def on_validateButton_clicked(self, checked=None):
         "Edit PortableApps.com Launcher details."
         not_implemented()
 
@@ -99,8 +99,8 @@ class Main(QtGui.QMainWindow):
         something without being overly hacky.
         """
         valid = paf.valid_package(unicode(string))
-        self.ui.formatButton.setEnabled(valid)
-        self.ui.launcherButton.setEnabled(valid)
+        self.ui.detailsButton.setEnabled(valid)
+        self.ui.validateButton.setEnabled(valid)
         self.ui.installerButton.setEnabled(valid)
 
 

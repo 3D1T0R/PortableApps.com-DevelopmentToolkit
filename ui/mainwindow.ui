@@ -91,12 +91,12 @@
        </layout>
       </item>
       <item>
-       <widget class="QCommandLinkButton" name="formatButton">
+       <widget class="QCommandLinkButton" name="detailsButton">
         <property name="statusTip">
          <string>Edit the basic app details</string>
         </property>
         <property name="text">
-         <string>PortableApps.com &amp;Format</string>
+         <string>Edit &amp;details</string>
         </property>
         <property name="description">
          <string>Edit the basic app details</string>
@@ -104,15 +104,15 @@
        </widget>
       </item>
       <item>
-       <widget class="QCommandLinkButton" name="launcherButton">
+       <widget class="QCommandLinkButton" name="validateButton">
         <property name="statusTip">
-         <string>Edit the app's launcher</string>
+         <string>Validate PortableApps.com Format compliance</string>
         </property>
         <property name="text">
-         <string>PortableApps.com &amp;Launcher</string>
+         <string>&amp;Validate</string>
         </property>
         <property name="description">
-         <string>Edit the app's launcher</string>
+         <string>Validate the app</string>
         </property>
        </widget>
       </item>
