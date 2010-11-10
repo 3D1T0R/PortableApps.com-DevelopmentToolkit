@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from qt import QtCore, QtGui
+from qt import QtCore, QtGui, IS_PYSIDE
 from ui.appinfo import Ui_AppInfoDialog
 from utils import center_window, ini_defined
 from paf.appinfo import valid_appid
@@ -12,7 +12,11 @@ class AppInfoDialog(QtGui.QDialog):
         super(AppInfoDialog, self).__init__(parent)
         self.ui = Ui_AppInfoDialog()
         self.ui.setupUi(self)
-        self.ui.AppID.setValidator(AppIDValidator())
+        # XXX The AppID validator is disabled for PySide because it causes a
+        # Segmentation fault in PySide (0.4.2). Due to be fixed in the next
+        # release.
+        if not IS_PYSIDE:
+            self.ui.AppID.setValidator(AppIDValidator())
 
     def accept(self):
         "User submits the form (presses Save). No validation at the moment."
