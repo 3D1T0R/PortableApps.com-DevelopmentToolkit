@@ -210,14 +210,14 @@ class Installer(object):
         """Get the filename (sans directories) of the installer."""
         self.load(False)
         if self.package.plugin:
-            filename = self.package.appinfo.appinfo.Details.PluginName
+            filename = self.package.appinfo.ini.Details.PluginName
         else:
             filename = self.package.appid
 
-        filename += '_%s' % self.package.appinfo.appinfo.Version.DisplayVersion
+        filename += '_%s' % self.package.appinfo.ini.Version.DisplayVersion
 
         # Assume it's there, it'd be a blocking error otherwise
-        language = self.package.appinfo.appinfo.Details.Language
+        language = self.package.appinfo.ini.Details.Language
         if language != 'Multilingual':
             filename += '_%s' % language
 

@@ -123,7 +123,7 @@ class AppInfoDialog(QtGui.QDialog):
 
     def load_package(self, package):
         self.package = package
-        self.appinfo = appinfo = package.appinfo.appinfo
+        self.appinfo = appinfo = package.appinfo.ini
         if ini_defined(appinfo.Details):
             self._fill(self.ui.Name, appinfo.Details.Name)
             self._fill(self.ui.AppID, appinfo.Details.AppID)
