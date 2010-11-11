@@ -37,6 +37,18 @@ class Package(object):
             ('Other', 'Help', 'Images'),
     ]
 
+    __instances = {}
+
+    def __new__(cls, *args, **kwargs):
+        """
+        Cache packages by package directory. Later we may be saving stuff that
+        actually takes a while to load.
+        """
+
+        if args[0] not in cls.__instances:
+            cls.__instances[args[0]] = object.__new__(cls)
+        return cls.__instances[args[0]]
+
     @property
     def _recommended_files(self):
         files = []
