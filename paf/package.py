@@ -89,7 +89,11 @@ class Package(object):
             ('Other', 'Source', 'AppNamePortable.ini'),
             ('Other', 'Source', 'License.txt'),
             ('Other', 'Source', 'Readme.txt')]
-        files.insert(0, ('App', 'AppInfo', 'Launcher', '%s.ini' % self.appid))
+        if self.appid is not None:
+            # If the AppID isn't set we don't want to complain about
+            # App\AppInfo\Launcher\None.ini not existing
+            files.insert(0,
+                    ('App', 'AppInfo', 'Launcher', '%s.ini' % self.appid))
         return files
 
     @property
