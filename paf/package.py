@@ -141,6 +141,7 @@ class Package(object):
                 "must be None, True or False.")
 
         self.appinfo = paf.AppInfo(self)
+        self.installer = paf.Installer(self)
 
         self.validate()
 

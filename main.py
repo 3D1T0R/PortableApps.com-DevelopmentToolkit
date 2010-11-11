@@ -152,28 +152,22 @@ class Main(QtGui.QMainWindow):
                 self.ui.statusBar.clearMessage()
                 return
 
-        # On Linux we can execute it with a Linux path, as Wine will take care
-        # of that, but it still expects a Windows path out the other side. Use
-        # winepath to convert it to the right Windows path.
-        if sys.platform != 'win32':
-            # Extra status bar line because spawning a Wine process is slow
-            self.ui.statusBar.showMessage(_("Preparing to run installer..."))
-            try:
-                # Blocking call
-                package_path = Popen(['winepath', '-w', package_path],
-                        stdout=PIPE).communicate()[0].strip()
-            except OSError:
-                QtGui.QMessageBox.critical(self,
-                        _('PortableApps.com Development Toolkit'),
-                        _("You don't seem to have Wine installed. To build "
-                            "on non-Windows platforms, Wine is required."),
-                        QtGui.QMessageBox.Ok)
-                self.ui.statusBar.clearMessage()
-                return
-
-        # Non-blocking
-        self.ui.statusBar.showMessage(_("Building installer..."), 2000)
-        Popen([installer_path, package_path])
+        self.ui.statusBar.showMessage(_("Building installer..."))
+        if package.installer.build():
+            self.ui.statusBar.showMessage(_('Installer built successfully.'),
+                    2000)
+            # TODO: calculate MD5 checksum and installer size (also installed
+            # size lazily, in a non-blocking way) and show user
+        else:
+            # They've already got an error from the Installer wizard, so no
+            # need to complain too loudly.
+            #QtGui.QMessageBox.critical(self,
+            #        _('PortableApps.com Development Toolkit'),
+            #        _('The installer failed to build.'),
+            #        QtGui.QMessageBox.Ok)
+            #self.ui.statusBar.clearMessage()
+            self.ui.statusBar.showMessage(_('Installer failed to build.'),
+                    2000)
 
     def on_packageText_textChanged(self, string):
         """
