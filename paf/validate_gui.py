@@ -81,12 +81,12 @@ class ValidationDialog(QDialog):
         self.ui.validationResultsArea.setPlainText(out)
 
 
-def validate(path):
+def validate(path, parent=None):
     """
     Validate a package.
     """
 
-    window = ValidationDialog()
+    window = ValidationDialog(parent)
     window.load_package(path)
     center_window(window)
     window.show()

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import os
 from qt import QtCore, QtGui
 from ui.mainwindow import Ui_MainWindow
 from utils import _, center_window
@@ -13,6 +14,7 @@ import warnings
 import warn
 import appinfo
 from functools import wraps
+from subprocess import Popen, PIPE
 
 
 def assert_valid_package_path(func):
@@ -73,7 +75,7 @@ class Main(QtGui.QMainWindow):
     @assert_valid_package_path
     def on_detailsButton_clicked(self, checked):
         "Edit PortableApps.com Format details."
-        appinfo_dialog = appinfo.AppInfoDialog()
+        appinfo_dialog = appinfo.AppInfoDialog(self)
         center_window(appinfo_dialog)
         appinfo_dialog.load_package(paf.Package(
             unicode(self.ui.packageText.text())))
@@ -84,9 +86,10 @@ class Main(QtGui.QMainWindow):
 
     @QtCore.Slot(bool)
     @assert_valid_package_path
-    def on_validateButton_clicked(self, checked=None):
+    def on_validateButton_clicked(self, checked):
         "Validate the app."
-        validate_dialog = paf.validate_gui.validate(self.ui.packageText.text())
+        validate_dialog = paf.validate_gui.validate(self.ui.packageText.text(),
+                self)
         center_window(validate_dialog)
         validate_dialog.setModal(True)
         validate_dialog.show()
@@ -96,8 +99,81 @@ class Main(QtGui.QMainWindow):
     @QtCore.Slot(bool)
     @assert_valid_package_path
     def on_installerButton_clicked(self, checked=None):
-        "Edit PortableApps.com Installer details."
-        not_implemented()
+        "Build the installer with the PortableApps.com Installer."
+
+        package_path = self.ui.packageText.text()
+
+        # First of all, check that it's valid.
+        self.ui.statusBar.showMessage(_("Validating package..."))
+        package = paf.Package(package_path)
+        package.validate()
+
+        if len(package.errors):
+            QtGui.QMessageBox.critical(self,
+                    _('PortableApps.com Development Toolkit'),
+                    _('There are errors in the package. You must fix them before making a release.'),
+                    QtGui.QMessageBox.Ok)
+            self.on_validateButton_clicked(False)
+            self.ui.statusBar.clearMessage()
+            return
+        elif len(package.warnings):
+            answer = QtGui.QMessageBox.warning(self,
+                    _('PortableApps.com Development Toolkit'),
+                    _('There are warnings in the package validation. You should fix them before making a release.'),
+                    QtGui.QMessageBox.Cancel, QtGui.QMessageBox.Ignore)
+            if answer == QtGui.QMessageBox.Cancel:
+                self.on_validateButton_clicked(False)
+                self.ui.statusBar.clearMessage()
+                return
+
+        installer_path = config.get('Main', 'InstallerPath')
+
+        if not installer_path or not os.path.isfile(installer_path):
+            # Try intelligently guessing if in PAF structure
+            portableapps_dir = os.path.dirname(
+                    config.ROOT_DIR.rpartition(
+                        os.path.sep + 'App' + os.path.sep)[0])
+            installer_path = os.path.join(portableapps_dir,
+                    'PortableApps.comInstaller',
+                    'PortableApps.comInstaller.exe')
+            if not portableapps_dir or not os.path.isfile(installer_path):
+                installer_path = QtGui.QFileDialog.getOpenFileName(self,
+                        _('Select the path to the PortableApps.com Installer'),
+                        config.ROOT_DIR,
+                        'PortableApps.com Installer (PortableApps.comInstaller.exe)')
+
+            if installer_path and os.path.isfile(installer_path):
+                config.settings.Main.InstallerPath = installer_path
+            else:
+                QtGui.QMessageBox.critical(self,
+                        _('PortableApps.com Development Toolkit'),
+                        _('Unable to locate the PortableApps.com Installer.'),
+                        QtGui.QMessageBox.Ok)
+                self.ui.statusBar.clearMessage()
+                return
+
+        # On Linux we can execute it with a Linux path, as Wine will take care
+        # of that, but it still expects a Windows path out the other side. Use
+        # winepath to convert it to the right Windows path.
+        if sys.platform != 'win32':
+            # Extra status bar line because spawning a Wine process is slow
+            self.ui.statusBar.showMessage(_("Preparing to run installer..."))
+            try:
+                # Blocking call
+                package_path = Popen(['winepath', '-w', package_path],
+                        stdout=PIPE).communicate()[0].strip()
+            except OSError:
+                QtGui.QMessageBox.critical(self,
+                        _('PortableApps.com Development Toolkit'),
+                        _("You don't seem to have Wine installed. To build "
+                            "on non-Windows platforms, Wine is required."),
+                        QtGui.QMessageBox.Ok)
+                self.ui.statusBar.clearMessage()
+                return
+
+        # Non-blocking
+        self.ui.statusBar.showMessage(_("Building installer..."), 2000)
+        Popen([installer_path, package_path])
 
     def on_packageText_textChanged(self, string):
         """
