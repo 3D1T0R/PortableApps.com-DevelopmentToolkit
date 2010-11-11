@@ -67,6 +67,7 @@ class Ui_MainWindow(object):
         self.statusBar.setSizeGripEnabled(False)
         self.statusBar.setObjectName("statusBar")
         MainWindow.setStatusBar(self.statusBar)
+        self.packageLabel.setBuddy(self.packageText)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -76,8 +77,8 @@ class Ui_MainWindow(object):
         self.createButton.setStatusTip(QtGui.QApplication.translate("MainWindow", "Start a new portable app package", None, QtGui.QApplication.UnicodeUTF8))
         self.createButton.setText(QtGui.QApplication.translate("MainWindow", "&Create a new portable app...", None, QtGui.QApplication.UnicodeUTF8))
         self.createButton.setDescription(QtGui.QApplication.translate("MainWindow", "Start a new portable app package here", None, QtGui.QApplication.UnicodeUTF8))
-        self.packageLabel.setText(QtGui.QApplication.translate("MainWindow", "Package:", None, QtGui.QApplication.UnicodeUTF8))
-        self.packageButton.setText(QtGui.QApplication.translate("MainWindow", "Browse...", None, QtGui.QApplication.UnicodeUTF8))
+        self.packageLabel.setText(QtGui.QApplication.translate("MainWindow", "&Package:", None, QtGui.QApplication.UnicodeUTF8))
+        self.packageButton.setText(QtGui.QApplication.translate("MainWindow", "&Browse...", None, QtGui.QApplication.UnicodeUTF8))
         self.detailsButton.setStatusTip(QtGui.QApplication.translate("MainWindow", "Edit the basic app details", None, QtGui.QApplication.UnicodeUTF8))
         self.detailsButton.setText(QtGui.QApplication.translate("MainWindow", "Edit &details", None, QtGui.QApplication.UnicodeUTF8))
         self.detailsButton.setDescription(QtGui.QApplication.translate("MainWindow", "Edit the basic app details", None, QtGui.QApplication.UnicodeUTF8))

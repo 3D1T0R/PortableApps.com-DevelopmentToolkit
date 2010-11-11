@@ -74,7 +74,10 @@
         <item>
          <widget class="QLabel" name="packageLabel">
           <property name="text">
-           <string>Package:</string>
+           <string>&amp;Package:</string>
+          </property>
+          <property name="buddy">
+           <cstring>packageText</cstring>
           </property>
          </widget>
         </item>
@@ -84,7 +87,7 @@
         <item>
          <widget class="QPushButton" name="packageButton">
           <property name="text">
-           <string>Browse...</string>
+           <string>&amp;Browse...</string>
           </property>
          </widget>
         </item>
