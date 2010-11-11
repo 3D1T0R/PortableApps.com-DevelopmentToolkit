@@ -140,7 +140,7 @@ class Package(object):
         return path_insensitive(join(self._directory, *path))
 
     def _dirlist(self, recommended=False):
-        dirlist = self._mandatory_dirs
+        dirlist = self._mandatory_dirs[:]
         if recommended:
             dirlist += self._recommended_dirs
         if self.launcher_is_pal:
@@ -161,7 +161,7 @@ class Package(object):
                 os.mkdir(dirpath)
 
     def _filelist(self, recommended=False):
-        filelist = self._mandatory_files
+        filelist = self._mandatory_files[:]
         if recommended:
             filelist += self._recommended_files
         if self.launcher_is_pal:
