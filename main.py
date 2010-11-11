@@ -6,6 +6,8 @@ from qt import QtCore, QtGui
 from ui.mainwindow import Ui_MainWindow
 from utils import _, center_window
 import paf
+import paf.validate_gui
+import paf.validate_cli
 import config
 import warnings
 import warn
@@ -83,8 +85,13 @@ class Main(QtGui.QMainWindow):
     @QtCore.Slot(bool)
     @assert_valid_package_path
     def on_validateButton_clicked(self, checked=None):
-        "Edit PortableApps.com Launcher details."
-        not_implemented()
+        "Validate the app."
+        validate_dialog = paf.validate_gui.validate(self.ui.packageText.text())
+        center_window(validate_dialog)
+        validate_dialog.setModal(True)
+        validate_dialog.show()
+        # Keep a reference to it so it doesn't get cleaned up
+        self.dialog = validate_dialog
 
     @QtCore.Slot(bool)
     @assert_valid_package_path
@@ -139,7 +146,6 @@ def cli_help():
 
 def validate_gui():
     app = QtGui.QApplication(sys.argv)
-    import paf.validate_gui
     window = paf.validate_gui.validate(sys.argv[2])
     exit_code = app.exec_()
 
@@ -147,7 +153,6 @@ def validate_gui():
 
 
 def validate_cli():
-    import paf.validate_cli
     return paf.validate_cli.validate(sys.argv[2])
 
 

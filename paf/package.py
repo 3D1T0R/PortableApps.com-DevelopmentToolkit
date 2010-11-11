@@ -233,6 +233,10 @@ class Package(object):
 
         self.appinfo.validate()
 
+        self.errors.extend(self.appinfo.errors)
+        self.warnings.extend(self.appinfo.warnings)
+        self.info.extend(self.appinfo.info)
+
     @property
     def eula(self):
         """
