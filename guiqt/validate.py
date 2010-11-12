@@ -2,8 +2,6 @@
 
 """
 Validate an app package in PortableApps.com Format and produce HTML.
-
-This is loaded from config.py.
 """
 
 from qt.QtGui import QDialog
@@ -13,11 +11,16 @@ from utils import center_window
 from languages import LANG
 
 
+__all__ = ['ValidationDialog']
+
+
 class ValidationDialog(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, path=None, parent=None):
         super(ValidationDialog, self).__init__(parent)
         self.ui = Ui_ValidationDialog()
         self.ui.setupUi(self)
+        if path:
+            self.load_package(path)
 
     def load_package(self, path):
         """
@@ -79,16 +82,3 @@ class ValidationDialog(QDialog):
 
         self.ui.validationResultsHTML.setHtml(out)
         self.ui.validationResultsArea.setPlainText(out)
-
-
-def validate(path, parent=None):
-    """
-    Validate a package.
-    """
-
-    window = ValidationDialog(parent)
-    window.load_package(path)
-    center_window(window)
-    window.show()
-
-    return window
