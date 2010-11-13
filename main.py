@@ -9,12 +9,10 @@ import sys
 from qt import QtGui
 from utils import center_window
 import paf
-import paf.validate_cli
 import config
 import warnings
 import warn
-from guiqt.main import MainWindow
-from guiqt.validate import ValidationDialog
+from frontend.guiqt import MainWindow, ValidationDialog
 
 
 def main():
@@ -61,7 +59,8 @@ def validate_gui():
 
 
 def validate_cli():
-    return paf.validate_cli.validate(sys.argv[2])
+    from frontend.cli.validate import validate
+    return validate(sys.argv[2])
 
 
 def not_implemented():
