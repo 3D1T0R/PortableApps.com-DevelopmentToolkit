@@ -14,22 +14,22 @@ else
 fi
 
 # Generate the files
-$RCC graphics/graphics.qrc -o ui/graphics_rc.py
-$UIC ui/mainwindow.ui -o ui/mainwindow.py
-$UIC ui/appinfo.ui -o ui/appinfo.py
-$UIC ui/validationsimple.ui -o ui/validationsimple.py
+$RCC graphics/graphics.qrc -o frontend/guiqt/ui/graphics_rc.py
+$UIC frontend/guiqt/ui/mainwindow.ui -o frontend/guiqt/ui/mainwindow.py
+$UIC frontend/guiqt/ui/appinfo.ui -o frontend/guiqt/ui/appinfo.py
+$UIC frontend/guiqt/ui/validationsimple.ui -o frontend/guiqt/ui/validationsimple.py
 
 # Now change PyQt4/PySide imports to use the qt proxy.
 sed -i "s/from $PYMOD import /from qt import /" \
-	ui/graphics_rc.py \
-	ui/mainwindow.py \
-	ui/appinfo.py \
-	ui/validationsimple.py
+	frontend/guiqt/ui/graphics_rc.py \
+	frontend/guiqt/ui/mainwindow.py \
+	frontend/guiqt/ui/appinfo.py \
+	frontend/guiqt/ui/validationsimple.py
 
 # Remove the "Created" time as it clutters commits. Unfortunately I can't yet
 # figure out how to remove the new line as well.
 sed -i "s/^# Created: .*//" \
-	ui/graphics_rc.py \
-	ui/mainwindow.py \
-	ui/appinfo.py \
-	ui/validationsimple.py
+	frontend/guiqt/ui/graphics_rc.py \
+	frontend/guiqt/ui/mainwindow.py \
+	frontend/guiqt/ui/appinfo.py \
+	frontend/guiqt/ui/validationsimple.py

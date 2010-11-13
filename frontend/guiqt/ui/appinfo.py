@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'ui/appinfo.ui'
+# Form implementation generated from reading ui file 'frontend/guiqt/ui/appinfo.ui'
 #
 
 #      by: PySide uic UI code generator

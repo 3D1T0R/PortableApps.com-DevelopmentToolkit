@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'ui/validationsimple.ui'
+# Form implementation generated from reading ui file 'frontend/guiqt/ui/validationsimple.ui'
 #
 
 #      by: PySide uic UI code generator
