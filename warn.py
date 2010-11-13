@@ -1,6 +1,6 @@
 import warnings
 from qt.QtGui import QMessageBox
-from utils import _S, _
+from utils import _
 
 
 def warn_qt(message, category, filename, lineno, file_=None, line=None):
@@ -10,7 +10,7 @@ def warn_qt(message, category, filename, lineno, file_=None, line=None):
     else:
         window = None
 
-    msg = _S('%(message)s\n\n(From %(file)s, line %(line)s)') % {
+    msg = _('%(message)s\n\n(From %(file)s, line %(line)s)') % {
             'message': message, 'file': filename, 'line': lineno}
 
     # Potential danger point: if the QApplication hasn't been initialised yet

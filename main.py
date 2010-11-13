@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+Main launch script for PortableApps.com Development Toolkit.
+"""
+
 import sys
-import os
-from qt import QtCore, QtGui
-from ui.mainwindow import Ui_MainWindow
-from utils import _, center_window
+from qt import QtGui
+from utils import center_window
 import paf
 import paf.validate_cli
 import config
 import warnings
 import warn
-from functools import wraps
-from subprocess import Popen, PIPE
 from guiqt.main import MainWindow
 from guiqt.validate import ValidationDialog
 
@@ -68,18 +68,18 @@ def not_implemented():
     warnings.warn('Sorry, this is not implemented yet.',
             UserWarning, stacklevel=2)
 
-
-if len(sys.argv) > 1:
-    if sys.argv[1] == 'help':
-        action = cli_help
-    elif sys.argv[1] == 'validate':
-        action = len(sys.argv) == 3 and validate_gui or cli_help
-    elif sys.argv[1] == 'validate-cli':
-        action = len(sys.argv) == 3 and validate_cli or cli_help
+def select_action():
+    if len(sys.argv) > 1:
+        if sys.argv[1] == 'help':
+            return cli_help
+        elif sys.argv[1] == 'validate':
+            return len(sys.argv) == 3 and validate_gui or cli_help
+        elif sys.argv[1] == 'validate-cli':
+            return len(sys.argv) == 3 and validate_cli or cli_help
+        else:
+            return main
     else:
-        action = main
-else:
-    action = main
+        return main
 
 if __name__ == "__main__":
-    sys.exit(action())
+    sys.exit(select_action()())

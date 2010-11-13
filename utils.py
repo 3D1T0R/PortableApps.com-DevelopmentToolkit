@@ -6,7 +6,6 @@ import os
 
 _ = lambda x: QApplication.translate("MainWindow", x, None,
         QApplication.UnicodeUTF8)
-_S = lambda x: unicode(_(x))
 
 
 def ini_defined(val):

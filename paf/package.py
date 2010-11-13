@@ -3,7 +3,7 @@
 from os.path import exists, isdir, isfile, join, abspath
 import os
 import config
-from utils import ini_defined, path_insensitive, _S as _
+from utils import ini_defined, path_insensitive, _
 from languages import LANG
 from shutil import copy2 as copy
 import paf

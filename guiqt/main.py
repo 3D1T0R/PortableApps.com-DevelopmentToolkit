@@ -73,7 +73,7 @@ class MainWindow(QtGui.QMainWindow):
         appinfo_dialog.setModal(True)
         appinfo_dialog.show()
         # Keep a reference to it so it doesn't get cleaned up
-        self.dialog = appinfo_dialog
+        self._dialog = appinfo_dialog
 
     @QtCore.Slot(bool)
     @assert_valid_package_path
@@ -84,7 +84,7 @@ class MainWindow(QtGui.QMainWindow):
         validate_dialog.setModal(True)
         validate_dialog.show()
         # Keep a reference to it so it doesn't get cleaned up
-        self.dialog = validate_dialog
+        self._dialog = validate_dialog
 
     @QtCore.Slot(bool)
     @assert_valid_package_path
