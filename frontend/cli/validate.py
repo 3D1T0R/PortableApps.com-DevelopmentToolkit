@@ -2,12 +2,13 @@
 
 """
 Validate an app package in PortableApps.com Format from the command line.
-
-This is loaded from config.py.
 """
 
 import paf
 from languages import LANG
+
+
+__all__ = ['validate']
 
 
 def validate(path):

@@ -10,6 +10,9 @@ import paf
 from paf import PAFException
 
 
+__all__ = ['Package', 'create_package', 'valid_package']
+
+
 class Package(object):
     """
     Manages all the details of a package in (or not in!) PortableApps.com

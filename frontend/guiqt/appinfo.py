@@ -7,6 +7,9 @@ from utils import center_window, ini_defined
 from paf.appinfo import valid_appid
 
 
+__all__ = ['AppInfoDialog']
+
+
 class AppInfoDialog(QtGui.QDialog):
     def __init__(self, parent=None):
         super(AppInfoDialog, self).__init__(parent)
