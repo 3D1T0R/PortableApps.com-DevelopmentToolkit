@@ -28,16 +28,16 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.setupUi(self)
         self.ui.packageText.setFocus()
 
-    @QtCore.Slot(bool)
-    def on_packageButton_clicked(self, checked):
+    @QtCore.Slot()
+    def on_packageButton_clicked(self):
         "Select a package."
         text_box = self.ui.packageText
         current_path = text_box.text()
         text_box.setText(QtGui.QFileDialog.getExistingDirectory(None,
             _("Select a portable app package"), current_path) or current_path)
 
-    @QtCore.Slot(bool)
-    def on_createButton_clicked(self, checked):
+    @QtCore.Slot()
+    def on_createButton_clicked(self):
         "Create a package."
         self.ui.statusBar.showMessage(_("Creating package..."))
         text_box = self.ui.packageText
@@ -62,9 +62,9 @@ class MainWindow(QtGui.QMainWindow):
                 self.ui.statusBar.clearMessage()
             break
 
-    @QtCore.Slot(bool)
+    @QtCore.Slot()
     @assert_valid_package_path
-    def on_detailsButton_clicked(self, checked):
+    def on_detailsButton_clicked(self):
         "Edit PortableApps.com Format details."
         appinfo_dialog = appinfo.AppInfoDialog(self)
         center_window(appinfo_dialog)
@@ -75,9 +75,9 @@ class MainWindow(QtGui.QMainWindow):
         # Keep a reference to it so it doesn't get cleaned up
         self._dialog = appinfo_dialog
 
-    @QtCore.Slot(bool)
+    @QtCore.Slot()
     @assert_valid_package_path
-    def on_validateButton_clicked(self, checked):
+    def on_validateButton_clicked(self):
         "Validate the app."
         validate_dialog = ValidationDialog(self.ui.packageText.text(), self)
         center_window(validate_dialog)
@@ -86,9 +86,9 @@ class MainWindow(QtGui.QMainWindow):
         # Keep a reference to it so it doesn't get cleaned up
         self._dialog = validate_dialog
 
-    @QtCore.Slot(bool)
+    @QtCore.Slot()
     @assert_valid_package_path
-    def on_installerButton_clicked(self, checked=None):
+    def on_installerButton_clicked(self):
         "Build the installer with the PortableApps.com Installer."
 
         package_path = self.ui.packageText.text()
