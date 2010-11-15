@@ -14,7 +14,7 @@ def assert_valid_package_path(func):
     happening."""
     @wraps(func)
     def decorate(self, *args, **kwargs):
-        if not paf.valid_package(unicode(self.ui.packageText.text())):
+        if not paf.valid_package(self.ui.packageText.text()):
             raise Exception("The package is not valid.")
 
         func(self, *args, **kwargs)
@@ -27,6 +27,7 @@ class MainWindow(QtGui.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.packageText.setFocus()
+        self.on_packageText_textChanged(self.ui.packageText.text())
 
     @QtCore.Slot()
     def on_packageButton_clicked(self):
@@ -47,7 +48,7 @@ class MainWindow(QtGui.QMainWindow):
                     _("Create a directory for the package"))
             if package:
                 try:
-                    paf.create_package(unicode(package))
+                    paf.create_package(package)
                 except paf.PAFException as e:
                     QtGui.QMessageBox.critical(self,
                             _('PortableApps.com Development Toolkit'),
@@ -68,8 +69,7 @@ class MainWindow(QtGui.QMainWindow):
         "Edit PortableApps.com Format details."
         appinfo_dialog = appinfo.AppInfoDialog(self)
         center_window(appinfo_dialog)
-        appinfo_dialog.load_package(paf.Package(
-            unicode(self.ui.packageText.text())))
+        appinfo_dialog.load_package(paf.Package(self.ui.packageText.text()))
         appinfo_dialog.setModal(True)
         appinfo_dialog.show()
         # Keep a reference to it so it doesn't get cleaned up
@@ -103,7 +103,7 @@ class MainWindow(QtGui.QMainWindow):
                     _('PortableApps.com Development Toolkit'),
                     _('There are errors in the package. You must fix them before making a release.'),
                     QtGui.QMessageBox.Ok)
-            self.on_validateButton_clicked(False)
+            self.on_validateButton_clicked()
             self.ui.statusBar.clearMessage()
             return
         elif len(package.warnings):
@@ -159,13 +159,14 @@ class MainWindow(QtGui.QMainWindow):
             self.ui.statusBar.showMessage(_('Installer failed to build.'),
                     2000)
 
+    @QtCore.Slot(unicode)
     def on_packageText_textChanged(self, string):
         """
         Enable or disable the buttons below based on whether the text is a
         valid directory. This is used instead of a validator so it can do
         something without being overly hacky.
         """
-        valid = paf.valid_package(unicode(string))
+        valid = paf.valid_package(string)
         self.ui.detailsButton.setEnabled(valid)
         self.ui.validateButton.setEnabled(valid)
         self.ui.installerButton.setEnabled(valid)
