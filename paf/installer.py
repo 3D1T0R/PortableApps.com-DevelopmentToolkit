@@ -243,8 +243,7 @@ class Installer(object):
                 .replace(';', '.') \
                 .replace('+', 'Plus')
 
-        if ini_defined(self.ini.DownloadFiles) and \
-                ini_defined(self.ini.DownloadFiles.DownloadURL):
+        if ini_defined(self.ini.DownloadFiles.DownloadURL):
             filename += '_online'
 
         return '%s.paf.exe' % filename

@@ -102,12 +102,11 @@ class Package(object):
     @property
     def appid(self):
         "Get the AppID of the package."
-        if ini_defined(self.appinfo.ini.Details):
-            if ini_defined(self.appinfo.ini.Details.AppID):
-                return self.appinfo.ini.Details.AppID
-            # Compatibility with a former typo in the PAF spec
-            elif ini_defined(self.appinfo.ini.Details.AppId):
-                return self.appinfo.ini.Details.AppId
+        if ini_defined(self.appinfo.ini.Details.AppID):
+            return self.appinfo.ini.Details.AppID
+        # Compatibility with a former typo in the PAF spec
+        elif ini_defined(self.appinfo.ini.Details.AppId):
+            return self.appinfo.ini.Details.AppId
         else:
             return None
 

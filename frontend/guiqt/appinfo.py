@@ -98,20 +98,17 @@ class AppInfoDialog(QtGui.QDialog):
         # Correct it (don't care about whether it was valid)
         appid = valid_appid(appid)[1]
 
-        if not (ini_defined(self.appinfo.Details) and
-                ini_defined(self.appinfo.Details.AppID)) and \
+        if not ini_defined(self.appinfo.Details.AppID) and \
         not self.ui.AppID.isModified():
             self.ui.AppID.setText(appid)
 
-        if not (ini_defined(self.appinfo.Details) and
-                ini_defined(self.appinfo.Details.Publisher)) and \
+        if not ini_defined(self.appinfo.Details.Publisher) and \
         not self.ui.Publisher.isModified():
             self.ui.Publisher.setText('%s team & PortableApps.com' % name)
 
         # Homepage: done by on_AppID_textChanged
 
-        if not (ini_defined(self.appinfo.Details) and
-                ini_defined(self.appinfo.Details.Description)) and \
+        if not ini_defined(self.appinfo.Details.Description) and \
         not self.ui.Description.isModified():
             self.ui.Description.setText('%s is a ___' % name)
 
@@ -119,90 +116,84 @@ class AppInfoDialog(QtGui.QDialog):
     def on_AppID_textChanged(self, value):
         "Auto-fill Homepage when the Name is changed."
 
-        if not (ini_defined(self.appinfo.Details) and
-                ini_defined(self.appinfo.Details.Homepage)) and \
+        if not ini_defined(self.appinfo.Details.Homepage) and \
         not self.ui.Homepage.isModified():
             self.ui.Homepage.setText('PortableApps.com/%s' % unicode(value))
 
     def load_package(self, package):
         self.package = package
         self.appinfo = appinfo = package.appinfo.ini
-        if ini_defined(appinfo.Details):
-            self._fill(self.ui.Name, appinfo.Details.Name)
-            self._fill(self.ui.AppID, appinfo.Details.AppID)
-            self._fill(self.ui.Publisher, appinfo.Details.Publisher)
-            self._fill(self.ui.Homepage, appinfo.Details.Homepage)
-            self._fill(self.ui.Category, appinfo.Details.Category)
-            self._fill(self.ui.Description, appinfo.Details.Description)
-            self._fill(self.ui.Language, appinfo.Details.Language)
-            self._fill(self.ui.Trademarks, appinfo.Details.Trademarks)
 
-        if ini_defined(appinfo.License):
-            self._fill(self.ui.Shareable, appinfo.License.Shareable)
-            self._fill(self.ui.OpenSource, appinfo.License.OpenSource)
-            self._fill(self.ui.Freeware, appinfo.License.Freeware)
-            self._fill(self.ui.CommercialUse, appinfo.License.CommercialUse)
+        self._fill(self.ui.Name, appinfo.Details.Name)
+        self._fill(self.ui.AppID, appinfo.Details.AppID)
+        self._fill(self.ui.Publisher, appinfo.Details.Publisher)
+        self._fill(self.ui.Homepage, appinfo.Details.Homepage)
+        self._fill(self.ui.Category, appinfo.Details.Category)
+        self._fill(self.ui.Description, appinfo.Details.Description)
+        self._fill(self.ui.Language, appinfo.Details.Language)
+        self._fill(self.ui.Trademarks, appinfo.Details.Trademarks)
 
-        if ini_defined(appinfo.Version):
-            if ini_defined(appinfo.Version.PackageVersion):
-                pv = appinfo.Version.PackageVersion
-                try:
-                    pv = map(int, pv.split('.'))
-                except ValueError:
-                    pass
-                else:
-                    if len(pv) == 4:
-                        self._fill(self.ui.PackageVersion1, pv[0])
-                        self._fill(self.ui.PackageVersion2, pv[1])
-                        self._fill(self.ui.PackageVersion3, pv[2])
-                        self._fill(self.ui.PackageVersion4, pv[3])
+        self._fill(self.ui.Shareable, appinfo.License.Shareable)
+        self._fill(self.ui.OpenSource, appinfo.License.OpenSource)
+        self._fill(self.ui.Freeware, appinfo.License.Freeware)
+        self._fill(self.ui.CommercialUse, appinfo.License.CommercialUse)
 
-            # Split DisplayVersion into chunks
-            if ini_defined(appinfo.Version.DisplayVersion):
-                dv = appinfo.Version.DisplayVersion
-                splits = (
-                        (' development test ', 'Development Test'),
-                        (' developmenttest ', 'Development Test'),
-                        (' devtest ', 'Development Test'),
-                        (' dev test ', 'Development Test'),
-                        (' prerelease ', 'Pre-Release'),
-                        (' pre-release ', 'Pre-Release'),
-                        (' prerelease', 'Pre-Release'),
-                        (' revision ', 'Revision'),
-                        (' rev ', 'Revision'))
-                for match, target in splits:
-                    split = map(str.strip, dv.lower().split(match))
-                    if len(split) == 2:
-                        try:
-                            split[1] = int(split[1])
-                        except ValueError:
-                            split[1] = 0
+        if ini_defined(appinfo.Version.PackageVersion):
+            pv = appinfo.Version.PackageVersion
+            try:
+                pv = map(int, pv.split('.'))
+            except ValueError:
+                pass
+            else:
+                if len(pv) == 4:
+                    self._fill(self.ui.PackageVersion1, pv[0])
+                    self._fill(self.ui.PackageVersion2, pv[1])
+                    self._fill(self.ui.PackageVersion3, pv[2])
+                    self._fill(self.ui.PackageVersion4, pv[3])
 
-                        self._fill(self.ui.DisplayVersionBase, split[0])
-                        self._fill(self.ui.DisplayVersionType, target)
-                        self._fill(self.ui.DisplayVersionNum, split[1])
-                        break
-                else:
-                    self._fill(self.ui.DisplayVersionBase, dv)
-                    self._fill(self.ui.DisplayVersionType,
-                            '(official release)')
-                    # TODO: this may not be necessary
-                    self.ui.DisplayVersionNum.setEnabled(False)
+        # Split DisplayVersion into chunks
+        if ini_defined(appinfo.Version.DisplayVersion):
+            dv = appinfo.Version.DisplayVersion
+            splits = (
+                    (' development test ', 'Development Test'),
+                    (' developmenttest ', 'Development Test'),
+                    (' devtest ', 'Development Test'),
+                    (' dev test ', 'Development Test'),
+                    (' prerelease ', 'Pre-Release'),
+                    (' pre-release ', 'Pre-Release'),
+                    (' prerelease', 'Pre-Release'),
+                    (' revision ', 'Revision'),
+                    (' rev ', 'Revision'))
+            for match, target in splits:
+                split = map(str.strip, dv.lower().split(match))
+                if len(split) == 2:
+                    try:
+                        split[1] = int(split[1])
+                    except ValueError:
+                        split[1] = 0
 
-            if not package.eula:
-                self.ui.EULAVersion.setEnabled(False)
-            self._fill(self.ui.EULAVersion, appinfo.Version.EULAVersion)
+                    self._fill(self.ui.DisplayVersionBase, split[0])
+                    self._fill(self.ui.DisplayVersionType, target)
+                    self._fill(self.ui.DisplayVersionNum, split[1])
+                    break
+            else:
+                self._fill(self.ui.DisplayVersionBase, dv)
+                self._fill(self.ui.DisplayVersionType,
+                        '(official release)')
+                # TODO: this may not be necessary
+                self.ui.DisplayVersionNum.setEnabled(False)
+
+        if not package.eula:
+            self.ui.EULAVersion.setEnabled(False)
+        self._fill(self.ui.EULAVersion, appinfo.Version.EULAVersion)
 
         # TODO: no Control section
-        #if ini_defined(appinfo.Control):
 
-        if ini_defined(appinfo.SpecialPaths):
-            self._fill(self.ui.PluginsPath, appinfo.SpecialPaths.Plugins)
+        self._fill(self.ui.PluginsPath, appinfo.SpecialPaths.Plugins)
 
-        if ini_defined(appinfo.Dependencies):
-            self._fill(self.ui.UsesJava, appinfo.Dependencies.UsesJava)
-            self._fill(self.ui.UsesDotNetVersion,
-                    appinfo.Dependencies.UsesDotNetVersion)
+        self._fill(self.ui.UsesJava, appinfo.Dependencies.UsesJava)
+        self._fill(self.ui.UsesDotNetVersion,
+                appinfo.Dependencies.UsesDotNetVersion)
 
     def save(self):
         "Loads the values from the GUI and saves them to appinfo.ini."
@@ -253,16 +244,14 @@ class AppInfoDialog(QtGui.QDialog):
         if self.ui.UsesJava.isChecked():
             appinfo.Dependencies.UsesJava = 'true'
         # If it was ticked before, remove it
-        elif ini_defined(appinfo.Dependencies) and \
-                ini_defined(appinfo.Dependencies.UsesJava):
+        elif ini_defined(appinfo.Dependencies.UsesJava):
             del appinfo.Dependencies.UsesJava
 
         if self.ui.UsesDotNetVersion.currentText() != 'None':
             appinfo.Dependencies.UsesDotNetVersion = \
                     self.ui.UsesDotNetVersion.currentText()
         # If it was set before, remove it
-        elif ini_defined(appinfo.Dependencies) and \
-                ini_defined(appinfo.Dependencies.UsesDotNetVersion):
+        elif ini_defined(appinfo.Dependencies.UsesDotNetVersion):
             del appinfo.Dependencies.UsesDotNetVersion
 
         # Deleting the last value in the section doesn't delete the section at

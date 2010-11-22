@@ -125,111 +125,117 @@ class AppInfo(object):
                 self.errors.append(LANG.APPINFO.VALUE_EXTRA %
                     dict(section=section, key=extra))
 
-        if ini_defined(ini.Format):
-            if ini.Format.Type != 'PortableApps.comFormat':
-                self.errors.append(LANG.APPINFO.BAD_FORMAT_TYPE)
+        # [Format]
 
-            if ini.Format.Version != FORMAT_VERSION:
-                if ini.Format.Version in ('0.90', '0.91', '0.9.8', '1.0'):
-                    self.warnings.append(LANG.APPINFO.OLD_FORMAT_VERSION
-                    % dict(old_version=ini.Format.Version,
-                        current_version=FORMAT_VERSION))
-                else:
-                    self.errors.append(LANG.APPINFO.BAD_FORMAT_VERSION
-                            % FORMAT_VERSION)
+        if ini.Format.Type != 'PortableApps.comFormat':
+            self.errors.append(LANG.APPINFO.BAD_FORMAT_TYPE)
 
-        if ini_defined(ini.Details):
-            # Name: no real validation
-            if ini_defined(ini.Details.Name) and '&' in ini.Details.Name:
-                self.warnings.append(LANG.APPINFO.DETAILS_NAME_AMP)
+        if ini.Format.Version != FORMAT_VERSION:
+            if ini.Format.Version in ('0.90', '0.91', '0.9.8', '1.0'):
+                self.warnings.append(LANG.APPINFO.OLD_FORMAT_VERSION
+                % dict(old_version=ini.Format.Version,
+                    current_version=FORMAT_VERSION))
+            else:
+                self.errors.append(LANG.APPINFO.BAD_FORMAT_VERSION
+                        % FORMAT_VERSION)
 
-            # AppID
-            if ini_defined(ini.Details.AppID) and \
-            OrderedSet(ini.Details.AppID) - '0123456789.-+_' - \
-            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz':
-                self.errors.append(LANG.APPINFO.DETAILS_APPID_BAD)
+        # [Details]
 
-            # Publisher: no validation
+        # Name: no real validation
+        if ini_defined(ini.Details.Name) and '&' in ini.Details.Name:
+            self.warnings.append(LANG.APPINFO.DETAILS_NAME_AMP)
 
-            # Homepage: no validation
-            if ini_defined(ini.Details.Homepage) and \
-            ini.Details.Homepage.lower().startswith('http://'):
-                self.info.append(LANG.APPINFO.DETAILS_HOMEPAGE_HTTP)
+        # AppID
+        if ini_defined(ini.Details.AppID) and \
+        OrderedSet(ini.Details.AppID) - '0123456789.-+_' - \
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz':
+            self.errors.append(LANG.APPINFO.DETAILS_APPID_BAD)
 
-            # Category
-            if ini_defined(ini.Details.Category) and \
-                    ini.Details.Category not in ('Accessibility',
-                            'Development', 'Education', 'Games',
-                            'Graphics & Pictures', 'Internet', 'Music & Video',
-                            'Office', 'Security', 'Utilities'):
-                self.errors.append(LANG.APPINFO.DETAILS_CATEGORY_BAD)
+        # Publisher: no validation
 
-            # Description: length
-            if ini_defined(ini.Details.Description):
-                chars = len(ini.Details.Description)
-                if chars > 512:
-                    self.errors.append(
-                            LANG.APPINFO.DETAILS_DESCRIPTION_TOO_LONG)
-                elif chars > 150:
-                    self.warnings.append(LANG.APPINFO.DETAILS_DESCRIPTION_LONG
-                            % chars)
+        # Homepage: no validation
+        if ini_defined(ini.Details.Homepage) and \
+        ini.Details.Homepage.lower().startswith('http://'):
+            self.info.append(LANG.APPINFO.DETAILS_HOMEPAGE_HTTP)
 
-            # Language
-            if ini_defined(ini.Details.Language) and \
-            ini.Details.Language not in ('Multilingual', 'Afrikaans',
-                    'Albanian', 'Arabic', 'Armenian', 'Basque', 'Belarusian',
-                    'Bosnian', 'Breton', 'Bulgarian', 'Catalan', 'Cibemba',
-                    'Croatian', 'Czech', 'Danish', 'Dutch', 'Efik', 'English',
-                    'Estonian', 'Farsi', 'Finnish', 'French', 'Galician',
-                    'Georgian', 'German', 'Greek', 'Hebrew', 'Hungarian',
-                    'Icelandic', 'Igbo', 'Indonesian', 'Irish', 'Italian',
-                    'Japanese', 'Khmer', 'Korean', 'Kurdish', 'Latvian',
-                    'Lithuanian', 'Luxembourgish', 'Macedonian', 'Malagasy',
-                    'Malay', 'Mongolian', 'Norwegian', 'NorwegianNynorsk',
-                    'Pashto', 'Polish', 'Portuguese', 'PortugueseBR',
-                    'Romanian', 'Russian', 'Serbian', 'SerbianLatin',
-                    'SimpChinese', 'Slovak', 'Slovenian', 'Spanish',
-                    'SpanishInternational', 'Swahili', 'Swedish', 'Thai',
-                    'TradChinese', 'Turkish', 'Ukranian', 'Uzbek', 'Valencian',
-                    'Vietnamese', 'Welsh', 'Yoruba'):
-                # Language names omitted, it would be too long otherwise.
-                self.errors.append(LANG.APPINFO.DETAILS_LANGUAGE_BAD)
+        # Category
+        if ini_defined(ini.Details.Category) and \
+                ini.Details.Category not in ('Accessibility',
+                        'Development', 'Education', 'Games',
+                        'Graphics & Pictures', 'Internet', 'Music & Video',
+                        'Office', 'Security', 'Utilities'):
+            self.errors.append(LANG.APPINFO.DETAILS_CATEGORY_BAD)
 
-            # Trademarks: no validation
+        # Description: length
+        if ini_defined(ini.Details.Description):
+            chars = len(ini.Details.Description)
+            if chars > 512:
+                self.errors.append(
+                        LANG.APPINFO.DETAILS_DESCRIPTION_TOO_LONG)
+            elif chars > 150:
+                self.warnings.append(LANG.APPINFO.DETAILS_DESCRIPTION_LONG
+                        % chars)
 
-            # InstallType: no validation
+        # Language
+        if ini_defined(ini.Details.Language) and \
+        ini.Details.Language not in ('Multilingual', 'Afrikaans',
+                'Albanian', 'Arabic', 'Armenian', 'Basque', 'Belarusian',
+                'Bosnian', 'Breton', 'Bulgarian', 'Catalan', 'Cibemba',
+                'Croatian', 'Czech', 'Danish', 'Dutch', 'Efik', 'English',
+                'Estonian', 'Farsi', 'Finnish', 'French', 'Galician',
+                'Georgian', 'German', 'Greek', 'Hebrew', 'Hungarian',
+                'Icelandic', 'Igbo', 'Indonesian', 'Irish', 'Italian',
+                'Japanese', 'Khmer', 'Korean', 'Kurdish', 'Latvian',
+                'Lithuanian', 'Luxembourgish', 'Macedonian', 'Malagasy',
+                'Malay', 'Mongolian', 'Norwegian', 'NorwegianNynorsk',
+                'Pashto', 'Polish', 'Portuguese', 'PortugueseBR',
+                'Romanian', 'Russian', 'Serbian', 'SerbianLatin',
+                'SimpChinese', 'Slovak', 'Slovenian', 'Spanish',
+                'SpanishInternational', 'Swahili', 'Swedish', 'Thai',
+                'TradChinese', 'Turkish', 'Ukranian', 'Uzbek', 'Valencian',
+                'Vietnamese', 'Welsh', 'Yoruba'):
+            # Language names omitted, it would be too long otherwise.
+            self.errors.append(LANG.APPINFO.DETAILS_LANGUAGE_BAD)
 
-            # PluginType: only applicable for self.plugin == True
-            if ini_defined(ini.Details.PluginType):
-                if not self.package.plugin:
-                    self.errors.append(
-                            LANG.APPINFO.DETAILS_PLUGINTYPE_NOT_PLUGIN)
-                elif ini.Details.PluginType != 'CommonFiles':
-                    self.errors.append(
-                            LANG.APPINFO.DETAILS_PLUGINTYPE_BAD)
+        # Trademarks: no validation
 
-        if ini_defined(ini.License):
-            for key in ('Shareable', 'OpenSource', 'Freeware',
-                    'CommercialUse'):
-                if ini_defined(ini.License[key]) and \
-                ini.License[key] not in ('true', 'false'):
-                    self.errors.append(LANG.APPINFO.BOOL_BAD %
-                    dict(section='License', key=key))
+        # InstallType: no validation
 
-            eula = self.package.eula
-            if ini_defined(ini.License.EULAVersion) and not eula:
-                self.errors.append(LANG.APPINFO.LICENSE_EULAVERSION_NO_EULA
-                % dict(eula=eula))
+        # PluginType: only applicable for self.plugin == True
+        if ini_defined(ini.Details.PluginType):
+            if not self.package.plugin:
+                self.errors.append(
+                        LANG.APPINFO.DETAILS_PLUGINTYPE_NOT_PLUGIN)
+            elif ini.Details.PluginType != 'CommonFiles':
+                self.errors.append(
+                        LANG.APPINFO.DETAILS_PLUGINTYPE_BAD)
 
-        if ini_defined(ini.Version):
-            if ini_defined(ini.Version.PackageVersion):
-                try:
-                    if len(map(int,
-                            ini.Version.PackageVersion.split('.'))) != 4:
-                        raise ValueError
-                except ValueError:
-                    self.errors.append(LANG.APPINFO.VERSION_PACKAGEVERSION_BAD)
-            # DisplayVersion: no validation yet (TODO)
+        # [License]
+
+        for key in ('Shareable', 'OpenSource', 'Freeware',
+                'CommercialUse'):
+            if ini_defined(ini.License[key]) and \
+            ini.License[key] not in ('true', 'false'):
+                self.errors.append(LANG.APPINFO.BOOL_BAD %
+                dict(section='License', key=key))
+
+        eula = self.package.eula
+        if ini_defined(ini.License.EULAVersion) and not eula:
+            self.errors.append(LANG.APPINFO.LICENSE_EULAVERSION_NO_EULA
+            % dict(eula=eula))
+
+        # [Version]
+
+        if ini_defined(ini.Version.PackageVersion):
+            try:
+                if len(map(int,
+                        ini.Version.PackageVersion.split('.'))) != 4:
+                    raise ValueError
+            except ValueError:
+                self.errors.append(LANG.APPINFO.VERSION_PACKAGEVERSION_BAD)
+        # DisplayVersion: no validation yet (TODO)
+
+        # [SpecialPaths]
 
         if ini_defined(ini.SpecialPaths):
             if not ini_defined(ini.SpecialPaths.Plugins):
@@ -240,95 +246,97 @@ class AppInfo(object):
             elif not isdir(self.package.path(ini.SpecialPaths.Plugins)):
                 self.errors.append(LANG.APPINFO.SPECIALPATHS_PLUGINS_BAD)
 
-        if ini_defined(ini.Dependencies):
-            if ini_defined(ini.Dependencies.UsesJava):
-                if ini.Dependencies.UsesJava == 'false':
-                    self.warnings.append(LANG.APPINFO.OMIT_DEFAULT %
-                            dict(section='Dependencies', key='UsesJava',
-                                default='false'))
-                elif ini.Dependencies.UsesJava != 'true':
-                    self.errors.append(LANG.APPINFO.DEPENDENCIES_JAVA_BAD)
+        # [Dependencies]
 
-            if ini_defined(ini.Dependencies.UsesDotNetVersion):
-                if ini.Dependencies.UsesDotNetVersion == '':
-                    self.warnings.append(LANG.APPINFO.OMIT_EMPTY %
-                        dict(section='Dependencies', key='UsesDotNetVersion'))
-                elif ini.Dependencies.UsesDotNetVersion \
-                not in ('1.1', '2.0', '3.0', '3.5'):
-                    self.warnings.append(
-                    LANG.APPINFO.DEPENDENCIES_USESDOTNETVERSION_PROBABLY_BAD)
-                else:
-                    try:
-                        map(int,
-                            ini.Dependencies.UsesDotNetVersion.split('.'))
-                    except ValueError:
-                        self.errors.append(
-                            LANG.APPINFO.DEPENDENCIES_USESDOTNETVERSION_BAD)
+        if ini_defined(ini.Dependencies.UsesJava):
+            if ini.Dependencies.UsesJava == 'false':
+                self.warnings.append(LANG.APPINFO.OMIT_DEFAULT %
+                        dict(section='Dependencies', key='UsesJava',
+                            default='false'))
+            elif ini.Dependencies.UsesJava != 'true':
+                self.errors.append(LANG.APPINFO.DEPENDENCIES_JAVA_BAD)
 
-        if ini_defined(ini.Control):
-            if ini_defined(ini.Control.Start):
-                start = ini.Control.Start
-                if '/' in start or '\\' in start:
-                    self.warnings.append(
-                        LANG.APPINFO.CONTROL_START_NO_SUBDIRS %
-                        dict(section='Control', key='Start'))
-                elif not isfile(self.package.path(start)):
-                    self.errors.append(
-                            LANG.APPINFO.CONTROL_FILE_NOT_EXIST %
-                            dict(section='Control', key='Start'))
-
-            if ini_defined(ini.Control.ExtractIcon) and \
-            not isfile(self.package.path(ini.Control.ExtractIcon)):
-                self.errors.append(LANG.APPINFO.CONTROL_FILE_NOT_EXIST %
-                    dict(section='Control', key='ExtractIcon'))
-
-            if ini_defined(ini.Control.Icons):
-                control_required = OrderedSet(self._keys_required['Control'])
-                control_optional = OrderedSet(self._keys_optional['Control'])
+        if ini_defined(ini.Dependencies.UsesDotNetVersion):
+            if ini.Dependencies.UsesDotNetVersion == '':
+                self.warnings.append(LANG.APPINFO.OMIT_EMPTY %
+                    dict(section='Dependencies', key='UsesDotNetVersion'))
+            elif ini.Dependencies.UsesDotNetVersion \
+            not in ('1.1', '2.0', '3.0', '3.5'):
+                self.warnings.append(
+                LANG.APPINFO.DEPENDENCIES_USESDOTNETVERSION_PROBABLY_BAD)
+            else:
                 try:
-                    num = int(ini.Control.Icons)
-                    if num < 1:
-                        raise ValueError()
-                    if num > 1:
-                        for i in xrange(1, num + 1):
-                            control_required.add('Start%d' % i)
-                            control_required.add('Name%d' % i)
-                            control_optional.add('ExtractIcon%d' % i)
-
-                            if ini_defined(ini.Control['Start%d' % i]):
-                                start = ini.Control['Start%d' % i]
-                                if '/' in start or '\\' in start:
-                                    self.warnings.append(
-                                    LANG.APPINFO.CONTROL_START_NO_SUBDIRS
-                                    %
-                                    dict(section='Control', key='Start%d' % i))
-                                elif not isfile(self.package.path(start)):
-                                    self.errors.append(
-                                        LANG.APPINFO.CONTROL_FILE_NOT_EXIST %
-                                        dict(section='Control', key='Start%d' %
-                                            i))
-
-                            # NameN: no validation (see [Details]:Name)
-
-                            if ini_defined(ini.Control['ExtractIcon%d'
-                                % i]) and not isfile(self.package.path(
-                                    ini.Control['ExtractIcon%d' % i])):
-                                self.errors.append(
-                                LANG.APPINFO.CONTROL_FILE_NOT_EXIST %
-                                dict(section='Control',
-                                    key='ExtractIcon%d' % i))
-
+                    map(int,
+                        ini.Dependencies.UsesDotNetVersion.split('.'))
                 except ValueError:
-                    self.errors.append(LANG.APPINFO.CONTROL_ICONS_BAD)
+                    self.errors.append(
+                        LANG.APPINFO.DEPENDENCIES_USESDOTNETVERSION_BAD)
 
-                for missing in control_required - ini.Control:
-                    self.errors.append(LANG.APPINFO.VALUE_MISSING %
-                        dict(section='Control', key=missing))
+        # [Control]
 
-                for extra in OrderedSet(ini.Control) \
-                - control_required - control_optional:
-                    self.errors.append(LANG.APPINFO.VALUE_EXTRA %
-                        dict(section='Control', key=extra))
+        if ini_defined(ini.Control.Start):
+            start = ini.Control.Start
+            if '/' in start or '\\' in start:
+                self.warnings.append(
+                    LANG.APPINFO.CONTROL_START_NO_SUBDIRS %
+                    dict(section='Control', key='Start'))
+            elif not isfile(self.package.path(start)):
+                self.errors.append(
+                        LANG.APPINFO.CONTROL_FILE_NOT_EXIST %
+                        dict(section='Control', key='Start'))
+
+        if ini_defined(ini.Control.ExtractIcon) and \
+        not isfile(self.package.path(ini.Control.ExtractIcon)):
+            self.errors.append(LANG.APPINFO.CONTROL_FILE_NOT_EXIST %
+                dict(section='Control', key='ExtractIcon'))
+
+        if ini_defined(ini.Control.Icons):
+            control_required = OrderedSet(self._keys_required['Control'])
+            control_optional = OrderedSet(self._keys_optional['Control'])
+            try:
+                num = int(ini.Control.Icons)
+                if num < 1:
+                    raise ValueError()
+                if num > 1:
+                    for i in xrange(1, num + 1):
+                        control_required.add('Start%d' % i)
+                        control_required.add('Name%d' % i)
+                        control_optional.add('ExtractIcon%d' % i)
+
+                        if ini_defined(ini.Control['Start%d' % i]):
+                            start = ini.Control['Start%d' % i]
+                            if '/' in start or '\\' in start:
+                                self.warnings.append(
+                                LANG.APPINFO.CONTROL_START_NO_SUBDIRS
+                                %
+                                dict(section='Control', key='Start%d' % i))
+                            elif not isfile(self.package.path(start)):
+                                self.errors.append(
+                                    LANG.APPINFO.CONTROL_FILE_NOT_EXIST %
+                                    dict(section='Control', key='Start%d' %
+                                        i))
+
+                        # NameN: no validation (see [Details]:Name)
+
+                        if ini_defined(ini.Control['ExtractIcon%d'
+                            % i]) and not isfile(self.package.path(
+                                ini.Control['ExtractIcon%d' % i])):
+                            self.errors.append(
+                            LANG.APPINFO.CONTROL_FILE_NOT_EXIST %
+                            dict(section='Control',
+                                key='ExtractIcon%d' % i))
+
+            except ValueError:
+                self.errors.append(LANG.APPINFO.CONTROL_ICONS_BAD)
+
+            for missing in control_required - ini.Control:
+                self.errors.append(LANG.APPINFO.VALUE_MISSING %
+                    dict(section='Control', key=missing))
+
+            for extra in OrderedSet(ini.Control) \
+            - control_required - control_optional:
+                self.errors.append(LANG.APPINFO.VALUE_EXTRA %
+                    dict(section='Control', key=extra))
 
     @_valid_appinfo
     def fix(self):
