@@ -130,7 +130,7 @@ class AppInfo(object):
                 self.errors.append(LANG.APPINFO.BAD_FORMAT_TYPE)
 
             if ini.Format.Version != FORMAT_VERSION:
-                if ini.Format.Version in ('0.90', '0.91', '1.0'):
+                if ini.Format.Version in ('0.90', '0.91', '0.9.8', '1.0'):
                     self.warnings.append(LANG.APPINFO.OLD_FORMAT_VERSION
                     % dict(old_version=ini.Format.Version,
                         current_version=FORMAT_VERSION))
