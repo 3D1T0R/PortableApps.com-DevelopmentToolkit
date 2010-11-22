@@ -95,15 +95,21 @@ class Undefined(object):
     """
 
     def __init__(self, name, namespace):
-        object.__setattr__(self, 'name', name)
-        object.__setattr__(self, 'namespace', namespace)
+        object.__setattr__(self, '_name', name)
+        object.__setattr__(self, '_namespace', namespace)
+
+    def __getitem__(self, key):
+        return Undefined(key, self)
+
+    def __getattr__(self, name):
+        return Undefined(name, self)
 
     def __setattr__(self, name, value):
-        obj = self.namespace._new_namespace(self.name)
+        obj = self._namespace._new_namespace(self._name)
         obj[name] = value
 
     def __setitem__(self, name, value):
-        obj = self.namespace._new_namespace(self.name)
+        obj = self._namespace._new_namespace(self._name)
         obj[name] = value
 
 
