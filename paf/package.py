@@ -281,17 +281,22 @@ class Package(object):
         return None
 
 
-def create_package(path):
-    "Create an app package in PortableApps.com Format™"
+def create_package(path, create_if_not_exist=False, require_empty=True):
+    """
+    Create an app package in PortableApps.com Format™.  By default, the
+    directory must exist and be empty or a ``PAFException`` will be raised.
+    """
     if exists(path):
         if isdir(path):
             pass  # Directory exists, fine.
         else:
             raise PAFException(LANG.GENERAL.FILE_NOT_DIRECTORY)
+    elif create_if_not_exist:
+        os.mkdir(path)
     else:
         raise PAFException(LANG.GENERAL.DIRECTORY_NOT_EXIST)
 
-    if os.listdir(path):
+    if require_empty and os.listdir(path):
         raise PAFException(LANG.GENERAL.DIRECTORY_NOT_EMPTY)
 
     package = Package(path)
