@@ -88,7 +88,7 @@ setup(
 
     windows=[dict(
         script='main.py',
-        icon_resources=[(1, 'graphics/appicon.ico')],
+        icon_resources=[(1, 'resources/appicon.ico')],
         description='PortableApps.com Development Toolkit',
         # Not including the manifest as it makes the app crash for some reason
         #other_resources=[(24, 1, manifest)],

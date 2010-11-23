@@ -26,7 +26,7 @@
    <string>PortableApps.com Development Toolkit</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../graphics/graphics.qrc">
+   <iconset resource="../../../resources/graphics.qrc">
     <normaloff>:/icon.png</normaloff>:/icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
@@ -40,7 +40,7 @@
        <string notr="true"/>
       </property>
       <property name="pixmap">
-       <pixmap resource="../graphics/graphics.qrc">:/sidebar.png</pixmap>
+       <pixmap resource="../../../resources/graphics.qrc">:/sidebar.png</pixmap>
       </property>
      </widget>
     </item>
@@ -156,7 +156,7 @@
   </widget>
  </widget>
  <resources>
-  <include location="../graphics/graphics.qrc"/>
+  <include location="../../../resources/graphics.qrc"/>
  </resources>
  <connections/>
 </ui>

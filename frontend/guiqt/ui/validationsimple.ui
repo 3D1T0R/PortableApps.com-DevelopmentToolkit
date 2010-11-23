@@ -14,7 +14,7 @@
    <string>Validation results</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../graphics/graphics.qrc">
+	  <iconset resource="../../../resources/graphics.qrc">
     <normaloff>:/icon.png</normaloff>:/icon.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -27,7 +27,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../graphics/graphics.qrc"/>
+  <include location="../../../resources/graphics.qrc"/>
  </resources>
  <connections/>
 </ui>

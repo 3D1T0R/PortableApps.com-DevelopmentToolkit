@@ -14,7 +14,7 @@ else
 fi
 
 # Generate the files
-$RCC graphics/graphics.qrc -o frontend/guiqt/ui/graphics_rc.py
+$RCC resources/graphics.qrc -o frontend/guiqt/ui/graphics_rc.py
 $UIC frontend/guiqt/ui/mainwindow.ui -o frontend/guiqt/ui/mainwindow.py
 $UIC frontend/guiqt/ui/appinfo.ui -o frontend/guiqt/ui/appinfo.py
 $UIC frontend/guiqt/ui/validationsimple.ui -o frontend/guiqt/ui/validationsimple.py
