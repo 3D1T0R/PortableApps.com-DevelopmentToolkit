@@ -10,7 +10,6 @@ from functools import wraps
 import re
 import iniparse
 from orderedset import OrderedSet
-from utils import ini_defined
 from languages import LANG
 from paf import PAFException
 import config
@@ -243,7 +242,7 @@ class Installer(object):
                 .replace(';', '.') \
                 .replace('+', 'Plus')
 
-        if ini_defined(self.ini.DownloadFiles.DownloadURL):
+        if 'DownloadURL' in self.ini.DownloadFiles:
             filename += '_online'
 
         return '%s.paf.exe' % filename

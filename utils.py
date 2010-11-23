@@ -1,19 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from qt.QtGui import QApplication, QDesktopWidget
-from iniparse.config import Undefined
 import os
 
 _ = lambda x: QApplication.translate("MainWindow", x, None,
         QApplication.UnicodeUTF8)
 
 
-def ini_defined(val):
-    return not isinstance(val, Undefined)
-
-
 def get_ini_str(iniconfig, section, key, default=None):
-    if not ini_defined(iniconfig[section][key]):
+    if key not in iniconfig[section]:
         #iniconfig[section][key] = default
         return default
     else:

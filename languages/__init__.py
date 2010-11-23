@@ -13,7 +13,7 @@ import os
 from collections import defaultdict
 import config
 from iniparse import INIConfig
-from utils import path_insensitive, ini_defined
+from utils import path_insensitive
 
 __all__ = ['LANG']
 
@@ -31,7 +31,7 @@ class _LanguagesController(object):
         for the moment it's just here, separate.
         """
         def __init__(self, controller, section):
-            if not ini_defined(controller._languages['english'][section]):
+            if section not in controller._languages['english']:
                 raise AttributeError('Invalid language section "%s"' % section)
 
             self._section_name = section
@@ -43,9 +43,9 @@ class _LanguagesController(object):
             Get a language string. Raises an AttributeError if the string
             doesn't exist in the current language or English.
             """
-            if ini_defined(self._section[attr]):
+            if attr in self._section:
                 return self._section[attr]
-            elif ini_defined(self._english_section[attr]):
+            elif attr in self._english_section:
                 return self._english_section[attr]
             else:
                 raise AttributeError('Invalid language string %s.%s' %

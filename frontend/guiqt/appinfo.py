@@ -3,8 +3,9 @@
 
 from qt import QtCore, QtGui, IS_PYSIDE
 from ui.appinfo import Ui_AppInfoDialog
-from utils import center_window, ini_defined
+from utils import center_window
 from paf.appinfo import valid_appid
+from iniparse.config import Undefined
 
 
 __all__ = ['AppInfoDialog']
@@ -98,17 +99,17 @@ class AppInfoDialog(QtGui.QDialog):
         # Correct it (don't care about whether it was valid)
         appid = valid_appid(appid)[1]
 
-        if not ini_defined(self.appinfo.Details.AppID) and \
+        if 'AppID' not in self.appinfo.Details and \
         not self.ui.AppID.isModified():
             self.ui.AppID.setText(appid)
 
-        if not ini_defined(self.appinfo.Details.Publisher) and \
+        if 'Publisher' not in self.appinfo.Details and \
         not self.ui.Publisher.isModified():
             self.ui.Publisher.setText('%s team & PortableApps.com' % name)
 
         # Homepage: done by on_AppID_textChanged
 
-        if not ini_defined(self.appinfo.Details.Description) and \
+        if 'Description' not in self.appinfo.Details and \
         not self.ui.Description.isModified():
             self.ui.Description.setText('%s is a ___' % name)
 
@@ -116,7 +117,7 @@ class AppInfoDialog(QtGui.QDialog):
     def on_AppID_textChanged(self, value):
         "Auto-fill Homepage when the Name is changed."
 
-        if not ini_defined(self.appinfo.Details.Homepage) and \
+        if 'Homepage' not in self.appinfo.Details and \
         not self.ui.Homepage.isModified():
             self.ui.Homepage.setText('PortableApps.com/%s' % unicode(value))
 
@@ -138,7 +139,7 @@ class AppInfoDialog(QtGui.QDialog):
         self._fill(self.ui.Freeware, appinfo.License.Freeware)
         self._fill(self.ui.CommercialUse, appinfo.License.CommercialUse)
 
-        if ini_defined(appinfo.Version.PackageVersion):
+        if 'PackageVersion' in appinfo.Version:
             pv = appinfo.Version.PackageVersion
             try:
                 pv = map(int, pv.split('.'))
@@ -152,7 +153,7 @@ class AppInfoDialog(QtGui.QDialog):
                     self._fill(self.ui.PackageVersion4, pv[3])
 
         # Split DisplayVersion into chunks
-        if ini_defined(appinfo.Version.DisplayVersion):
+        if 'DisplayVersion' in appinfo.Version:
             dv = appinfo.Version.DisplayVersion
             splits = (
                     (' development test ', 'Development Test'),
@@ -244,54 +245,56 @@ class AppInfoDialog(QtGui.QDialog):
         if self.ui.UsesJava.isChecked():
             appinfo.Dependencies.UsesJava = 'true'
         # If it was ticked before, remove it
-        elif ini_defined(appinfo.Dependencies.UsesJava):
+        elif 'UsesJava' in appinfo.Dependencies:
             del appinfo.Dependencies.UsesJava
 
         if self.ui.UsesDotNetVersion.currentText() != 'None':
             appinfo.Dependencies.UsesDotNetVersion = \
                     self.ui.UsesDotNetVersion.currentText()
         # If it was set before, remove it
-        elif ini_defined(appinfo.Dependencies.UsesDotNetVersion):
+        elif 'UsesDotNetVersion' in appinfo.Dependencies:
             del appinfo.Dependencies.UsesDotNetVersion
 
         # Deleting the last value in the section doesn't delete the section at
         # the moment, so delete it manually
-        if len(list(appinfo.Dependencies)) == 0:
+        if 'Dependencies' in appinfo and not list(appinfo.Dependencies):
             del appinfo.Dependencies
 
         # TODO: no proper control of the Control section, dummy code
-        if not ini_defined(appinfo.Control):
+        if 'Control' not in appinfo:
             appinfo.Control.Icons = 1
             appinfo.Control.Start = '%s.exe' % appinfo.Details.AppID
 
     def _fill(self, field, value):
-        if ini_defined(value):
-            if isinstance(field, QtGui.QComboBox):
-                index = field.findText(value)
-                if index > -1:
-                    field.setCurrentIndex(index)
-                elif field.isEditable():
-                    field.setEditText(index)
-                # else fail silently
-            elif isinstance(field, QtGui.QCheckBox):
-                if value == 'true':
-                    field.setChecked(True)
-                elif value == 'false':
-                    field.setChecked(False)
-                # else fail silently
-            elif isinstance(field, QtGui.QLineEdit):
-                field.setText(value)
-                field.setCursorPosition(0)
-            elif isinstance(field, QtGui.QSpinBox):
-                try:
-                    value = int(value)
-                except ValueError:
-                    pass
-                else:
-                    field.setValue(value)
+        if isinstance(value, Undefined):
+            return
+
+        if isinstance(field, QtGui.QComboBox):
+            index = field.findText(value)
+            if index > -1:
+                field.setCurrentIndex(index)
+            elif field.isEditable():
+                field.setEditText(index)
+            # else fail silently
+        elif isinstance(field, QtGui.QCheckBox):
+            if value == 'true':
+                field.setChecked(True)
+            elif value == 'false':
+                field.setChecked(False)
+            # else fail silently
+        elif isinstance(field, QtGui.QLineEdit):
+            field.setText(value)
+            field.setCursorPosition(0)
+        elif isinstance(field, QtGui.QSpinBox):
+            try:
+                value = int(value)
+            except ValueError:
+                pass
             else:
-                raise TypeError("Field %s type %s is invalid." % (field,
-                    type(field)))
+                field.setValue(value)
+        else:
+            raise TypeError("Field %s type %s is invalid." % (field,
+                type(field)))
 
 
 class AppIDValidator(QtGui.QValidator):

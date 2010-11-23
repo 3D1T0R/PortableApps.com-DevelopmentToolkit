@@ -3,7 +3,7 @@
 from os.path import exists, isdir, isfile, join, abspath
 import os
 import config
-from utils import ini_defined, path_insensitive, _
+from utils import path_insensitive, _
 from languages import LANG
 from shutil import copy2 as copy
 import paf
@@ -102,10 +102,10 @@ class Package(object):
     @property
     def appid(self):
         "Get the AppID of the package."
-        if ini_defined(self.appinfo.ini.Details.AppID):
+        if 'AppID' in self.appinfo.ini.Details:
             return self.appinfo.ini.Details.AppID
         # Compatibility with a former typo in the PAF spec
-        elif ini_defined(self.appinfo.ini.Details.AppId):
+        elif 'AppId' in self.appinfo.ini.Details:
             return self.appinfo.ini.Details.AppId
         else:
             return None
