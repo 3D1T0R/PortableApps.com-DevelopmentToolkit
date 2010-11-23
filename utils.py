@@ -21,9 +21,9 @@ def get_ini_str(iniconfig, section, key, default=None):
 
 
 def center_window(window):
-    scr = QDesktopWidget().screenGeometry()
+    s = QDesktopWidget().screenGeometry()
     g = window.geometry()
-    window.move((scr.width() - g.width()) / 2, (scr.height() - g.height()) / 2)
+    window.move((s.width() - g.width()) // 2, (s.height() - g.height()) // 2)
 
 
 def path_insensitive(path):
