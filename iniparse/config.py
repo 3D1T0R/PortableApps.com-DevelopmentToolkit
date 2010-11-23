@@ -98,6 +98,11 @@ class Undefined(object):
         object.__setattr__(self, '_name', name)
         object.__setattr__(self, '_namespace', namespace)
 
+    def __iter__(self):
+        """Simple iterator which produces no output."""
+        return
+        yield
+
     def __getitem__(self, key):
         return Undefined(key, self)
 
