@@ -58,7 +58,7 @@ class MainWindow(QtGui.QMainWindow):
                 text_box.setText(package)
                 self.ui.statusBar.showMessage(
                         _("Package created successfully."), 2000)
-                self.on_detailsButton_clicked(False)
+                self.on_detailsButton_clicked()
             else:
                 self.ui.statusBar.clearMessage()
             break
@@ -112,7 +112,7 @@ class MainWindow(QtGui.QMainWindow):
                     _('There are warnings in the package validation. You should fix them before making a release.'),
                     QtGui.QMessageBox.Cancel, QtGui.QMessageBox.Ignore)
             if answer == QtGui.QMessageBox.Cancel:
-                self.on_validateButton_clicked(False)
+                self.on_validateButton_clicked()
                 self.ui.statusBar.clearMessage()
                 return
 
