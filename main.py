@@ -8,14 +8,12 @@ Main launch script for PortableApps.com Development Toolkit.
 import sys
 from qt import QtGui
 from utils import center_window
-import paf
 import config
-import warnings
 import warn
 from frontend.guiqt import MainWindow, ValidationDialog
 
-
 def main():
+    """Run the normal interface."""
     app = QtGui.QApplication(sys.argv)
     window = MainWindow()
 
@@ -32,11 +30,13 @@ def main():
 
 
 def prepare_quit(window):
+    """Save the window state and settings file."""
     config.settings.Main.Package = window.ui.packageText.text()
     config.save()
 
 
 def cli_help():
+    """Help for command-line usage."""
     print "PortableApps.com Development Toolkit"
     print "Launch without command line arguments to run normally."
     print
@@ -49,6 +49,7 @@ def cli_help():
 
 
 def validate_gui():
+    """Just run the validator (GUI version)."""
     app = QtGui.QApplication(sys.argv)
     window = ValidationDialog(sys.argv[2])
     center_window(window)
@@ -59,15 +60,13 @@ def validate_gui():
 
 
 def validate_cli():
+    """Just run the validator (command-line version)."""
     from frontend.cli.validate import validate
     return validate(sys.argv[2])
 
 
-def not_implemented():
-    warnings.warn('Sorry, this is not implemented yet.',
-            UserWarning, stacklevel=2)
-
 def select_action():
+    """Simple controller for command-line arguments."""
     if len(sys.argv) > 1:
         if sys.argv[1] == 'help':
             return cli_help
