@@ -17,7 +17,7 @@ def main():
     app = QtGui.QApplication(sys.argv)
     window = MainWindow()
 
-    window.ui.packageText.setText(config.get('Main', 'Package', ''))
+    window.packageText.setText(config.get('Main', 'Package', ''))
 
     center_window(window)
     window.show()
@@ -31,7 +31,7 @@ def main():
 
 def prepare_quit(window):
     """Save the window state and settings file."""
-    config.settings.Main.Package = window.ui.packageText.text()
+    config.settings.Main.Package = window.packageText.text()
     config.save()
 
 

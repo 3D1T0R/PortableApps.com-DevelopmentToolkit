@@ -14,25 +14,24 @@ def assert_valid_package_path(func):
     happening."""
     @wraps(func)
     def decorate(self, *args, **kwargs):
-        if not paf.valid_package(self.ui.packageText.text()):
+        if not paf.valid_package(self.packageText.text()):
             raise Exception("The package is not valid.")
 
         func(self, *args, **kwargs)
     return decorate
 
 
-class MainWindow(QtGui.QMainWindow):
+class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
-        self.ui.packageText.setFocus()
-        self.on_packageText_textChanged(self.ui.packageText.text())
+        self.setupUi(self)
+        self.packageText.setFocus()
+        self.on_packageText_textChanged(self.packageText.text())
 
     @QtCore.Slot()
     def on_packageButton_clicked(self):
         "Select a package."
-        text_box = self.ui.packageText
+        text_box = self.packageText
         current_path = text_box.text()
         text_box.setText(QtGui.QFileDialog.getExistingDirectory(None,
             _("Select a portable app package"), current_path) or current_path)
@@ -40,8 +39,8 @@ class MainWindow(QtGui.QMainWindow):
     @QtCore.Slot()
     def on_createButton_clicked(self):
         "Create a package."
-        self.ui.statusBar.showMessage(_("Creating package..."))
-        text_box = self.ui.packageText
+        self.statusBar.showMessage(_("Creating package..."))
+        text_box = self.packageText
         current_path = text_box.text()
         while True:
             package = QtGui.QFileDialog.getExistingDirectory(None,
@@ -56,11 +55,11 @@ class MainWindow(QtGui.QMainWindow):
                     continue
 
                 text_box.setText(package)
-                self.ui.statusBar.showMessage(
+                self.statusBar.showMessage(
                         _("Package created successfully."), 2000)
                 self.on_detailsButton_clicked()
             else:
-                self.ui.statusBar.clearMessage()
+                self.statusBar.clearMessage()
             break
 
     @QtCore.Slot()
@@ -69,7 +68,7 @@ class MainWindow(QtGui.QMainWindow):
         "Edit PortableApps.com Format details."
         appinfo_dialog = appinfo.AppInfoDialog(self)
         center_window(appinfo_dialog)
-        appinfo_dialog.load_package(paf.Package(self.ui.packageText.text()))
+        appinfo_dialog.load_package(paf.Package(self.packageText.text()))
         appinfo_dialog.setModal(True)
         appinfo_dialog.show()
         # Keep a reference to it so it doesn't get cleaned up
@@ -79,7 +78,7 @@ class MainWindow(QtGui.QMainWindow):
     @assert_valid_package_path
     def on_validateButton_clicked(self):
         "Validate the app."
-        validate_dialog = ValidationDialog(self.ui.packageText.text(), self)
+        validate_dialog = ValidationDialog(self.packageText.text(), self)
         center_window(validate_dialog)
         validate_dialog.setModal(True)
         validate_dialog.show()
@@ -91,10 +90,10 @@ class MainWindow(QtGui.QMainWindow):
     def on_installerButton_clicked(self):
         "Build the installer with the PortableApps.com Installer."
 
-        package_path = self.ui.packageText.text()
+        package_path = self.packageText.text()
 
         # First of all, check that it's valid.
-        self.ui.statusBar.showMessage(_("Validating package..."))
+        self.statusBar.showMessage(_("Validating package..."))
         package = paf.Package(package_path)
         package.validate()
 
@@ -104,7 +103,7 @@ class MainWindow(QtGui.QMainWindow):
                     _('There are errors in the package. You must fix them before making a release.'),
                     QtGui.QMessageBox.Ok)
             self.on_validateButton_clicked()
-            self.ui.statusBar.clearMessage()
+            self.statusBar.clearMessage()
             return
         elif len(package.warnings):
             answer = QtGui.QMessageBox.warning(self,
@@ -113,7 +112,7 @@ class MainWindow(QtGui.QMainWindow):
                     QtGui.QMessageBox.Cancel, QtGui.QMessageBox.Ignore)
             if answer == QtGui.QMessageBox.Cancel:
                 self.on_validateButton_clicked()
-                self.ui.statusBar.clearMessage()
+                self.statusBar.clearMessage()
                 return
 
         installer_path = config.get('Main', 'InstallerPath')
@@ -139,12 +138,12 @@ class MainWindow(QtGui.QMainWindow):
                         _('PortableApps.com Development Toolkit'),
                         _('Unable to locate the PortableApps.com Installer.'),
                         QtGui.QMessageBox.Ok)
-                self.ui.statusBar.clearMessage()
+                self.statusBar.clearMessage()
                 return
 
-        self.ui.statusBar.showMessage(_("Building installer..."))
+        self.statusBar.showMessage(_("Building installer..."))
         if package.installer.build():
-            self.ui.statusBar.showMessage(_('Installer built successfully.'),
+            self.statusBar.showMessage(_('Installer built successfully.'),
                     2000)
             # TODO: calculate MD5 checksum and installer size (also installed
             # size lazily, in a non-blocking way) and show user
@@ -155,8 +154,8 @@ class MainWindow(QtGui.QMainWindow):
             #        _('PortableApps.com Development Toolkit'),
             #        _('The installer failed to build.'),
             #        QtGui.QMessageBox.Ok)
-            #self.ui.statusBar.clearMessage()
-            self.ui.statusBar.showMessage(_('Installer failed to build.'),
+            #self.statusBar.clearMessage()
+            self.statusBar.showMessage(_('Installer failed to build.'),
                     2000)
 
     @QtCore.Slot(unicode)
@@ -167,6 +166,6 @@ class MainWindow(QtGui.QMainWindow):
         something without being overly hacky.
         """
         valid = paf.valid_package(string)
-        self.ui.detailsButton.setEnabled(valid)
-        self.ui.validateButton.setEnabled(valid)
-        self.ui.installerButton.setEnabled(valid)
+        self.detailsButton.setEnabled(valid)
+        self.validateButton.setEnabled(valid)
+        self.installerButton.setEnabled(valid)

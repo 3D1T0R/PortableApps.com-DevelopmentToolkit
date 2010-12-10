@@ -14,11 +14,10 @@ from languages import LANG
 __all__ = ['ValidationDialog']
 
 
-class ValidationDialog(QDialog):
+class ValidationDialog(QDialog, Ui_ValidationDialog):
     def __init__(self, path=None, parent=None):
         super(ValidationDialog, self).__init__(parent)
-        self.ui = Ui_ValidationDialog()
-        self.ui.setupUi(self)
+        self.setupUi(self)
         if path:
             self.load_package(path)
 
@@ -31,8 +30,8 @@ class ValidationDialog(QDialog):
             self.package = paf.Package(path)
         except paf.PAFException as msg:
             out = LANG.VALIDATION.CRITICAL_HTML % msg
-            self.ui.validationResultsHTML.setHtml(out)
-            self.ui.validationResultsArea.setPlainText(out)
+            self.validationResultsHTML.setHtml(out)
+            self.validationResultsArea.setPlainText(out)
             self.setWindowTitle(LANG.VALIDATION.WINDOW_TITLE_CRITICAL)
             return
 
@@ -80,5 +79,5 @@ class ValidationDialog(QDialog):
                 out += '<li>%s</li>\n' % item
             out += '</ul>\n'
 
-        self.ui.validationResultsHTML.setHtml(out)
-        self.ui.validationResultsArea.setPlainText(out)
+        self.validationResultsHTML.setHtml(out)
+        self.validationResultsArea.setPlainText(out)

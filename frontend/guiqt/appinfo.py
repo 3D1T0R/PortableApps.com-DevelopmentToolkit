@@ -11,12 +11,11 @@ from iniparse.config import Undefined
 __all__ = ['AppInfoDialog']
 
 
-class AppInfoDialog(QtGui.QDialog):
+class AppInfoDialog(QtGui.QDialog, Ui_AppInfoDialog):
     def __init__(self, parent=None):
         super(AppInfoDialog, self).__init__(parent)
-        self.ui = Ui_AppInfoDialog()
-        self.ui.setupUi(self)
-        self.ui.AppID.setValidator(AppIDValidator())
+        self.setupUi(self)
+        self.AppID.setValidator(AppIDValidator())
 
     def accept(self):
         "User submits the form (presses Save). No validation at the moment."
@@ -29,56 +28,56 @@ class AppInfoDialog(QtGui.QDialog):
         "Disable the DT/PR/revision number field for an official release."
 
         if value == '(official release)':
-            self.ui.DisplayVersionNum.setEnabled(False)
+            self.DisplayVersionNum.setEnabled(False)
         else:
-            self.ui.DisplayVersionNum.setEnabled(True)
+            self.DisplayVersionNum.setEnabled(True)
 
     @QtCore.Slot(unicode)
     def on_Name_textChanged(self, value):
         "Auto-fill some fields when the Name is changed."
 
-        if hasattr(self.ui.Name, 'matched'):
+        if hasattr(self.Name, 'matched'):
             return
         value = unicode(value)
-        if hasattr(self.ui.Name, 'backspacing'):
-            self.ui.Name.last_value = value
+        if hasattr(self.Name, 'backspacing'):
+            self.Name.last_value = value
             return
 
         # Deal with backspace and this auto-complete thing
-        if hasattr(self.ui.Name, 'last_value') and \
-                not hasattr(self.ui.Name, 'backspacing') and \
-                value == self.ui.Name.last_value:
-            self.ui.Name.backspacing = True
+        if hasattr(self.Name, 'last_value') and \
+                not hasattr(self.Name, 'backspacing') and \
+                value == self.Name.last_value:
+            self.Name.backspacing = True
             # This does make Delete act as Backspace sometimes, but never mind.
-            self.ui.Name.backspace()
-            del self.ui.Name.backspacing
+            self.Name.backspace()
+            del self.Name.backspacing
             return
-        self.ui.Name.last_value = value
+        self.Name.last_value = value
 
         # If the cursor is at the end of the line, and nothing is selected
-        if self.ui.Name.cursorPosition() == len(value) and \
-                not self.ui.Name.hasSelectedText():
-            self.ui.Name.matched = False
+        if self.Name.cursorPosition() == len(value) and \
+                not self.Name.hasSelectedText():
+            self.Name.matched = False
             for suffix in ', Portable Edition', ' Portable':
                 for end in [suffix[:i] for i in xrange(len(suffix), 0, -1)]:
                     if value.endswith(end):
-                        self.ui.Name.matched = True
-                        self.ui.Name.insert(suffix[len(end):])
+                        self.Name.matched = True
+                        self.Name.insert(suffix[len(end):])
                         # Unfortunately setCursorPosition doesn't make it so
                         # the cursor can be at the start of the selection
-                        self.ui.Name.setSelection(len(value),
+                        self.Name.setSelection(len(value),
                                 len(suffix) - len(end))
                         value = value + suffix[len(end):]
                         break
-                if self.ui.Name.matched:
+                if self.Name.matched:
                     break
-            #if not self.ui.Name.matched:
-            #    self.ui.Name.matched = True
+            #if not self.Name.matched:
+            #    self.Name.matched = True
             #    end = ' Portable'
-            #    self.ui.Name.insert(end)
-            #    self.ui.Name.setSelection(len(value), len(end))
+            #    self.Name.insert(end)
+            #    self.Name.setSelection(len(value), len(end))
             #    value = value + end
-            del self.ui.Name.matched
+            del self.Name.matched
 
         for suffix in ', Portable Edition', ' Portable':
             if value.endswith(suffix):
@@ -96,44 +95,44 @@ class AppInfoDialog(QtGui.QDialog):
         appid = valid_appid(appid)[1]
 
         if 'AppID' not in self.appinfo.Details and \
-        not self.ui.AppID.isModified():
-            self.ui.AppID.setText(appid)
+        not self.AppID.isModified():
+            self.AppID.setText(appid)
 
         if 'Publisher' not in self.appinfo.Details and \
-        not self.ui.Publisher.isModified():
-            self.ui.Publisher.setText('%s team & PortableApps.com' % name)
+        not self.Publisher.isModified():
+            self.Publisher.setText('%s team & PortableApps.com' % name)
 
         # Homepage: done by on_AppID_textChanged
 
         if 'Description' not in self.appinfo.Details and \
-        not self.ui.Description.isModified():
-            self.ui.Description.setText('%s is a ___' % name)
+        not self.Description.isModified():
+            self.Description.setText('%s is a ___' % name)
 
     @QtCore.Slot(unicode)
     def on_AppID_textChanged(self, value):
         "Auto-fill Homepage when the Name is changed."
 
         if 'Homepage' not in self.appinfo.Details and \
-        not self.ui.Homepage.isModified():
-            self.ui.Homepage.setText('PortableApps.com/%s' % unicode(value))
+        not self.Homepage.isModified():
+            self.Homepage.setText('PortableApps.com/%s' % unicode(value))
 
     def load_package(self, package):
         self.package = package
         self.appinfo = appinfo = package.appinfo.ini
 
-        self._fill(self.ui.Name, appinfo.Details.Name)
-        self._fill(self.ui.AppID, appinfo.Details.AppID)
-        self._fill(self.ui.Publisher, appinfo.Details.Publisher)
-        self._fill(self.ui.Homepage, appinfo.Details.Homepage)
-        self._fill(self.ui.Category, appinfo.Details.Category)
-        self._fill(self.ui.Description, appinfo.Details.Description)
-        self._fill(self.ui.Language, appinfo.Details.Language)
-        self._fill(self.ui.Trademarks, appinfo.Details.Trademarks)
+        self._fill(self.Name, appinfo.Details.Name)
+        self._fill(self.AppID, appinfo.Details.AppID)
+        self._fill(self.Publisher, appinfo.Details.Publisher)
+        self._fill(self.Homepage, appinfo.Details.Homepage)
+        self._fill(self.Category, appinfo.Details.Category)
+        self._fill(self.Description, appinfo.Details.Description)
+        self._fill(self.Language, appinfo.Details.Language)
+        self._fill(self.Trademarks, appinfo.Details.Trademarks)
 
-        self._fill(self.ui.Shareable, appinfo.License.Shareable)
-        self._fill(self.ui.OpenSource, appinfo.License.OpenSource)
-        self._fill(self.ui.Freeware, appinfo.License.Freeware)
-        self._fill(self.ui.CommercialUse, appinfo.License.CommercialUse)
+        self._fill(self.Shareable, appinfo.License.Shareable)
+        self._fill(self.OpenSource, appinfo.License.OpenSource)
+        self._fill(self.Freeware, appinfo.License.Freeware)
+        self._fill(self.CommercialUse, appinfo.License.CommercialUse)
 
         if 'PackageVersion' in appinfo.Version:
             pv = appinfo.Version.PackageVersion
@@ -143,10 +142,10 @@ class AppInfoDialog(QtGui.QDialog):
                 pass
             else:
                 if len(pv) == 4:
-                    self._fill(self.ui.PackageVersion1, pv[0])
-                    self._fill(self.ui.PackageVersion2, pv[1])
-                    self._fill(self.ui.PackageVersion3, pv[2])
-                    self._fill(self.ui.PackageVersion4, pv[3])
+                    self._fill(self.PackageVersion1, pv[0])
+                    self._fill(self.PackageVersion2, pv[1])
+                    self._fill(self.PackageVersion3, pv[2])
+                    self._fill(self.PackageVersion4, pv[3])
 
         # Split DisplayVersion into chunks
         if 'DisplayVersion' in appinfo.Version:
@@ -169,27 +168,27 @@ class AppInfoDialog(QtGui.QDialog):
                     except ValueError:
                         split[1] = 0
 
-                    self._fill(self.ui.DisplayVersionBase, split[0])
-                    self._fill(self.ui.DisplayVersionType, target)
-                    self._fill(self.ui.DisplayVersionNum, split[1])
+                    self._fill(self.DisplayVersionBase, split[0])
+                    self._fill(self.DisplayVersionType, target)
+                    self._fill(self.DisplayVersionNum, split[1])
                     break
             else:
-                self._fill(self.ui.DisplayVersionBase, dv)
-                self._fill(self.ui.DisplayVersionType,
+                self._fill(self.DisplayVersionBase, dv)
+                self._fill(self.DisplayVersionType,
                         '(official release)')
                 # TODO: this may not be necessary
-                self.ui.DisplayVersionNum.setEnabled(False)
+                self.DisplayVersionNum.setEnabled(False)
 
         if not package.eula:
-            self.ui.EULAVersion.setEnabled(False)
-        self._fill(self.ui.EULAVersion, appinfo.Version.EULAVersion)
+            self.EULAVersion.setEnabled(False)
+        self._fill(self.EULAVersion, appinfo.Version.EULAVersion)
 
         # TODO: no Control section
 
-        self._fill(self.ui.PluginsPath, appinfo.SpecialPaths.Plugins)
+        self._fill(self.PluginsPath, appinfo.SpecialPaths.Plugins)
 
-        self._fill(self.ui.UsesJava, appinfo.Dependencies.UsesJava)
-        self._fill(self.ui.UsesDotNetVersion,
+        self._fill(self.UsesJava, appinfo.Dependencies.UsesJava)
+        self._fill(self.UsesDotNetVersion,
                 appinfo.Dependencies.UsesDotNetVersion)
 
     def save(self):
@@ -205,48 +204,48 @@ class AppInfoDialog(QtGui.QDialog):
         appinfo.Format.Type = 'PortableApps.comFormat'
         appinfo.Format.Version = '2.0'
 
-        appinfo.Details.Name = self.ui.Name.text()
-        appinfo.Details.AppID = self.ui.AppID.text()
-        appinfo.Details.Publisher = self.ui.Publisher.text()
-        appinfo.Details.Homepage = self.ui.Homepage.text()
-        appinfo.Details.Category = self.ui.Category.currentText()
-        appinfo.Details.Description = self.ui.Description.text()
-        appinfo.Details.Language = self.ui.Language.currentText()
-        if self.ui.Trademarks.text():
-            appinfo.Details.Trademarks = self.ui.Trademarks.text()
+        appinfo.Details.Name = self.Name.text()
+        appinfo.Details.AppID = self.AppID.text()
+        appinfo.Details.Publisher = self.Publisher.text()
+        appinfo.Details.Homepage = self.Homepage.text()
+        appinfo.Details.Category = self.Category.currentText()
+        appinfo.Details.Description = self.Description.text()
+        appinfo.Details.Language = self.Language.currentText()
+        if self.Trademarks.text():
+            appinfo.Details.Trademarks = self.Trademarks.text()
 
         b = lambda i: 'true' if i.isChecked() else 'false'
 
-        appinfo.License.Shareable = b(self.ui.Shareable)
-        appinfo.License.OpenSource = b(self.ui.OpenSource)
-        appinfo.License.Freeware = b(self.ui.Freeware)
-        appinfo.License.CommercialUse = b(self.ui.CommercialUse)
+        appinfo.License.Shareable = b(self.Shareable)
+        appinfo.License.OpenSource = b(self.OpenSource)
+        appinfo.License.Freeware = b(self.Freeware)
+        appinfo.License.CommercialUse = b(self.CommercialUse)
 
-        if self.ui.EULAVersion.isEnabled() and self.ui.EULAVersion.text():
-            appinfo.License.EULAVersion = self.ui.EULAVersion.text()
+        if self.EULAVersion.isEnabled() and self.EULAVersion.text():
+            appinfo.License.EULAVersion = self.EULAVersion.text()
 
         appinfo.Version.PackageVersion = '.'.join(map(str, (
-            self.ui.PackageVersion1.value(), self.ui.PackageVersion2.value(),
-            self.ui.PackageVersion3.value(), self.ui.PackageVersion4.value())))
+            self.PackageVersion1.value(), self.PackageVersion2.value(),
+            self.PackageVersion3.value(), self.PackageVersion4.value())))
 
-        dvtype = self.ui.DisplayVersionType.currentText()
-        appinfo.Version.DisplayVersion = self.ui.DisplayVersionBase.text()
+        dvtype = self.DisplayVersionType.currentText()
+        appinfo.Version.DisplayVersion = self.DisplayVersionBase.text()
         if dvtype != '(official release)':
             appinfo.Version.DisplayVersion += ' ' + dvtype + ' ' + \
-                    str(self.ui.DisplayVersionNum.value())
+                    str(self.DisplayVersionNum.value())
 
-        if self.ui.PluginsPath.text():
-            appinfo.SpecialPaths.Plugins = self.ui.PluginsPath.text()
+        if self.PluginsPath.text():
+            appinfo.SpecialPaths.Plugins = self.PluginsPath.text()
 
-        if self.ui.UsesJava.isChecked():
+        if self.UsesJava.isChecked():
             appinfo.Dependencies.UsesJava = 'true'
         # If it was ticked before, remove it
         elif 'UsesJava' in appinfo.Dependencies:
             del appinfo.Dependencies.UsesJava
 
-        if self.ui.UsesDotNetVersion.currentText() != 'None':
+        if self.UsesDotNetVersion.currentText() != 'None':
             appinfo.Dependencies.UsesDotNetVersion = \
-                    self.ui.UsesDotNetVersion.currentText()
+                    self.UsesDotNetVersion.currentText()
         # If it was set before, remove it
         elif 'UsesDotNetVersion' in appinfo.Dependencies:
             del appinfo.Dependencies.UsesDotNetVersion
