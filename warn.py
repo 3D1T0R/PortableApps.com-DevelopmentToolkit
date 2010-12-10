@@ -1,5 +1,5 @@
 import warnings
-from qt.QtGui import QMessageBox
+from PyQt4.QtGui import QMessageBox
 from utils import _
 
 

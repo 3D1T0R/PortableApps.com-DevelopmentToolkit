@@ -7,7 +7,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from qt import QtCore, QtGui
+from PyQt4 import QtCore, QtGui
 
 class Ui_ValidationDialog(object):
     def setupUi(self, ValidationDialog):

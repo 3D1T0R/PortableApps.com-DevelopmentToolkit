@@ -1,6 +1,6 @@
 import os
 from functools import wraps
-from qt import QtCore, QtGui
+from PyQt4 import QtCore, QtGui
 from ui.mainwindow import Ui_MainWindow
 import paf
 import config

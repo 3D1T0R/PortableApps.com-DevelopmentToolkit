@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from qt import QtCore, QtGui
+from PyQt4 import QtCore, QtGui
 from ui.appinfo import Ui_AppInfoDialog
 from utils import center_window
 from paf.appinfo import valid_appid

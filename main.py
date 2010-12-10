@@ -6,7 +6,9 @@ Main launch script for PortableApps.com Development Toolkit.
 """
 
 import sys
-from qt import QtGui
+import pyqt4pysideimporter
+pyqt4pysideimporter.autoselect()
+from PyQt4 import QtGui
 from utils import center_window
 import config
 import warn

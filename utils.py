@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from qt.QtGui import QApplication, QDesktopWidget
+from PyQt4.QtGui import QApplication, QDesktopWidget
 import os
 
 _ = lambda x: QApplication.translate("MainWindow", x, None,
