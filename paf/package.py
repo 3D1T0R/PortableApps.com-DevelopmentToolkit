@@ -148,6 +148,7 @@ class Package(object):
 
         self.appinfo = paf.AppInfo(self)
         self.installer = paf.Installer(self)
+        self.launcher = paf.Launcher(self)
 
         self.validate()
 

@@ -9,3 +9,4 @@ class PAFException(Exception):
 from paf.package import *
 from paf.appinfo import *
 from paf.installer import *
+from paf.launcher import *
