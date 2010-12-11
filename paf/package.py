@@ -80,11 +80,14 @@ class Package(object):
             ('App', 'AppInfo', 'Launcher'),
     ]
 
+    _pal_recommended_files = [
+            ('App', 'AppInfo', 'Launcher', 'splash.jpg'),
+    ]
+
     @property
-    def _pal_files(self):
+    def _pal_mandatory_files(self):
         files = [
             # Files from the template
-            ('App', 'AppInfo', 'Launcher', 'splash.jpg'),
             ('App', 'readme.txt'),
             ('Other', 'Help', 'Images', 'donation_button.png'),
             ('Other', 'Help', 'Images', 'favicon.ico'),
@@ -127,6 +130,7 @@ class Package(object):
         # Check if it's a plugin installer
         if isfile(self.path('Other', 'Source', 'plugininstaller.ini')):
             self.plugin = True
+            self._mandatory_files = self._mandatory_files[:]
             self._mandatory_files[self._mandatory_files.index(('App',
                 'AppInfo', 'appinfo.ini'))] = \
                         ('Other', 'Source', 'plugininstaller.ini')
@@ -187,7 +191,9 @@ class Package(object):
         if recommended:
             filelist += self._recommended_files
         if self.launcher_is_pal:
-            filelist += self._pal_files
+            filelist += self._pal_mandatory_files
+            if recommended:
+                filelist += self._pal_recommended_files
         return filelist
 
     def fix_missing_files(self):
@@ -241,7 +247,10 @@ class Package(object):
                 self.warnings.append(LANG.GENERAL.DIRECTORY_MISSING %
                         join(*directory))
 
-        for filename in self._recommended_files:
+        recommended_files = self._recommended_files[:]
+        if self.launcher_is_pal:
+            recommended_files += self._pal_recommended_files
+        for filename in recommended_files:
             if isdir(os.path.dirname(self.path(*filename))) and \
             not isfile(self.path(*filename)):
                 self.warnings.append(LANG.GENERAL.FILE_MISSING %
@@ -312,6 +321,7 @@ class Package(object):
         Popen([appcompactor_path, package_path]).wait()
 
         return True
+
 
 def create_package(path, create_if_not_exist=False, require_empty=True):
     """
