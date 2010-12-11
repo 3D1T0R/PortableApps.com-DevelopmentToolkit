@@ -28,6 +28,8 @@ class Launcher(object):
         Builds a launcher with the PortableApps.com Launcher Generator.
 
         Raises an ``OSError`` if run on Linux/OS X and Wine is not installed.
+        Raises a ``PAFException`` if the package has no AppID (that's about the
+        only real requirement for building a launcher).
 
         Returns True on success, or False if either the PortableApps.com
         Launcher Generator was not found or the launcher fails to build.
@@ -35,7 +37,7 @@ class Launcher(object):
 
         if self.package.appid is None:
             # Hopeless case, the Generator needs an AppID to work on.
-            return False
+            raise PAFException("Can't build Launcher, AppID is not set.")
 
         generator_path = config.get('Main', 'LauncherGeneratorPath')
         if not generator_path or not isfile(generator_path):
@@ -50,7 +52,7 @@ class Launcher(object):
             package_path = Popen(['winepath', '-w', package_path],
                     stdout=PIPE).communicate()[0].strip()
 
-        full_target = self.package.path('..', '%s.exe' % self.package.appid)
+        full_target = self.package.path('%s.exe' % self.package.appid)
         # Make sure it's not there from a previous build.
         if isfile(full_target):
             remove(full_target)
