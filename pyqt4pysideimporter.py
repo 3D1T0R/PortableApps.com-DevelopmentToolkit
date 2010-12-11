@@ -5,6 +5,7 @@ interchangeable, fixing up bad things in PyQt4 if it's selected.
 
 __all__ = ('IS_PYQT4', 'IS_PYSIDE', 'autoselect')
 
+import zip_imp  # for py2exe
 import imp
 
 
@@ -69,5 +70,6 @@ def autoselect():
             load_pyside()
     else:
         load_pyqt4()
+    zip_imp.cleanup()
 
 IS_PYQT4 = IS_PYSIDE = False
