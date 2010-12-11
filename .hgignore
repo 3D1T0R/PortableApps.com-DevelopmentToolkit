@@ -5,3 +5,4 @@ settings.ini
 .*.swp
 build/
 dist/
+dist-paf/
