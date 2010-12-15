@@ -1,3 +1,5 @@
+"""A way of making warnings friendlier with Qt."""
+
 import warnings
 from PyQt4.QtGui import QMessageBox
 from utils import _

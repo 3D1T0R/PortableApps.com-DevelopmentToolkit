@@ -1,3 +1,4 @@
+"""Compiler and package producer."""
 from distutils.core import setup
 import py2exe
 import os
@@ -144,6 +145,7 @@ def paffify():
             join(paf_path, 'App', 'DevelopmentToolkit'))
 
     return package
+
 
 def upload():
     """Voom!"""

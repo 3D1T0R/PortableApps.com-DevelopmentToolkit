@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+"""Various utility functions."""
 
 from PyQt4.QtGui import QApplication, QDesktopWidget
 import os
@@ -7,15 +7,13 @@ _ = lambda x: QApplication.translate("MainWindow", x, None,
         QApplication.UnicodeUTF8)
 
 
-def get_ini_str(iniconfig, section, key, default=None):
-    if key not in iniconfig[section]:
-        #iniconfig[section][key] = default
-        return default
-    else:
-        return iniconfig[section][key]
+def get_ini_str(ini, section, key, default=None):
+    """Get a value from an INIConfig with a default value if not set."""
+    return ini[section][key] if key in ini[section] else default
 
 
 def center_window(window):
+    """Center a window on the screen."""
     s = QDesktopWidget().screenGeometry()
     g = window.geometry()
     window.move((s.width() - g.width()) // 2, (s.height() - g.height()) // 2)
@@ -54,37 +52,36 @@ def _path_insensitive(path):
     if path == '' or os.path.exists(path):
         return path
 
-    f = os.path.basename(path)  # f may be a directory or a file
-    d = os.path.dirname(path)
+    base = os.path.basename(path)  # may be a directory or a file
+    dirname = os.path.dirname(path)
 
     suffix = ''
-    if not f:  # dir ends with a slash?
-        if len(d) < len(path):
-            suffix = path[:len(path) - len(d)]
+    if not base:  # dir ends with a slash?
+        if len(dirname) < len(path):
+            suffix = path[:len(path) - len(dirname)]
 
-        f = os.path.basename(d)
-        d = os.path.dirname(d)
+        base = os.path.basename(dirname)
+        dirname = os.path.dirname(dirname)
 
-    if not os.path.exists(d):
-        d = _path_insensitive(d)
-        if not d:
-            return False
+    if not os.path.exists(dirname):
+        dirname = _path_insensitive(dirname)
+        if not dirname:
+            return
 
     # at this point, the directory exists but not the file
 
-    try:  # we are expecting 'd' to be a directory, but it could be a file
-        files = os.listdir(d)
+    try:  # we are expecting dirname to be a directory, but it could be a file
+        files = os.listdir(dirname)
     except OSError:
-        return False
+        return
 
-    f_low = f.lower()
-
+    baselow = base.lower()
     try:
-        f_nocase = [fl for fl in files if fl.lower() == f_low][0]
+        basefinal = [fl for fl in files if fl.lower() == baselow][0]
     except IndexError:
-        return False
+        return
 
-    if f_nocase:
-        return os.path.join(d, f_nocase) + suffix
+    if basefinal:
+        return os.path.join(dirname, basefinal) + suffix
     else:
-        return False
+        return

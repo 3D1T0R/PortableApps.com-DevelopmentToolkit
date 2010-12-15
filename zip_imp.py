@@ -1,11 +1,4 @@
 # From http://www.voidspace.org.uk/python/weblog/arch_d7_2006_02_25.shtml#e241
-import sys
-import os
-import imp
-import marshal
-import tempfile
-from zipimport import zipimporter, ZipImportError
-
 """
 A module that patches ``imp.find_module`` to work from within py2exe.
 
@@ -16,6 +9,13 @@ files created.
 
 This will only work if you have a zip file on ``sys.path`.
 """
+
+import sys
+import os
+import imp
+import marshal
+import tempfile
+from zipimport import zipimporter, ZipImportError
 
 __all__ = ['cleanup']
 
@@ -76,27 +76,3 @@ def cleanup():
         # calling close on an already closed file doesn't hurt
         file_obj.close()
         os.remove(name)
-
-if __name__ == '__main__':
-    if not hasattr(sys, 'frozen'):
-        print 'This test only works from *inside* Movable Python or a',
-        print 'program frozen with py2exe.'
-        sys.exit()
-    #
-    name = 'Cookie'
-    try:
-        file, pathname, description = imp.find_module(name)
-    except ImportError:
-        print 'Failed to ``find_module``.'
-    else:
-        print file, pathname, description
-        print '``find_module`` succeeded.'
-        m = imp.load_module(name, file, pathname, description)
-        print "``load_module`` succeeded."
-        file.close()
-        #
-        print
-        print m
-        print m.Cookie
-    #
-    cleanup()

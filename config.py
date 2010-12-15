@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+"""Things to do with configuration and user settings storage."""
 
 import os
 import sys
@@ -9,24 +9,15 @@ ROOT_DIR = os.path.abspath(os.path.dirname(unicode(sys.executable
     if hasattr(sys, 'frozen') else __file__, sys.getfilesystemencoding())))
 
 
-def settings_path(filename=None):
-    if 'PAL:DataDir' in os.environ \
-    and os.path.isdir(os.environ['PAL:DataDir']):
-        dirname = os.environ['PAL:DataDir']
-    else:
-        dirname = ROOT_DIR
-
-    if filename:
-        return os.path.join(dirname, filename)
-    else:
-        return dirname
+def settings_path(filename=''):
+    """Finds the path to a settings file."""
+    return os.path.join(os.environ.get('PAL:DataDir', ROOT_DIR), filename)
 
 
 def load():
+    """Load the user's settings."""
     global settings
-
     settings_file = settings_path('settings.ini')
-
     if os.path.isfile(settings_file):
         settings = INIConfig(open(settings_file))
     else:
@@ -34,13 +25,14 @@ def load():
 
 
 def save():
-    f = open(settings_path('settings.ini'), 'w')
+    """Save the user's settings."""
     tidy(settings)
-    f.write(unicode(settings))
-    f.close()
+    with open(settings_path('settings.ini'), 'w') as outfile:
+        outfile.write(unicode(settings))
 
 
 def get(section, key, default=None):
+    """Get a value from the user's settings."""
     return get_ini_str(settings, section, key, default)
 
 load()

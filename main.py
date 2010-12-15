@@ -14,6 +14,7 @@ import config
 import warn
 from frontend.guiqt import MainWindow, ValidationDialog
 
+
 def main():
     """Run the normal interface."""
     app = QtGui.QApplication(sys.argv)
