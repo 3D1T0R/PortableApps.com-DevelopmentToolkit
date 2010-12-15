@@ -3,7 +3,7 @@
 # This file is for App/AppInfo/appinfo.ini validation
 
 from os import makedirs
-from os.path import exists, isfile, isdir
+from os.path import exists, isfile, isdir, join
 from languages import LANG
 import iniparse
 from paf import FORMAT_VERSION, PAFException
@@ -220,6 +220,11 @@ class AppInfo(object):
 
         eula = self.package.eula
         if 'EULAVersion' in ini.License and not eula:
+            if self.package.plugin:
+                eula = join('Other', 'Source', 'PluginEULA')
+            else:
+                eula = join('Other', 'Source', 'EULA')
+
             self.errors.append(LANG.APPINFO.LICENSE_EULAVERSION_NO_EULA
             % dict(eula=eula))
 
