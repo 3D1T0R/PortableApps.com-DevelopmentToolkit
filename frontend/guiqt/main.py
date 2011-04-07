@@ -4,7 +4,7 @@ from PyQt4 import QtCore, QtGui
 from ui.mainwindow import Ui_MainWindow
 import paf
 import config
-from utils import _, center_window
+from utils import _, center_window, path_local
 from validate import ValidationDialog
 import appinfo
 
@@ -46,6 +46,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             package = QtGui.QFileDialog.getExistingDirectory(None,
                     _("Create a directory for the package"))
             if package:
+                package = path_local(package)
                 try:
                     paf.create_package(package)
                 except paf.PAFException as e:

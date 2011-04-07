@@ -2,9 +2,13 @@
 
 from PyQt4.QtGui import QApplication, QDesktopWidget
 import os
+import sys
+from subprocess import Popen, PIPE
 
 _ = lambda x: QApplication.translate("MainWindow", x, None,
         QApplication.UnicodeUTF8)
+
+win32 = sys.platform == 'win32'
 
 
 def get_ini_str(ini, section, key, default=None):
@@ -85,3 +89,51 @@ def _path_insensitive(path):
         return os.path.join(dirname, basefinal) + suffix
     else:
         return
+
+
+def path_local(path, absolute=False):
+    """
+    Converts a Windows path to a path for the current operating system. This is
+    the opposite of ``path_windows``.
+
+    On Windows, this returns the provided input with any stray forward slashes
+    changed to backslashes; on Linux it replaces backslashes with slashes and
+    if absolute=True feeds the path through winepath to get a valid local path.
+    As a result, this is an expensive call.  Thus absolute=True should only be
+    used when really needed.
+
+    Raises an OSError on Linux if Wine is not installed when absolute=True.
+    """
+    if absolute and not win32:
+        try:
+            return os.path.realpath(Popen(['winepath', '-u', path],
+                    stdout=PIPE).communicate()[0].strip())
+        except OSError:
+            raise OSError('Wine is not installed')
+    elif win32:
+        return path.replace('/', '\\')
+    else:
+        return path.replace('\\', '/')
+
+
+def path_windows(path, absolute=False):
+    """
+    Converts a path from the local operating system to a Windows path. This is
+    the opposite of ``path_local``.
+
+    On Windows, this returns the provided input with any stray forward slashes
+    changed to backslashes; on Linux it replaces backslashes with slashes and
+    if absolute=True feeds the path through winepath to get a valid local path.
+    As a result, this is an expensive call.  Thus absolute=True should only be
+    used when really needed.
+
+    Raises an OSError on Linux if Wine is not installed when absolute=True.
+    """
+    if absolute and not win32:
+        try:
+            return Popen(['winepath', '-w', path],
+                    stdout=PIPE).communicate()[0].strip()
+        except OSError:
+            raise OSError('Wine is not installed')
+    else:
+        return path.replace('/', '\\')
