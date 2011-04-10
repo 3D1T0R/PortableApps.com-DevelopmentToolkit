@@ -33,8 +33,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         "Select a package."
         text_box = self.packageText
         current_path = text_box.text()
-        text_box.setText(QtGui.QFileDialog.getExistingDirectory(None,
-            _("Select a portable app package"), current_path) or current_path)
+        text_box.setText(path_local(QtGui.QFileDialog.getExistingDirectory(None,
+            _("Select a portable app package"), current_path)) or current_path)
 
     @QtCore.Slot()
     def on_createButton_clicked(self):
