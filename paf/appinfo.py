@@ -115,14 +115,21 @@ class AppInfo(object):
             if section == 'Control':
                 continue
 
-            for missing in self._keys_required[section] - ini[section]:
-                self.errors.append(LANG.APPINFO.VALUE_MISSING %
-                    dict(section=section, key=missing))
+            for key in self._keys_required[section]:
+                if key not in ini[section]:
+                    self.errors.append(LANG.APPINFO.VALUE_MISSING %
+                            dict(section=section, key=key))
+                elif ini[section][key] == '':
+                    self.errors.append(LANG.APPINFO.VALUE_EMPTY %
+                            dict(section=section, key=key))
 
-            for extra in OrderedSet(ini[section]) \
-            - self._keys_required[section] - self._keys_optional[section]:
-                self.errors.append(LANG.APPINFO.VALUE_EXTRA %
-                    dict(section=section, key=extra))
+            for key in OrderedSet(ini[section]) - self._keys_required[section]:
+                if key not in self._keys_optional[section]:
+                    self.errors.append(LANG.APPINFO.VALUE_EXTRA %
+                            dict(section=section, key=key))
+                elif ini[section][key] == '':
+                    self.errors.append(LANG.APPINFO.OMIT_EMPTY %
+                            dict(section=section, key=key))
 
         # [Format]
 
@@ -262,8 +269,9 @@ class AppInfo(object):
 
         if 'UsesDotNetVersion' in ini.Dependencies:
             if ini.Dependencies.UsesDotNetVersion == '':
-                self.warnings.append(LANG.APPINFO.OMIT_EMPTY %
-                    dict(section='Dependencies', key='UsesDotNetVersion'))
+                pass  # Checked up atop now
+                #self.warnings.append(LANG.APPINFO.OMIT_EMPTY %
+                #    dict(section='Dependencies', key='UsesDotNetVersion'))
             elif ini.Dependencies.UsesDotNetVersion \
             not in ('1.1', '2.0', '3.0', '3.5'):
                 self.warnings.append(
