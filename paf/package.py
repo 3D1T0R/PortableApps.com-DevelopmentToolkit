@@ -107,6 +107,8 @@ class Package(object):
     @property
     def appid(self):
         "Get the AppID of the package."
+        if self.appinfo.ini is None:
+            return None
         if 'AppID' in self.appinfo.ini.Details:
             return self.appinfo.ini.Details.AppID
         # Compatibility with a former typo in the PAF spec
