@@ -1,5 +1,4 @@
 import os
-import re
 from orderedset import OrderedSet
 from languages import LANG
 from paf import FORMAT_VERSION, CATEGORIES, LANGUAGES
@@ -198,9 +197,9 @@ class Control(SectionValidator):
             return OrderedSet(result)
 
         mappings = {
-                re.compile('Start\d+'): 'Start',
-                re.compile('ExtractIcon\d+'): 'ExtractIcon',
-                #re.compile('Name\d+'): Name_, # no validation
+                'Start[1-9]\d*$': 'Start',
+                'ExtractIcon[1-9]\d*$': 'ExtractIcon',
+                #'Name[1-9]\d*$': 'Name_', # no validation
                 }
 
     def Start(self, value):

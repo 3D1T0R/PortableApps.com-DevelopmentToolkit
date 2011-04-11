@@ -1,3 +1,4 @@
+import re
 from orderedset import OrderedSet
 from languages import LANG
 
@@ -24,7 +25,16 @@ class INIValidator(object):
             self.warnings.append(LANG.APPINFO.SECTIONS_OUT_OF_ORDER)
 
         for section in setini & meta.order:
-            secval = getattr(self.module, section)(ini, package)
+            secval_cls = getattr(self.module, section)
+            if hasattr(self.module, section):
+                secval_cls = getattr(self.module, section)
+            else:
+                for regex, clsname in meta.mappings.iteritems():
+                    if re.match(regex, key):
+                        secval_cls = getattr(self.module, clsname)
+                        # TODO: could be nice to know what section is in this case...
+                        break
+            secval = secval_cls(ini, package)
             smeta = secval.Meta(ini, package, secval)
             inisection = ini[section]
             inisectionset = OrderedSet(inisection)
@@ -53,8 +63,15 @@ class INIValidator(object):
 
             # Oh yeah, we may as well validate the value. Could be handy.
             for key in smeta.order:
-                if key in inisection and hasattr(secval, key):
-                    self._add_item(getattr(secval, key)(inisection[key]))
+                if key in inisection:
+                    if hasattr(secval, key):
+                        self._add_item(getattr(secval, key)(inisection[key]))
+                    else:
+                        for regex, fnname in smeta.mappings.iteritems():
+                            if re.match(regex, key):
+                                self._add_item(getattr(secval, fnname)(inisection[key]))
+                                # TODO: could be nice to know what key is in this case...
+                                break
 
     def _add_item(self, item):
         if item is None:
@@ -87,6 +104,7 @@ class FileMeta(ValidatorObject):
     optional = OrderedSet()
     order = OrderedSet()
     enforce_order = False
+    mappings = {}
 
 
 class SectionMeta(ValidatorObject):
@@ -94,6 +112,7 @@ class SectionMeta(ValidatorObject):
     optional = OrderedSet()
     order = OrderedSet()
     enforce_order = Ellipsis  # Inherit from file
+    mappings = {}
 
     def __init__(self, ini, package, secval):
         super(SectionMeta, self).__init__(ini, package)
