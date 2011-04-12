@@ -1,17 +1,22 @@
 import os
+import sys
 from orderedset import OrderedSet
 from languages import LANG
 from paf import FORMAT_VERSION, CATEGORIES, LANGUAGES
 from .engine.factory import bool_check
-from .engine import (SectionValidator, FileMeta, SectionMeta,
+from .engine import (INIValidator, SectionValidator, FileMeta, SectionMeta,
         ValidatorError, ValidatorWarning, ValidatorInfo)
 
 
-class Meta(FileMeta):
-    mandatory = OrderedSet(('Format', 'Details', 'License', 'Version', 'Control'))
-    optional = OrderedSet(('SpecialPaths', 'Dependencies'))
-    order = OrderedSet(('Format', 'Details', 'License', 'Version', 'SpecialPaths', 'Dependencies', 'Control'))
-    enforce_order = True
+class AppInfoValidator(INIValidator):
+    module = sys.modules[__name__]
+    filename = r'App\AppInfo\appinfo.ini'
+
+    class Meta(FileMeta):
+        mandatory = OrderedSet(('Format', 'Details', 'License', 'Version', 'Control'))
+        optional = OrderedSet(('SpecialPaths', 'Dependencies'))
+        order = OrderedSet(('Format', 'Details', 'License', 'Version', 'SpecialPaths', 'Dependencies', 'Control'))
+        enforce_order = True
 
 
 class Format(SectionValidator):
@@ -30,7 +35,7 @@ class Format(SectionValidator):
                     % dict(old_version=value, current_version=FORMAT_VERSION))
             else:
                 return ValidatorError(LANG.APPINFO.BAD_FORMAT_VERSION
-                    % FORMAT_VERSION)
+                    % dict(version=FORMAT_VERSION))
 
 
 class Details(SectionValidator):
@@ -63,7 +68,7 @@ class Details(SectionValidator):
         if chars > 512:
             return ValidatorError(LANG.APPINFO.DETAILS_DESCRIPTION_TOO_LONG)
         elif chars > 150:
-            return ValidatorWarning(LANG.APPINFO.DETAILS_DESCRIPTION_LONG % chars)
+            return ValidatorWarning(LANG.APPINFO.DETAILS_DESCRIPTION_LONG % dict(chars=chars))
 
     def Language(self, value):
         if value not in LANGUAGES:
@@ -125,7 +130,7 @@ class SpecialPaths(SectionValidator):
 
     def Plugins(self, value):
         if value == 'NONE':
-            return ValidatorWarning(LANG.APPINFO.OMIT_DEFAULT % dict(
+            return ValidatorWarning(LANG.INIVALIDATOR.OMIT_DEFAULT % dict(filename=self.validator.filename,
                 section='SpecialPaths', key='Plugins', default='NONE'))
         elif not os.path.isdir(self.package.path(value)):
             return ValidatorError(LANG.APPINFO.SPECIALPATHS_PLUGINS_BAD)
@@ -138,8 +143,8 @@ class Dependencies(SectionValidator):
 
     def UsesJava(self, value):
         if value == 'false':
-            return ValidatorWarning(LANG.APPINFO.OMIT_DEFAULT %
-                    dict(section='Dependencies', key='UsesJava',
+            return ValidatorWarning(LANG.INIVALIDATOR.OMIT_DEFAULT %
+                    dict(filename=self.validator.filename, section='Dependencies', key='UsesJava',
                         default='false'))
         elif value != 'true':
             return ValidatorError(LANG.APPINFO.DEPENDENCIES_JAVA_BAD)

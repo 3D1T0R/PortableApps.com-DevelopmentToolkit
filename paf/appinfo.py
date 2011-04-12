@@ -3,13 +3,15 @@
 # This file is for App/AppInfo/appinfo.ini validation
 
 from os import makedirs
-from os.path import exists, isfile, isdir, join
+from os.path import exists, isfile
 from languages import LANG
 import iniparse
 import ConfigParser
-from paf import FORMAT_VERSION, PAFException
+from paf import PAFException
 from orderedset import OrderedSet
 from functools import wraps
+from validator.appinfo import AppInfoValidator
+
 
 __all__ = ['AppInfo', 'valid_appid']
 
@@ -104,10 +106,7 @@ class AppInfo(object):
             # being missing has already been added to the list, we'll give up.
             return
 
-        import validator.appinfo
-        import validator.engine
-
-        inivalidator = validator.engine.INIValidator(validator.appinfo)
+        inivalidator = AppInfoValidator()
         inivalidator.validate(self.ini, self.package)
         self.errors.extend(inivalidator.errors)
         self.warnings.extend(inivalidator.warnings)

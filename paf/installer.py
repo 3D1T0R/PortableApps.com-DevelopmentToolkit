@@ -126,14 +126,14 @@ class Installer(object):
         # TODO: style validation
 
         for extra in OrderedSet(ini) - self._sections:
-            self.errors.append(LANG.INSTALLER.SECTION_EXTRA % extra)
+            self.errors.append(LANG.INIVALIDATOR.SECTION_EXTRA % dict(filename=self._path, section=extra))
 
         for section in self._sections & ini:
             for extra in ini[section]:
                 if not any(re.match('%s$' % key, extra)
                         for key in self._keys[section]):
-                    self.errors.append(LANG.INSTALLER.VALUE_EXTRA %
-                            dict(section=section, key=extra))
+                    self.errors.append(LANG.INIVALIDATOR.VALUE_EXTRA %
+                            dict(filename=self._path, section=section, key=extra))
 
     @_valid_installer
     def fix(self):

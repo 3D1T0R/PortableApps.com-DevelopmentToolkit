@@ -3,26 +3,25 @@ from orderedset import OrderedSet
 from languages import LANG
 
 class INIValidator(object):
-    def __init__(self, module):
-        self.module = module
+    def __init__(self):
         self.errors = []
         self.warnings = []
         self.info = []
 
     def validate(self, ini, package):
-        meta = self.module.Meta(ini, package)  # () so properties work
+        meta = self.Meta(self, ini, package)  # () so properties work
         setini = OrderedSet(ini)
 
         for missing in meta.mandatory - setini:
-            self.errors.append(LANG.APPINFO.SECTION_MISSING % missing)
+            self.errors.append(LANG.INIVALIDATOR.SECTION_MISSING % dict(filename=self.filename, section=missing))
 
         for extra in setini - meta.order:
-            self.errors.append(LANG.APPINFO.SECTION_EXTRA % extra)
+            self.errors.append(LANG.INIVALIDATOR.SECTION_EXTRA % dict(filename=self.filename, section=extra))
 
         # Check that they're in the same order
         if meta.enforce_order and setini & meta.order != meta.order & setini:
             # A warning? We like fancy INI files.
-            self.warnings.append(LANG.APPINFO.SECTIONS_OUT_OF_ORDER)
+            self.warnings.append(LANG.INIVALIDATOR.SECTIONS_OUT_OF_ORDER % dict(filename=self.filename))
 
         for section in setini & meta.order:
             secval_cls = getattr(self.module, section)
@@ -34,32 +33,33 @@ class INIValidator(object):
                         secval_cls = getattr(self.module, clsname)
                         # TODO: could be nice to know what section is in this case...
                         break
-            secval = secval_cls(ini, package)
-            smeta = secval.Meta(ini, package, secval)
+            secval = secval_cls(self, ini, package)
+            smeta = secval.Meta(self, ini, package, secval)
             inisection = ini[section]
             inisectionset = OrderedSet(inisection)
 
             for key in smeta.mandatory:
                 if key not in inisection:
-                    self.errors.append(LANG.APPINFO.VALUE_MISSING %
-                            dict(section=section, key=key))
+                    self.errors.append(LANG.INIVALIDATOR.VALUE_MISSING %
+                            dict(filename=self.filename, section=section, key=key))
                 elif inisection[key] == '':
-                    self.errors.append(LANG.APPINFO.VALUE_EMPTY %
-                            dict(section=section, key=key))
+                    self.errors.append(LANG.INIVALIDATOR.VALUE_EMPTY %
+                            dict(filename=self.filename, section=section, key=key))
 
             for key in inisectionset - smeta.mandatory:
                 if key not in smeta.optional:
-                    self.errors.append(LANG.APPINFO.VALUE_EXTRA %
-                            dict(section=section, key=key))
+                    self.errors.append(LANG.INIVALIDATOR.VALUE_EXTRA %
+                            dict(filename=self.filename, section=section, key=key))
                 elif inisection[key] == '':
-                    self.errors.append(LANG.APPINFO.OMIT_EMPTY %
-                            dict(section=section, key=key))
+                    self.errors.append(LANG.INIVALIDATOR.OMIT_EMPTY %
+                            dict(filename=self.filename, section=section, key=key))
 
             # Check that they're in the same order
             enforce_order = meta.enforce_order if smeta.enforce_order is Ellipsis else smeta.enforce_order
             if enforce_order and inisectionset & smeta.order != smeta.order & inisectionset:
                 # A warning? We like fancy INI files.
-                self.warnings.append(LANG.APPINFO.KEYS_OUT_OF_ORDER % section)
+                self.warnings.append(LANG.INIVALIDATOR.KEYS_OUT_OF_ORDER %
+                        dict(filename=self.filename, section=section))
 
             # Oh yeah, we may as well validate the value. Could be handy.
             for key in smeta.order:
@@ -90,7 +90,8 @@ class INIValidator(object):
 
 
 class ValidatorObject(object):
-    def __init__(self, ini, package):
+    def __init__(self, validator, ini, package):
+        self.validator = validator
         self.ini = ini
         self.package = package
 
@@ -114,8 +115,8 @@ class SectionMeta(ValidatorObject):
     enforce_order = Ellipsis  # Inherit from file
     mappings = {}
 
-    def __init__(self, ini, package, secval):
-        super(SectionMeta, self).__init__(ini, package)
+    def __init__(self, validator, ini, package, secval):
+        super(SectionMeta, self).__init__(validator, ini, package)
         self.parent = secval
 
 
