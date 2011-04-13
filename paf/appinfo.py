@@ -8,7 +8,6 @@ from languages import LANG
 import iniparse
 import ConfigParser
 from paf import PAFException
-from orderedset import OrderedSet
 from functools import wraps
 from validator.appinfo import AppInfoValidator
 
@@ -36,33 +35,6 @@ def _valid_appinfo(func):
 
 class AppInfo(object):
     "The manager for the app info (appinfo.ini)."
-
-    _sections_required = OrderedSet(('Format', 'Details', 'License', 'Version',
-                                    'Control'))
-    _sections_optional = OrderedSet(('SpecialPaths', 'Dependencies'))
-    _keys_required = dict(
-            Format=OrderedSet(('Type', 'Version')),
-            Details=OrderedSet(('Name', 'AppID', 'Publisher', 'Homepage',
-                                'Category', 'Description', 'Language')),
-            License=OrderedSet(('Shareable', 'OpenSource', 'Freeware',
-                                'CommercialUse')),
-            Version=OrderedSet(('PackageVersion', 'DisplayVersion')),
-            SpecialPaths=OrderedSet(),
-            Dependencies=OrderedSet(),
-            Control=OrderedSet(('Icons', 'Start')),
-            # Control: also StartN and NameN for 1 to Icons if Icons > 1
-            )
-    _keys_optional = dict(
-            Format=OrderedSet(),
-            Details=OrderedSet(('Trademarks', 'InstallType', 'PluginType')),
-            # PluginType is only valid for self.plugin == True, validated later
-            License=OrderedSet(('EULAVersion',)),
-            Version=OrderedSet(),
-            SpecialPaths=OrderedSet(('Plugins',)),
-            Dependencies=OrderedSet(('UsesJava', 'UsesDotNetVersion')),
-            Control=OrderedSet(('ExtractIcon',)),
-            # Control: also ExtractIconN for 1 to Icons if Icons > 1
-            )
 
     def __init__(self, package):
         self.package = package
