@@ -5,7 +5,7 @@ from languages import LANG
 from paf import FORMAT_VERSION, CATEGORIES, LANGUAGES
 from .engine.factory import bool_check
 from .engine import (INIValidator, SectionValidator, FileMeta, SectionMeta,
-        ValidatorError, ValidatorWarning, ValidatorInfo)
+        ValidatorError, ValidatorWarning, ValidatorInfo, RegExMapping)
 
 
 class AppInfoValidator(INIValidator):
@@ -201,11 +201,11 @@ class Control(SectionValidator):
                     result.append('ExtractIcon%i')
             return OrderedSet(result)
 
-        mappings = {
-                'Start[1-9]\d*$': 'Start',
-                'ExtractIcon[1-9]\d*$': 'ExtractIcon',
-                #'Name[1-9]\d*$': 'Name_', # no validation
-                }
+        mappings = (
+                RegExMapping('Start[1-9]\d*$', 'Start'),
+                RegExMapping('ExtractIcon[1-9]\d*$', 'ExtractIcon'),
+                #RegExMapping('Name[1-9]\d*$'), 'Name_'), # no validation
+                )
 
     def Start(self, value):
         if '/' in value or '\\' in value:

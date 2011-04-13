@@ -28,3 +28,4 @@ from paf.package import *
 from paf.appinfo import *
 from paf.installer import *
 from paf.launcher import *
+from paf.appcompactor import *

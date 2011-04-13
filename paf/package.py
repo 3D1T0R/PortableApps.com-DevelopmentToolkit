@@ -226,6 +226,8 @@ class Package(object):
         """
 
         self.appinfo.load()
+        appcompactor = paf.AppCompactor(self)
+        appcompactor.load()
 
         self.errors = []
         self.warnings = []
@@ -264,11 +266,12 @@ class Package(object):
                 self.info.append(LANG.GENERAL.SUGGESTED_FILE_MISSING %
                         join(*filename))
 
-        self.appinfo.validate()
 
-        self.errors.extend(self.appinfo.errors)
-        self.warnings.extend(self.appinfo.warnings)
-        self.info.extend(self.appinfo.info)
+        for o in (self.appinfo, appcompactor):
+            o.validate()
+            self.errors.extend(o.errors)
+            self.warnings.extend(o.warnings)
+            self.info.extend(o.info)
 
     @property
     def eula(self):

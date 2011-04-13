@@ -9,6 +9,8 @@ class INIValidator(object):
         self.info = []
 
     def validate(self, ini, package):
+        self.ini = ini
+        self.package = package
         meta = self.Meta(self, ini, package)  # () so properties work
         setini = OrderedSet(ini)
 
@@ -24,13 +26,12 @@ class INIValidator(object):
             self.warnings.append(LANG.INIVALIDATOR.SECTIONS_OUT_OF_ORDER % dict(filename=self.filename))
 
         for section in setini & meta.order:
-            secval_cls = getattr(self.module, section)
             if hasattr(self.module, section):
                 secval_cls = getattr(self.module, section)
             else:
-                for regex, clsname in meta.mappings.iteritems():
-                    if re.match(regex, key):
-                        secval_cls = getattr(self.module, clsname)
+                for mapping in meta.mappings:
+                    if mapping.match(section):
+                        secval_cls = getattr(self.module, mapping.target)
                         # TODO: could be nice to know what section is in this case...
                         break
             secval = secval_cls(self, ini, package)
@@ -67,9 +68,9 @@ class INIValidator(object):
                     if hasattr(secval, key):
                         self._add_item(getattr(secval, key)(inisection[key]))
                     else:
-                        for regex, fnname in smeta.mappings.iteritems():
-                            if re.match(regex, key):
-                                self._add_item(getattr(secval, fnname)(inisection[key]))
+                        for mapping in smeta.mappings:
+                            if mapping.match(key):
+                                self._add_item(getattr(secval, mapping.target)(inisection[key]))
                                 # TODO: could be nice to know what key is in this case...
                                 break
 
@@ -137,3 +138,21 @@ class ValidatorWarning(ValidatorItem):
 
 class ValidatorInfo(ValidatorItem):
     pass
+
+
+class StringMapping(object):
+    def __init__(self, matcher, target):
+        self.matcher = matcher
+        self.target = target
+
+    def match(self, value):
+        return self.matcher == value
+
+
+class RegExMapping(object):
+    def __init__(self, matcher, target):
+        self.matcher = matcher
+        self.target = target
+
+    def match(self, value):
+        return re.match(self.matcher, value)
