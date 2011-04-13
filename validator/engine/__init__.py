@@ -25,6 +25,9 @@ class INIValidator(object):
             # A warning? We like fancy INI files.
             self.warnings.append(LANG.INIVALIDATOR.SECTIONS_OUT_OF_ORDER % dict(filename=self.filename))
 
+        if len(ini) == 0:
+            self.warnings.append(LANG.INIVALIDATOR.FILE_EMPTY % dict(filename=self.filename))
+
         for section in setini & meta.order:
             if hasattr(self.module, section):
                 secval_cls = getattr(self.module, section)
@@ -38,6 +41,9 @@ class INIValidator(object):
             smeta = secval.Meta(self, ini, package, secval)
             inisection = ini[section]
             inisectionset = OrderedSet(inisection)
+
+            if len(inisection) == 0:
+                self.warnings.append(LANG.INIVALIDATOR.SECTION_EMPTY % dict(filename=self.filename, section=section))
 
             for key in smeta.mandatory:
                 if key not in inisection:
