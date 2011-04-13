@@ -411,6 +411,12 @@ class INISection(config.ConfigNamespace):
                     yield x
                     d.add(x)
 
+    def __len__(self):
+        len_ = 0
+        for i in self:
+            len_ += 1
+        return len_
+
     def _new_namespace(self, name):
         raise Exception('No sub-sections allowed', name)
 
@@ -496,6 +502,12 @@ class INIConfig(config.ConfigNamespace):
                 if x.name not in d:
                     yield x.name
                     d.add(x.name)
+
+    def __len__(self):
+        len_ = 0
+        for i in self:
+            len_ += 1
+        return len_
 
     def _new_namespace(self, name):
         if self._data.contents:
