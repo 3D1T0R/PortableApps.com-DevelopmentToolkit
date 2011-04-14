@@ -1,30 +1,29 @@
 # -*- coding: utf-8 -*-
 
-# This file is for App/AppInfo/appinfo.ini validation
+# This file is for App/AppInfo/appinfo.ini management and validation
 
-from os import makedirs
-from os.path import exists, isfile
+from os.path import join
 from languages import LANG
-import iniparse
-import ConfigParser
 from paf import PAFException
 from functools import wraps
-from validator.appinfo import AppInfoValidator
+
+import os
+import sys
+from orderedset import OrderedSet
+from paf import FORMAT_VERSION, CATEGORIES, LANGUAGES
+from validator.engine.factory import bool_check
+from validator.engine import (INIManager, SectionValidator, FileMeta, SectionMeta,
+        ValidatorError, ValidatorWarning, ValidatorInfo, RegExMapping)
 
 
 __all__ = ['AppInfo', 'valid_appid']
 
 
-def _valid_appinfo(func):
-    "A decorator to ensure appinfo is set up."
+def valid_ini(func):
+    "A decorator to ensure the INI file is set up."
     @wraps(func)
     def decorate(self, *args, **kwargs):
-        try:
-            if not self._path:
-                raise Exception()
-            if not self.ini:
-                raise Exception()
-        except:  # Could potentially be Exception or NameError
+        if not (getattr(self, '_path', False) and getattr(self, 'ini', False)):
             # Naturally though this should never happen.
             raise PAFException(LANG.GENERAL.PACKAGE_NOT_INITIALISED)
 
@@ -33,84 +32,22 @@ def _valid_appinfo(func):
     return decorate
 
 
-class AppInfo(object):
+class AppInfo(INIManager):
     "The manager for the app info (appinfo.ini)."
 
-    def __init__(self, package):
-        self.package = package
-        self.errors = []
-        self.warnings = []
-        self.info = []
-        self.ini = None
-        self._path = ''
+    module = sys.modules[__name__]
 
-    def load(self, do_reload=True):
-        "Load appinfo.ini."
-        if not do_reload and self.ini:
-            return
+    class Meta(FileMeta):
+        mandatory = OrderedSet(('Format', 'Details', 'License', 'Version', 'Control'))
+        optional = OrderedSet(('SpecialPaths', 'Dependencies'))
+        order = OrderedSet(('Format', 'Details', 'License', 'Version', 'SpecialPaths', 'Dependencies', 'Control'))
+        enforce_order = True
 
+    def path(self):
         if self.package.plugin:
-            self._path = self.package.path('Other', 'Source',
-                    'plugininstaller.ini')
+            return join('Other', 'Source', 'plugininstaller.ini')
         else:
-            self._path = self.package.path('App', 'AppInfo', 'appinfo.ini')
-
-        try:
-            self.ini = iniparse.INIConfig(open(self._path) \
-                    if isfile(self._path) else None)
-        except ConfigParser.Error as e:
-            self.ini_fail = e
-
-    def validate(self):
-        """
-        Validate the appinfo and put the results into ``errors``, ``warnings``
-        and ``info`` in ``self``.
-        """
-        self.load(False)
-        if self.ini is None:
-            self.errors.append(self.ini_fail)
-            return  # Don't need "section missing" errors
-
-        if not isfile(self._path):
-            # If appinfo.ini doesn't exist, we've created an INIConfig which
-            # will be empty, for the fix routine. Then as we don't want to spew
-            # a whole heap of errors given that an error about appinfo.ini
-            # being missing has already been added to the list, we'll give up.
-            return
-
-        inivalidator = AppInfoValidator()
-        inivalidator.validate(self.ini, self.package)
-        self.errors.extend(inivalidator.errors)
-        self.warnings.extend(inivalidator.warnings)
-        self.info.extend(inivalidator.info)
-
-    @_valid_appinfo
-    def fix(self):
-        "Some values in appinfo.ini can be fixed. This fixes such values."
-        # TODO
-        self.save()
-
-    @_valid_appinfo
-    def save(self):
-        "Save the current state in appinfo.ini"
-
-        # Tidy it so when sections get added and removed and whatnot it looks
-        # generally decent (no multiple blank lines, EOL at EOF)
-        iniparse.tidy(self.ini)
-
-        # Make sure the directory exists (Package.fix might potentially not
-        # have been called?)
-        if self.package.plugin:
-            appinfo_dir = self.package.path('Other', 'Source')
-        else:
-            appinfo_dir = self.package.path('App', 'AppInfo')
-        if not exists(appinfo_dir):
-            makedirs(appinfo_dir)
-
-        # Now write it
-        appinfo = open(self._path, 'w')
-        appinfo.write(unicode(self.ini))
-        appinfo.close()
+            return join('App', 'AppInfo', 'appinfo.ini')
 
 
 def valid_appid(appid):
@@ -152,3 +89,216 @@ def valid_appid(appid):
         return False, new
     else:
         return True, appid
+
+
+# -------- INI Validation --------
+#
+
+class Format(SectionValidator):
+    class Meta(SectionMeta):
+        mandatory = OrderedSet(('Type', 'Version'))
+        order = OrderedSet(('Type', 'Version'))
+
+    def Type(self, value):
+        if value != 'PortableApps.comFormat':
+            return ValidatorError(LANG.APPINFO.BAD_FORMAT_TYPE)
+
+    def Version(self, value):
+        if value != FORMAT_VERSION:
+            if value in ('0.90', '0.91', '0.9.8', '1.0'):
+                return ValidatorWarning(LANG.APPINFO.OLD_FORMAT_VERSION
+                    % dict(old_version=value, current_version=FORMAT_VERSION))
+            else:
+                return ValidatorError(LANG.APPINFO.BAD_FORMAT_VERSION
+                    % dict(version=FORMAT_VERSION))
+
+
+class Details(SectionValidator):
+    class Meta(SectionMeta):
+        mandatory = OrderedSet(('Name', 'AppID', 'Publisher', 'Homepage', 'Category', 'Description'))
+        optional = OrderedSet(('Language', 'Trademarks', 'InstallType', 'PluginType'))
+        order = OrderedSet(('Name', 'AppID', 'Publisher', 'Homepage', 'Category', 'Description',
+            'Language', 'Trademarks', 'PluginType', 'InstallType'))
+
+    # Name: no validation
+
+    def AppID(self, value):
+        if OrderedSet(value) - '0123456789.-+_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz':
+            return ValidatorError(LANG.APPINFO.DETAILS_APPID_BAD)
+
+    # Publisher: no validation
+
+    # Homepage: no real validation
+
+    def Homepage(self, value):
+        if value.lower().startswith('http://'):
+            return ValidatorInfo(LANG.APPINFO.DETAILS_HOMEPAGE_HTTP)
+
+    def Category(self, value):
+        if value not in CATEGORIES:
+            return ValidatorError(LANG.APPINFO.DETAILS_CATEGORY_BAD)
+
+    def Description(self, value):
+        chars = len(value)
+        if chars > 512:
+            return ValidatorError(LANG.APPINFO.DETAILS_DESCRIPTION_TOO_LONG)
+        elif chars > 150:
+            return ValidatorWarning(LANG.APPINFO.DETAILS_DESCRIPTION_LONG % dict(chars=chars))
+
+    def Language(self, value):
+        if value not in LANGUAGES:
+            return ValidatorError(LANG.APPINFO.DETAILS_LANGUAGE_BAD)
+
+    # Trademarks: no validation
+
+    # InstallType: no validation
+
+    def PluginType(self, value):
+        # Only applicable for package.plugin == True
+        if not self.package.plugin:
+            return ValidatorError(LANG.APPINFO.DETAILS_PLUGINTYPE_NOT_PLUGIN)
+        elif value != 'CommonFiles':
+            return ValidatorError(LANG.APPINFO.DETAILS_PLUGINTYPE_BAD)
+
+
+class License(SectionValidator):
+    class Meta(SectionMeta):
+        mandatory = OrderedSet(('Shareable', 'OpenSource', 'Freeware', 'CommercialUse'))
+        optional = OrderedSet(('EULAVersion',))
+        order = OrderedSet(('Shareable', 'OpenSource', 'Freeware', 'CommercialUse', 'EULAVersion'))
+
+    Shareable = bool_check('License', 'Shareable')
+    OpenSource = bool_check('License', 'OpenSource')
+    Freeware = bool_check('License', 'Freeware')
+    CommercialUse = bool_check('License', 'CommercialUse')
+
+    def EULAVersion(self, value):
+        if not self.package.eula:
+            if self.package.plugin:
+                eula = os.path.join('Other', 'Source', 'PluginEULA')
+            else:
+                eula = os.path.join('Other', 'Source', 'EULA')
+
+            return ValidatorError(LANG.APPINFO.LICENSE_EULAVERSION_NO_EULA
+            % dict(eula=eula))
+
+
+class Version(SectionValidator):
+    class Meta(SectionMeta):
+        mandatory = OrderedSet(('PackageVersion', 'DisplayVersion'))
+        order = OrderedSet(('PackageVersion', 'DisplayVersion'))
+
+    def PackageVersion(self, value):
+        try:
+            if len(map(int, value.split('.'))) != 4:
+                raise ValueError()
+        except ValueError:
+            return ValidatorError(LANG.APPINFO.VERSION_PACKAGEVERSION_BAD)
+
+    # DisplayVersion: no validation yet (TODO)
+
+
+class SpecialPaths(SectionValidator):
+    class Meta(SectionMeta):
+        optional = OrderedSet(('Plugins',))
+        order = OrderedSet(('Plugins',))
+
+    def Plugins(self, value):
+        if value == 'NONE':
+            return ValidatorWarning(LANG.INIVALIDATOR.OMIT_DEFAULT % dict(filename=self.validator.path(),
+                section='SpecialPaths', key='Plugins', default='NONE'))
+        elif not os.path.isdir(self.package.path(value)):
+            return ValidatorError(LANG.APPINFO.SPECIALPATHS_PLUGINS_BAD)
+
+
+class Dependencies(SectionValidator):
+    class Meta(SectionMeta):
+        optional = OrderedSet(('UsesJava', 'UsesDotNetVersion'))
+        order = OrderedSet(('UsesJava', 'UsesDotNetVersion'))
+
+    def UsesJava(self, value):
+        if value == 'false':
+            return ValidatorWarning(LANG.INIVALIDATOR.OMIT_DEFAULT %
+                    dict(filename=self.validator.path(), section='Dependencies', key='UsesJava',
+                        default='false'))
+        elif value != 'true':
+            return ValidatorError(LANG.APPINFO.DEPENDENCIES_JAVA_BAD)
+
+    def UsesDotNetVersion(self, value):
+        if value not in ('1.1', '2.0', '3.0', '3.5'):
+            return ValidatorWarning(LANG.APPINFO.DEPENDENCIES_USESDOTNETVERSION_PROBABLY_BAD)
+        else:
+            try:
+                map(int, value.split('.'))
+            except ValueError:
+                return ValidatorError(LANG.APPINFO.DEPENDENCIES_USESDOTNETVERSION_BAD)
+
+
+class Control(SectionValidator):
+    class Meta(SectionMeta):
+        # TODO: what does self mean here?
+        def __icons(self):
+            """Gets the value of [Control]:Icons, or 1 if unset or invalid."""
+            if 'Icons' not in self.parent.ini.Control:
+                return 1
+            icons = self.parent.ini.Control.Icons
+            try:
+                return int(icons)
+            except ValueError:
+                return 1
+
+        @property
+        def mandatory(self):
+            base = ['Icons', 'Start']
+            icons = self.__icons()
+            if icons > 1:
+                return OrderedSet(base +
+                        ['Start%i' % i for i in xrange(1, icons + 1)] +
+                        ['Name%i' % i for i in xrange(1, icons + 1)])
+            return OrderedSet(base)
+
+        @property
+        def optional(self):
+            base = ['ExtractIcons']
+            icons = self.__icons()
+            if icons > 1:
+                return OrderedSet(base + ['ExtractIcon%i' % i for i in xrange(1, icons + 1)])
+            return OrderedSet(base)
+
+        @property
+        def order(self):
+            result = ['Icons', 'Start', 'ExtractIcon']
+            icons = self.__icons()
+            if icons > 1:
+                for i in xrange(1, icons + 1):
+                    result.append('Start%i')
+                    result.append('Name%i')
+                    result.append('ExtractIcon%i')
+            return OrderedSet(result)
+
+        mappings = (
+                RegExMapping('Start[1-9]\d*$', 'Start'),
+                RegExMapping('ExtractIcon[1-9]\d*$', 'ExtractIcon'),
+                #RegExMapping('Name[1-9]\d*$'), 'Name_'), # no validation
+                )
+
+    def Start(self, value):
+        if '/' in value or '\\' in value:
+            return ValidatorWarning(LANG.APPINFO.CONTROL_START_NO_SUBDIRS %
+                    dict(section='Control', key='Start'))
+        elif not os.path.isfile(self.package.path(value)):
+            return ValidatorError(LANG.APPINFO.CONTROL_FILE_NOT_EXIST %
+                    dict(section='Control', key='Start'))
+
+    def ExtractIcon(self, value):
+        if not os.path.isfile(self.package.path(value)):
+            return ValidatorError(LANG.APPINFO.CONTROL_FILE_NOT_EXIST %
+                    dict(section='Control', key='ExtractIcon'))
+
+    def Icons(self, value):
+        try:
+            value = int(value)
+            if value < 1:
+                raise ValueError()
+        except ValueError:
+            return ValidatorError(LANG.APPINFO.CONTROL_ICONS_BAD)

@@ -2,47 +2,37 @@
 
 # This file is for App/AppInfo/installer.ini validation
 
-from os import makedirs, remove
-from os.path import isfile, isdir
+from os import remove
+from os.path import isfile, join
 import sys
 from subprocess import Popen, PIPE
-from functools import wraps
 import re
-import iniparse
 from orderedset import OrderedSet
 from languages import LANG
-from paf import PAFException
 import config
+from validator.engine.factory import bool_check
+from validator.engine import (INIManager, SectionValidator, FileMeta, SectionMeta,
+        ValidatorError, ValidatorWarning)
 
 __all__ = ['Installer']
 
 
-def _valid_installer(func):
-    "A decorator to ensure installer is set up."
-    @wraps(func)
-    def decorate(self, *args, **kwargs):
-        try:
-            if not self._path:
-                raise Exception()
-            if not self.ini:
-                raise Exception()
-        except:  # Could potentially be Exception or NameError
-            # Naturally though this should never happen.
-            raise PAFException(LANG.GENERAL.PACKAGE_NOT_INITIALISED)
-
-        func(self, *args, **kwargs)
-
-    return decorate
-
-
-class Installer(object):
+class Installer(INIManager):
     "The manager for the app info (installer.ini)."
 
-    _sections = OrderedSet(('CheckRunning', 'Source', 'MainDirectories',
-        'OptionalComponents', 'CopyLocalFiles', 'DownloadFiles', 'Languages',
-        'DirectoriesToPreserve', 'DirectoriesToRemove', 'FilesToPreserve',
-        'FilesToRemove'))
+    module = sys.modules[__name__]
 
+    class Meta(FileMeta):
+        optional = OrderedSet(('CheckRunning', 'Source', 'MainDirectories', 'OptionalComponents',
+            'CopyLocalFiles', 'DownloadFiles', 'Languages',
+            'DirectoriesToPreserve', 'DirectoriesToRemove', 'FilesToPreserve', 'FilesToRemove'))
+        order = OrderedSet(('CheckRunning', 'Source', 'MainDirectories', 'OptionalComponents',
+            'CopyLocalFiles', 'DownloadFiles', 'Languages',
+            'DirectoriesToPreserve', 'DirectoriesToRemove', 'FilesToPreserve', 'FilesToRemove'))
+        #enforce_order = True
+
+    # Kept until validation is finished (TODO)
+    """
     _keys = dict(
             CheckRunning=OrderedSet(('CloseEXE', 'CloseName')),
             Source=OrderedSet(('IncludeInstallerSource')),
@@ -84,93 +74,13 @@ class Installer(object):
             FilesToPreserve=OrderedSet(('PreserveFile\d+')),
             FilesToRemove=OrderedSet(('RemoveFile\d+')),
             )
+    """
 
-    def __init__(self, package):
-        self.package = package
-        self.errors = []
-        self.warnings = []
-        self.info = []
-        self.ini = None
-        self._path = ''
-
-    def load(self, do_reload=True):
-        "Load installer.ini."
-        if not do_reload and self.ini:
-            return
-
+    def path(self):
         if self.package.plugin:
-            self._path = self.package.path('Other', 'Source',
-                    'plugininstaller.ini')
+            return join('Other', 'Source', 'plugininstaller.ini')
         else:
-            self._path = self.package.path('App', 'AppInfo', 'installer.ini')
-
-        self.ini = iniparse.INIConfig(open(self._path) \
-                if isfile(self._path) else None)
-
-    def validate(self):
-        """
-        Validate installer.ini and put the results into ``errors``,
-        ``warnings`` and ``info`` in ``self``.
-        """
-        self.load(False)
-
-        if not isfile(self._path):
-            # If installer.ini doesn't exist, we've created an INIConfig which
-            # will be empty, for the fix routine. Then as we don't want to spew
-            # a whole heap of errors given that an error about installer.ini
-            # being missing has already been added to the list, we'll give up.
-            return
-
-        ini = self.ini
-
-        # TODO: style validation
-
-        for extra in OrderedSet(ini) - self._sections:
-            self.errors.append(LANG.INIVALIDATOR.SECTION_EXTRA % dict(filename=self._path, section=extra))
-
-        for section in self._sections & ini:
-            for extra in ini[section]:
-                if not any(re.match('%s$' % key, extra)
-                        for key in self._keys[section]):
-                    self.errors.append(LANG.INIVALIDATOR.VALUE_EXTRA %
-                            dict(filename=self._path, section=section, key=extra))
-
-    @_valid_installer
-    def fix(self):
-        "Some values in installer.ini can be fixed. This fixes such values."
-        # TODO
-        self.save()
-
-    @_valid_installer
-    def save(self):
-        "Save the current state in installer.ini"
-
-        if not len(list(self.ini)):
-            # There's no content
-            if isfile(self._path):
-                # Don't write it empty, delete it
-                remove(self._path)
-            else:
-                # Doesn't exist and nothing to write.
-                return
-
-        # Tidy it so when sections get added and removed and whatnot it looks
-        # generally decent (no multiple blank lines, EOL at EOF)
-        iniparse.tidy(self.ini)
-
-        # Make sure the directory exists (Package.fix might potentially not
-        # have been called?)
-        if self.package.plugin:
-            installer_dir = self.package.path('Other', 'Source')
-        else:
-            installer_dir = self.package.path('App', 'AppInfo')
-        if not isdir(installer_dir):
-            makedirs(installer_dir)
-
-        # Now write it
-        installer = open(self._path, 'w')
-        installer.write(unicode(self.ini))
-        installer.close()
+            return join('App', 'AppInfo', 'installer.ini')
 
     def build(self):
         """
@@ -246,3 +156,63 @@ class Installer(object):
             filename += '_online'
 
         return '%s.paf.exe' % filename
+
+
+class CheckRunning(SectionValidator):
+    class Meta(SectionMeta):
+        optional = OrderedSet(('CloseEXE', 'CloseName'))
+        order = OrderedSet(('CloseEXE', 'CloseName'))
+
+    def CloseEXE(self, value):
+        if not value.endswith('.exe') and value != 'NONE':
+            return ValidatorWarning(LANG.INSTALLER.CHECKRUNNING_CLOSEEXE_NOT_EXE % dict(filename=self.filename))
+
+    def CloseName(self, value):
+        if self.package.appinfo.ini and self.package.appinfo.ini.Details.Name == value:
+            return ValidatorWarning(LANG.INSTALLER.CLOSENAME_SAME_AS_APPINFO % dict(filename=self.filename))
+
+
+class Source(SectionValidator):
+    class Meta(SectionMeta):
+        optional = OrderedSet(('IncludeInstallerSource',))
+        order = OrderedSet(('IncludeInstallerSource',))
+
+    def IncludeInstallerSource(self, value):
+        if value not in ('true', 'false'):
+            return ValidatorError(LANG.INIVALIDATOR.BOOL_BAD %
+                    dict(filename=self.filename, section='Source', key='IncludeInstallerSource'))
+        elif value == 'false':
+            return ValidatorWarning(LANG.INIVALIDATOR.OMIT_DEFAULT %
+                    dict(filename=self.filename, section='Source', key='IncludeInstallerSource', default='false'))
+        else:
+            return ValidatorWarning(LANG.INSTALLER.INCLUDEINSTALLERSOURCE % dict(filename=self.filename))
+
+
+class MainDirectories(SectionValidator):
+    class Meta(SectionMeta):
+        optional = OrderedSet(('RemoveAppDirectory', 'RemoveDataDirectory', 'RemoveOtherDirectory'))
+        order = OrderedSet(('RemoveAppDirectory', 'RemoveDataDirectory', 'RemoveOtherDirectory'))
+
+    RemoveAppDirectory = bool_check('MainDirectories', 'RemoveAppDirectory', 'true')
+    RemoveDataDirectory = bool_check('MainDirectories', 'RemoveDataDirectory', 'false')
+    RemoveOtherDirectory = bool_check('MainDirectories', 'RemoveOther', 'true')
+
+
+class OptionalComponents(SectionValidator):
+    class Meta(SectionMeta):
+        optional = OrderedSet(('OptionalComponents', 'MainSectionTitle', 'MainSectionDescription',
+            'OptionalSectionTitle', 'OptionalSectionDescription', 'OptionalSectionSelectedInstallType',
+            'OptionalSelectionNotSelectedInstallType', 'OptionalSelectionPreSelectedIfNotEnglish',
+            'OptionalSectionInstalledWhenSilent',
+            re.compile(r'OptionalDirectory[1-9]\d*'), re.compile(r'OptionalFile[1-9]\d*')))
+        # TODO: order!
+
+    def OptionalComponents(self, value):
+        pass
+
+
+# Notes for later:
+# Need some way to have ``order`` et al. accept numbered things
+# appinfo.ini:[Details]:Name is PluginName for self.package.plugin?
+# appinfo.ini:[Details]:Name is PluginName for self.package.plugin?
+# [MainDirectories]:* default to false for self.package.plugin
