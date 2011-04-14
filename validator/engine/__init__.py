@@ -1,5 +1,5 @@
 import re
-from os import makedirs
+from os import makedirs, remove
 from os.path import dirname, exists, isfile
 from functools import wraps
 import ConfigParser
@@ -24,12 +24,17 @@ def assert_valid_ini(func):
 class INIManager(object):
     """The manager for the INI files, providing framework and validation."""
 
+    module = None
+
     def __init__(self, package):
         self.package = package
         self.errors = []
         self.warnings = []
         self.info = []
         self.ini = None
+
+    def path(self):
+        return ''
 
     def path_abs(self):
         return self.package.path(self.path())
@@ -79,7 +84,7 @@ class INIManager(object):
 
     def delete(self):
         """Deletes appcompactor.ini; for use when it's empty."""
-        os.remove(self._path)
+        remove(self.path())
 
     def validate(self):
         """

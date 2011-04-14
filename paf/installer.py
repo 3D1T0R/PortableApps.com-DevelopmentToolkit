@@ -165,11 +165,11 @@ class CheckRunning(SectionValidator):
 
     def CloseEXE(self, value):
         if not value.endswith('.exe') and value != 'NONE':
-            return ValidatorWarning(LANG.INSTALLER.CHECKRUNNING_CLOSEEXE_NOT_EXE % dict(filename=self.filename))
+            return ValidatorWarning(LANG.INSTALLER.CHECKRUNNING_CLOSEEXE_NOT_EXE % dict(filename=self.validator.path()))
 
     def CloseName(self, value):
         if self.package.appinfo.ini and self.package.appinfo.ini.Details.Name == value:
-            return ValidatorWarning(LANG.INSTALLER.CLOSENAME_SAME_AS_APPINFO % dict(filename=self.filename))
+            return ValidatorWarning(LANG.INSTALLER.CLOSENAME_SAME_AS_APPINFO % dict(filename=self.validator.path()))
 
 
 class Source(SectionValidator):
@@ -180,12 +180,12 @@ class Source(SectionValidator):
     def IncludeInstallerSource(self, value):
         if value not in ('true', 'false'):
             return ValidatorError(LANG.INIVALIDATOR.BOOL_BAD %
-                    dict(filename=self.filename, section='Source', key='IncludeInstallerSource'))
+                    dict(filename=self.validator.path(), section='Source', key='IncludeInstallerSource'))
         elif value == 'false':
             return ValidatorWarning(LANG.INIVALIDATOR.OMIT_DEFAULT %
-                    dict(filename=self.filename, section='Source', key='IncludeInstallerSource', default='false'))
+                    dict(filename=self.validator.path(), section='Source', key='IncludeInstallerSource', default='false'))
         else:
-            return ValidatorWarning(LANG.INSTALLER.INCLUDEINSTALLERSOURCE % dict(filename=self.filename))
+            return ValidatorWarning(LANG.INSTALLER.INCLUDEINSTALLERSOURCE % dict(filename=self.validator.path()))
 
 
 class MainDirectories(SectionValidator):

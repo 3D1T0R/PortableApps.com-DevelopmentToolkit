@@ -7,6 +7,7 @@ from os.path import isfile
 import sys
 from subprocess import Popen, PIPE
 import config
+from paf import PAFException
 
 __all__ = ('Launcher',)
 
