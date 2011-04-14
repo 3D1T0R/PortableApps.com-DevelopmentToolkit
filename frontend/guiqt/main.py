@@ -8,6 +8,7 @@ from utils import _, center_window, path_local
 from validate import ValidationDialog
 import appinfo
 
+
 def assert_valid_package_path(func):
     """Decorator to make sure that something which shouldn't ever happen
     doesn't cause a crash, and to provide a code indication of what's
@@ -40,8 +41,6 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def on_createButton_clicked(self):
         "Create a package."
         self.statusBar.showMessage(_("Creating package..."))
-        text_box = self.packageText
-        current_path = text_box.text()
         while True:
             package = QtGui.QFileDialog.getExistingDirectory(None,
                     _("Create a directory for the package"))
@@ -55,7 +54,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
                             unicode(e), QtGui.QMessageBox.Ok)
                     continue
 
-                text_box.setText(package)
+                self.packageText.setText(package)
                 self.statusBar.showMessage(
                         _("Package created successfully."), 2000)
                 self.on_detailsButton_clicked()

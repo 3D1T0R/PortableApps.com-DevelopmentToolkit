@@ -170,7 +170,7 @@ def do_all():
         print "(Please run and configure this before trying to build it.)"
         return
     print "Scrunching it up..."
-    if not package.compact():
+    if not package.appcompactor.compact():
         print "Couldn't find PortableApps.com AppCompactor!",
         print "(Please run and configure this before trying to build it.)"
         return

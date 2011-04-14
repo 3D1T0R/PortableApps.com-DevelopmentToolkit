@@ -2,9 +2,7 @@
 
 from os.path import exists, isdir, isfile, join, abspath
 import os
-import sys
 import config
-from subprocess import Popen, PIPE
 from utils import path_insensitive, _
 from languages import LANG
 from shutil import copy2 as copy
@@ -266,7 +264,6 @@ class Package(object):
                 self.info.append(LANG.GENERAL.SUGGESTED_FILE_MISSING %
                         join(*filename))
 
-
         for o in (self.appinfo, appcompactor):
             o.validate()
             self.errors.extend(o.errors)
@@ -296,36 +293,6 @@ class Package(object):
                 return '%s.%s' % (eula_path, extension)
 
         return None
-
-    def compact(self):
-        """
-        Compacts a package with the PortableApps.com AppCompactor. Currently
-        this runs the normal GUI (with the path filled in) and the user will
-        still need to press "Go".
-
-        Raises an ``OSError`` if run on Linux/OS X and Wine is not installed.
-
-        Returns True on success, or False if the PortableApps.com AppCompactor
-        was not found. If something went otherwise wrong, you probably won't
-        hear about it.
-        """
-
-        appcompactor_path = config.get('Main', 'AppCompactorPath')
-        if not appcompactor_path or not isfile(appcompactor_path):
-            return False
-
-        package_path = self.path()
-        # On Linux we can execute it with a Linux path, as Wine will take care
-        # of that, but it still expects a Windows path out the other side. Use
-        # winepath to convert it to the right Windows path.
-        if sys.platform != 'win32':
-            # Blocking call; throws an OSError if winepath isn't found
-            package_path = Popen(['winepath', '-w', package_path],
-                    stdout=PIPE).communicate()[0].strip()
-
-        Popen([appcompactor_path, package_path]).wait()
-
-        return True
 
 
 def create_package(path, create_if_not_exist=False, require_empty=True):

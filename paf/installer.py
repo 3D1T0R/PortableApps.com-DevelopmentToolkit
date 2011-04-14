@@ -10,6 +10,7 @@ import re
 from orderedset import OrderedSet
 from languages import LANG
 import config
+from utils import win32
 from validator.engine.factory import bool_check
 from validator.engine import (INIManager, SectionValidator, FileMeta, SectionMeta,
         ValidatorError, ValidatorWarning)
@@ -100,7 +101,7 @@ class Installer(INIManager):
         # On Linux we can execute it with a Linux path, as Wine will take care
         # of that, but it still expects a Windows path out the other side. Use
         # winepath to convert it to the right Windows path.
-        if sys.platform != 'win32':
+        if not win32:
             # Blocking call; throws an OSError if winepath isn't found
             package_path = Popen(['winepath', '-w', package_path],
                     stdout=PIPE).communicate()[0].strip()

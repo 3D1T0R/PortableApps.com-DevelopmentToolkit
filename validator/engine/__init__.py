@@ -8,6 +8,7 @@ from orderedset import OrderedSet
 from paf import PAFException
 from languages import LANG
 
+
 def assert_valid_ini(func):
     """A decorator to ensure the INI file is set up."""
     @wraps(func)
@@ -83,7 +84,7 @@ class INIManager(object):
         iniw.close()
 
     def delete(self):
-        """Deletes appcompactor.ini; for use when it's empty."""
+        """Deletes the INI file; for use when it's empty."""
         remove(self.path())
 
     def validate(self):
@@ -227,6 +228,7 @@ class ValidatorItem(object):
 
     def __str__(self):
         return self.string
+
 
 class ValidatorError(ValidatorItem):
     pass
