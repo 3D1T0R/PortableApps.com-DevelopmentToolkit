@@ -17,9 +17,9 @@ def assert_valid_ini(func):
             # Naturally though this should never happen.
             raise PAFException(LANG.GENERAL.PACKAGE_NOT_INITIALISED)
 
-        func(self, *args, **kwargs)
+        return func(self, *args, **kwargs)
 
-        return decorate
+    return decorate
 
 
 class INIManager(object):
