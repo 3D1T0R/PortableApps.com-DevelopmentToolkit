@@ -225,7 +225,7 @@ class Dependencies(SectionValidator):
             return ValidatorError(LANG.APPINFO.DEPENDENCIES_JAVA_BAD)
 
     def UsesDotNetVersion(self, value):
-        if value not in ('1.1', '2.0', '3.0', '3.5'):
+        if value not in ('1.1', '2.0', '3.0', '3.5', '4.0'):
             return ValidatorWarning(LANG.APPINFO.DEPENDENCIES_USESDOTNETVERSION_PROBABLY_BAD)
         else:
             try:
