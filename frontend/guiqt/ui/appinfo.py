@@ -2,8 +2,7 @@
 
 # Form implementation generated from reading ui file 'frontend/guiqt/ui/appinfo.ui'
 #
-
-#      by: PySide uic UI code generator
+#      by: pyside-uic 0.2.8 running on PySide 1.0.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -436,4 +435,4 @@ class Ui_AppInfoDialog(object):
         self.UsesJava.setText(QtGui.QApplication.translate("AppInfoDialog", "Uses &Java", None, QtGui.QApplication.UnicodeUTF8))
         self.EULAVersionLabel.setText(QtGui.QApplication.translate("AppInfoDialog", "E&ULA version", None, QtGui.QApplication.UnicodeUTF8))
 
-import graphics_rc
+import resources_rc

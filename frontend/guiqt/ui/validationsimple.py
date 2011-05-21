@@ -2,8 +2,7 @@
 
 # Form implementation generated from reading ui file 'frontend/guiqt/ui/validationsimple.ui'
 #
-
-#      by: PySide uic UI code generator
+#      by: pyside-uic 0.2.8 running on PySide 1.0.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -31,4 +30,4 @@ class Ui_ValidationDialog(object):
     def retranslateUi(self, ValidationDialog):
         ValidationDialog.setWindowTitle(QtGui.QApplication.translate("ValidationDialog", "Validation results", None, QtGui.QApplication.UnicodeUTF8))
 
-import graphics_rc
+import resources_rc

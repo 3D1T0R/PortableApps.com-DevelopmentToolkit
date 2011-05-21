@@ -14,7 +14,7 @@
    <string>App details</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../../resources/graphics.qrc">
+   <iconset resource="../../../resources/resources.qrc">
     <normaloff>:/icon.png</normaloff>:/icon.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
@@ -866,7 +866,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../../../resources/graphics.qrc"/>
+  <include location="../../../resources/resources.qrc"/>
  </resources>
  <connections>
   <connection>

@@ -2,8 +2,7 @@
 
 # Form implementation generated from reading ui file 'frontend/guiqt/ui/mainwindow.ui'
 #
-
-#      by: PySide uic UI code generator
+#      by: pyside-uic 0.2.8 running on PySide 1.0.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -21,14 +20,15 @@ class Ui_MainWindow(object):
         self.centralWidget = QtGui.QWidget(MainWindow)
         self.centralWidget.setObjectName("centralWidget")
         self.horizontalLayout = QtGui.QHBoxLayout(self.centralWidget)
-        self.horizontalLayout.setMargin(0)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.sidebarLogo = QtGui.QLabel(self.centralWidget)
+        self.sidebarLogo.setText("")
         self.sidebarLogo.setPixmap(QtGui.QPixmap(":/sidebar.png"))
         self.sidebarLogo.setObjectName("sidebarLogo")
         self.horizontalLayout.addWidget(self.sidebarLogo)
         self.pageLayout = QtGui.QVBoxLayout()
-        self.pageLayout.setMargin(9)
+        self.pageLayout.setContentsMargins(9, 9, 9, 9)
         self.pageLayout.setObjectName("pageLayout")
         self.createButton = QtGui.QCommandLinkButton(self.centralWidget)
         self.createButton.setObjectName("createButton")
@@ -89,4 +89,4 @@ class Ui_MainWindow(object):
         self.installerButton.setText(QtGui.QApplication.translate("MainWindow", "PortableApps.com &Installer", None, QtGui.QApplication.UnicodeUTF8))
         self.installerButton.setDescription(QtGui.QApplication.translate("MainWindow", "Generate your installer", None, QtGui.QApplication.UnicodeUTF8))
 
-import graphics_rc
+import resources_rc

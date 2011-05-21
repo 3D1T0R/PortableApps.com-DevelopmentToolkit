@@ -1,0 +1,54 @@
+<style>dt{font-weight:bold}</style>
+
+<p>Here is a checklist of some things to check over before releasing a portable app. For any other issues, try going through <a href="http://portableapps.com/manuals/PortableApps.comLauncher/troubleshooting/#troubleshooting">Troubleshooting</a>. This also makes a good checklist for testers.</p>
+
+<dl>
+<dt>Does it validate against the <a href="http://portableapps.com/manuals/PortableApps.comLauncher/ref/paf/#paf">PortableApps.com Format&trade; Specification</a>?</dt>
+<dd>It saves time later if it&#8217;s in PortableApps.com Format to start with: you&#8217;ll need to fix it afterwards anyway if you want to have it released.</dd>
+
+<dt>Does it run?</dt>
+<dd>There&#8217;s not much point in releasing a package which doesn&#8217;t work. Try to test it (or at least run it) on as many computers and operating systems as you can, with the software installed locally and not, 32-bit and 64-bit, and so on.</dd>
+
+<dt>Does it run from the PortableApps.com Platform?</dt>
+<dd>If not, a common cause of failure is having the wrong value in <a href="http://portableapps.com/manuals/PortableApps.comLauncher/ref/paf/appinfo/#paf-appinfo-control">appinfo.ini, [Control]</a>.</dd>
+
+<dt>Does it run by running the launcher executable directly?</dt>
+<dd>Many users don&#8217;t use the PortableApps.com Platform. Thus it&#8217;s a good idea to make sure that it works without it.</dd>
+
+<dt>Does a different working directory break things?</dt>
+<dd>Try running the executable while the working directory is not its own directory &#8211; for example, start Command Prompt and run the launcher executable without changing the directory. If there are any symptoms of malfunction, your app may need the working directory to be set to a special value (see <a href="http://portableapps.com/manuals/PortableApps.comLauncher/ref/launcher.ini/launch/#std:ini-key-[Launch]:WorkingDirectory"><code>[Launch]:WorkingDirectory</code></a>).</dd>
+
+<dt>Does it run from a path with spaces in it?</dt>
+<dd>If not, check in launcher.ini that you have quoted paths in values like <a href="http://portableapps.com/manuals/PortableApps.comLauncher/ref/launcher.ini/launch/#std:ini-key-[Launch]:CommandLineArguments"><code>[Launch]:CommandLineArguments</code></a>.  If it&#8217;s still not working and the base app doesn&#8217;t work if you install it to a path with spaces, set <a href="http://portableapps.com/manuals/PortableApps.comLauncher/ref/launcher.ini/launch/#std:ini-key-[Launch]:NoSpacesInPath"><code>[Launch]:NoSpacesInPath</code></a><code>=true</code>.</dd>
+
+<dt>Is data stored in the Data directory?</dt>
+<dd>Make sure data isn&#8217;t stored in the App directory. This is a core part of the usefulness of the PortableApps.com Format and PortableApps.com Installer.</dd>
+
+<dt>Does a fresh installation work?</dt>
+<dd>Run the installer and install to an empty directory. Then try running the app and make sure it works. If it doesn&#8217;t, make sure that the app and data are properly separated.</dd>
+
+<dt>Does nothing go wrong in upgrading from a previous version?</dt>
+<dd>Try running the installer and installing over another installation of the portable app. No settings should be lost by doing this, and the app should run properly. If anything goes wrong, you may need to use <a href="http://portableapps.com/manuals/PortableApps.comLauncher/ref/paf/installer/#paf-installer-custom">custom installer code</a> to update paths, or you may just need to make sure data isn&#8217;t stored in the App directory (see the above two points).</dd>
+
+<dt>Does it run from a different drive letter?</dt>
+<dd>A key feature for portable applications is being able to run from different drive letters. If your app can&#8217;t do that, you&#8217;re in trouble.  A <a href="http://portableapps.com/manuals/PortableApps.comLauncher/ref/launcher.ini/filewriten/#std:ini-section-[FileWriteN]"><code>[FileWriteN]</code></a> <code>Replace</code> section tends to be the way this is achieved.</dd>
+
+<dt>Does it run if you move the directory?</dt>
+<dd>Prior to the PortableApps.com Launcher, little attention has been paid to supporting moving the directory (e.g. from C:\Users\user\Desktop to X:\PortableApps). It is not a requirement that you support directory moving, but it is generally fairly easy to do and is often already supported. It&#8217;s recommended that you make sure that this works and set <a href="http://portableapps.com/manuals/PortableApps.comLauncher/ref/launcher.ini/launch/#std:ini-key-[Launch]:DirectoryMoveOK"><code>[Launch]:DirectoryMoveOK</code></a> to <code>yes</code>, or determine that it&#8217;s too hard to fix and set it definitively to <code>no</code> which will explicitly block the user from running it and tell them it breaks things.</dd>
+
+<dt>Does it run on different operating systems?</dt>
+<dd>Where possible you should test apps on multiple operating systems, especially one of 2000 or XP and one of Vista and 7, so that you get the two path schemes (e.g. <code>C:\Documents and Settings\Username\Application Data</code> and  <code>C:\Users\Username\AppData\Roaming</code>). Testing on 32- and 64-bit systems is also helpful where possible. Support for running in Linux with Wine is not mandatory but it can be good to know from the start if an app can run in it.</dd>
+</dl>
+
+<h2>Other helpful things</h2>
+<dl>
+<dt>Language switching:</dt>
+<dd>If an app is multilingual, it&#8217;s good if the launcher supports automatic language switching. Refer to <a href="../languages/#languages">Languages</a> for more details about implementing this.</dd>
+
+<dt>Support for directory moving:</dt>
+<dd>While not mandatory, if you can make an app support moving the installation directory, it&#8217;s good to. See &#8220;Does it run if you move the directory?&#8221; above.</dd>
+</dl>
+
+<h2>Suggestions and improvements</h2>
+<p>If you have any suggestions for improvements to this checklist (or any of the
+rest of the manual), please <a href="http://portableapps.com/manuals/PortableApps.comLauncher/help/#help">get in contact with Chris Morgan</a>.</p>
