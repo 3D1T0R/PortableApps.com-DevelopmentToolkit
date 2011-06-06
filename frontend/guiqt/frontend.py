@@ -53,8 +53,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.page_start.on_open_textChanged(self.page_start.open.text())
         self.set_page('start')
 
-        # TODO: remove this which is in for sideways compatibility
-        self.packageText = self.page_start.open
+        self.page_start.open.setText(config.get('Main', 'Package', ''))
 
     @QtCore.Slot()
     def set_page(self, name):
@@ -75,7 +74,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def closeEvent(self, event):
         """Window closed, trigger the leave event for the current page."""
         self.current_page.leave(True)
-        # TODO: move state saving from /main.py here
+        config.settings.Main.Package = self.page_start.open.text()
 
     @QtCore.Slot()
     def on_nav_start_clicked(self):

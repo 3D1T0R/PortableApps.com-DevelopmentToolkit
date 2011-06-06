@@ -8,8 +8,7 @@ def main():
     pages = ('start', 'details', 'launcher', 'compact', 'test', 'publish',
             'options', 'about')
 
-    uic_files = ['frontend', 'mainwindow', 'appinfo', 'validationsimple']
-    uic_files += ['page' + s for s in pages]
+    uic_files = ['frontend'] + ['page' + s for s in pages]
 
     tools = Tools.create_from_argv(sys.argv)
     if tools == None:

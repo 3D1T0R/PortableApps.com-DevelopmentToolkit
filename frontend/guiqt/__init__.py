@@ -1,5 +1,3 @@
-from main import MainWindow
-from validate import ValidationDialog
-from appinfo import AppInfoDialog
+from frontend import MainWindow
 
-__all__ = ['MainWindow', 'ValidationDialog', 'AppInfoDialog']
+__all__ = ['MainWindow']
