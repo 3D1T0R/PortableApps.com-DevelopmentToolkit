@@ -12,167 +12,191 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QGroupBox" name="test_launcher_groupbox">
-     <property name="title">
-      <string>Launcher</string>
+    <widget class="QTabWidget" name="tabwidget">
+     <property name="currentIndex">
+      <number>0</number>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QCheckBox" name="test_validates">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Does it validate with no errors or warnings?</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="test_runs">
-        <property name="text">
-         <string>Does it run?</string>
-        </property>
-        <property name="tristate">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="test_run_platform">
-        <property name="text">
-         <string>Does it run from the PortableApps.com Platform?</string>
-        </property>
-        <property name="tristate">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="test_run_direct">
-        <property name="text">
-         <string>Does it run by running the launcher executable directly?</string>
-        </property>
-        <property name="tristate">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="test_workingdirectory">
-        <property name="text">
-         <string>Is it working directory independent?</string>
-        </property>
-        <property name="tristate">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="test_path_spaces">
-        <property name="text">
-         <string>Does it run from a path with spaces in it?</string>
-        </property>
-        <property name="tristate">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="test_data">
-        <property name="text">
-         <string>Is data stored in the Data directory?</string>
-        </property>
-        <property name="tristate">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="test_fresh_installation">
-        <property name="text">
-         <string>Does a fresh installation work?</string>
-        </property>
-        <property name="tristate">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="test_upgrades">
-        <property name="text">
-         <string>Do upgrades from a previous version work completely?</string>
-        </property>
-        <property name="tristate">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="test_drive_switches">
-        <property name="text">
-         <string>Does it run from a different drive letter?</string>
-        </property>
-        <property name="tristate">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="test_move_directory">
-        <property name="text">
-         <string>Does it run if you move the directory?</string>
-        </property>
-        <property name="tristate">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="test_os">
-        <property name="text">
-         <string>Does it run on different operating systems?</string>
-        </property>
-        <property name="tristate">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="test_multilingual">
-        <property name="text">
-         <string>If multilingual, is automatic language switching implemented?</string>
-        </property>
-        <property name="tristate">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="spacer_17">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QTextBrowser" name="test_help">
-     <property name="source">
-      <url>
-       <string>qrc:/checklist.html</string>
-      </url>
-     </property>
-     <property name="openExternalLinks">
-      <bool>true</bool>
-     </property>
+     <widget class="QWidget" name="validate_tab">
+      <attribute name="title">
+       <string>Validation</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout" columnstretch="3,2">
+       <item row="0" column="0" rowspan="2">
+        <widget class="QTextBrowser" name="validation_results_html"/>
+       </item>
+       <item row="1" column="1">
+        <widget class="QPlainTextEdit" name="validation_results_plain"/>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>HTML output (for putting in PortableApps.com forums)</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="checklist_tab">
+      <attribute name="title">
+       <string>Release checklist</string>
+      </attribute>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QGroupBox" name="launcher_groupbox">
+         <property name="title">
+          <string>Launcher</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QCheckBox" name="checklist_runs">
+            <property name="text">
+             <string>Does it run?</string>
+            </property>
+            <property name="tristate">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checklist_run_platform">
+            <property name="text">
+             <string>Does it run from the PortableApps.com Platform?</string>
+            </property>
+            <property name="tristate">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checklist_run_direct">
+            <property name="text">
+             <string>Does it run by running the launcher executable directly?</string>
+            </property>
+            <property name="tristate">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checklist_workingdirectory">
+            <property name="text">
+             <string>Is it working directory independent?</string>
+            </property>
+            <property name="tristate">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checklist_path_spaces">
+            <property name="text">
+             <string>Does it run from a path with spaces in it?</string>
+            </property>
+            <property name="tristate">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checklist_data">
+            <property name="text">
+             <string>Is data stored in the Data directory?</string>
+            </property>
+            <property name="tristate">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checklist_fresh_installation">
+            <property name="text">
+             <string>Does a fresh installation work?</string>
+            </property>
+            <property name="tristate">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checklist_upgrades">
+            <property name="text">
+             <string>Do upgrades from a previous version work completely?</string>
+            </property>
+            <property name="tristate">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checklist_drive_switches">
+            <property name="text">
+             <string>Does it run from a different drive letter?</string>
+            </property>
+            <property name="tristate">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checklist_move_directory">
+            <property name="text">
+             <string>Does it run if you move the directory?</string>
+            </property>
+            <property name="tristate">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checklist_os">
+            <property name="text">
+             <string>Does it run on different operating systems?</string>
+            </property>
+            <property name="tristate">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checklist_multilingual">
+            <property name="text">
+             <string>If multilingual, is automatic language switching implemented?</string>
+            </property>
+            <property name="tristate">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="checklist_left_spacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTextBrowser" name="checklist_help">
+         <property name="source">
+          <url>
+           <string>qrc:/checklist.html</string>
+          </url>
+         </property>
+         <property name="openExternalLinks">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>
