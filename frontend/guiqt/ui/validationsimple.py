@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'frontend/guiqt/ui/validationsimple.ui'
 #
-#      by: pyside-uic 0.2.8 running on PySide 1.0.2
+#      by: pyside-uic 0.2.9 running on PySide 1.0.3
 #
 # WARNING! All changes made in this file will be lost!
 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PageLauncher</class>
+ <widget class="QWidget" name="pagelauncher">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>960</width>
+    <height>445</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>&lt;p&gt;A really advanced sort of editor and manager for PortableApps.com Launcher configuration will go here.&lt;/p&gt;&lt;p&gt;Unfortunately, it's going to be &lt;em&gt;so&lt;/em&gt; powerful that it's not ready yet.&lt;/p&gt;</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::AutoText</enum>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
