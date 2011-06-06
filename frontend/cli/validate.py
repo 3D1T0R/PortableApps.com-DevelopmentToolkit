@@ -11,7 +11,15 @@ from languages import LANG
 __all__ = ['validate']
 
 
-def validate(path):
+def _escape_rst(string, process):
+    string = unicode(string)
+    if not process:
+        return string
+    else:
+        return string.replace('\\', '\\\\')
+
+
+def validate(path, rst=False):
     """
     Validate a package.
 
@@ -53,23 +61,29 @@ def validate(path):
 
     if error_count:
         print LANG.VALIDATION.STR_ERRORS + ':'
-        print '=' * (len(LANG.VALIDATION.STR_ERRORS) + 1)
+        print '-' * (len(LANG.VALIDATION.STR_ERRORS) + 1)
+        print
         for item in app.errors:
-            print item
+            if rst: print '-',
+            print _escape_rst(item, rst)
         print
 
     if warning_count:
         print LANG.VALIDATION.STR_WARNINGS + ':'
-        print '=' * (len(LANG.VALIDATION.STR_WARNINGS) + 1)
+        print '-' * (len(LANG.VALIDATION.STR_WARNINGS) + 1)
+        print
         for item in app.warnings:
-            print item
+            if rst: print '-',
+            print _escape_rst(item, rst)
         print
 
     if len(app.info):
         print LANG.VALIDATION.STR_INFORMATION + ':'
-        print '=' * (len(LANG.VALIDATION.STR_INFORMATION) + 1)
+        print '-' * (len(LANG.VALIDATION.STR_INFORMATION) + 1)
+        print
         for item in app.info:
-            print item
+            if rst: print '-',
+            print _escape_rst(item, rst)
         print
 
     if error_count:
