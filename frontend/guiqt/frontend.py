@@ -7,11 +7,10 @@ from .ui import (Ui_MainWindow, Ui_PageStart, Ui_PageDetails, Ui_PageLauncher,
         Ui_PageAbout)
 import paf
 import config
-from utils import _, center_window, path_local
-from validate import ValidationDialog
-import appinfo
+from utils import _, path_local
 from paf.appinfo import valid_appid
 from languages import LANG
+import hashlib
 
 
 def assert_valid_package_path(func):
@@ -109,79 +108,6 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     @QtCore.Slot()
     def on_nav_about_clicked(self):
         self.set_page('about')
-
-    @QtCore.Slot()
-    @assert_valid_package_path
-    def on_installerButton_clicked(self):
-        "Build the installer with the PortableApps.com Installer."
-
-        package_path = self.page_start.open.text()
-
-        # First of all, check that it's valid.
-        self.statusBar.showMessage(_("Validating package..."))
-        package = paf.Package(package_path)
-        package.validate()
-
-        if len(package.errors):
-            QtGui.QMessageBox.critical(self,
-                    _('PortableApps.com Development Toolkit'),
-                    _('There are errors in the package. You must fix them before making a release.'),
-                    QtGui.QMessageBox.Ok)
-            self.on_validateButton_clicked()
-            self.statusBar.clearMessage()
-            return
-        elif len(package.warnings):
-            answer = QtGui.QMessageBox.warning(self,
-                    _('PortableApps.com Development Toolkit'),
-                    _('There are warnings in the package validation. You should fix them before making a release.'),
-                    QtGui.QMessageBox.Cancel, QtGui.QMessageBox.Ignore)
-            if answer == QtGui.QMessageBox.Cancel:
-                self.on_validateButton_clicked()
-                self.statusBar.clearMessage()
-                return
-
-        installer_path = config.get('Main', 'InstallerPath')
-
-        if not installer_path or not os.path.isfile(installer_path):
-            # Try intelligently guessing if in PAF structure
-            portableapps_dir = os.path.dirname(
-                    config.ROOT_DIR.rpartition(
-                        os.path.sep + 'App' + os.path.sep)[0])
-            installer_path = os.path.join(portableapps_dir,
-                    'PortableApps.comInstaller',
-                    'PortableApps.comInstaller.exe')
-            if not portableapps_dir or not os.path.isfile(installer_path):
-                installer_path = QtGui.QFileDialog.getOpenFileName(self,
-                        _('Select the path to the PortableApps.com Installer'),
-                        config.ROOT_DIR,
-                        'PortableApps.com Installer (PortableApps.comInstaller.exe)')
-
-            if installer_path and os.path.isfile(installer_path):
-                config.settings.Main.InstallerPath = installer_path
-            else:
-                QtGui.QMessageBox.critical(self,
-                        _('PortableApps.com Development Toolkit'),
-                        _('Unable to locate the PortableApps.com Installer.'),
-                        QtGui.QMessageBox.Ok)
-                self.statusBar.clearMessage()
-                return
-
-        self.statusBar.showMessage(_("Building installer..."))
-        if package.installer.build():
-            self.statusBar.showMessage(_('Installer built successfully.'),
-                    2000)
-            # TODO: calculate MD5 checksum and installer size (also installed
-            # size lazily, in a non-blocking way) and show user
-        else:
-            # They've already got an error from the Installer wizard, so no
-            # need to complain too loudly.
-            #QtGui.QMessageBox.critical(self,
-            #        _('PortableApps.com Development Toolkit'),
-            #        _('The installer failed to build.'),
-            #        QtGui.QMessageBox.Ok)
-            #self.statusBar.clearMessage()
-            self.statusBar.showMessage(_('Installer failed to build.'),
-                    2000)
 
 
 class WindowPage(QtGui.QWidget):
@@ -628,12 +554,136 @@ class PageTest(WindowPage, Ui_PageTest):
     def load_checklist(self):
         pass  # TODO
 
+    def go_to_tab(self, tab):
+        self.tabwidget.setCurrentWidget(getattr(self, tab + '_tab'))
+
+
 class PagePublish(WindowPage, Ui_PagePublish):
-    pass
+    @assert_valid_package_path
+    def enter(self):
+        self.update_contents()
+        self.filename.setText(self.installer_path)
+
+    @QtCore.Slot()
+    @assert_valid_package_path
+    def on_build_installer_clicked(self):
+        # First of all, check that it's valid.
+        package = self.window.package
+        package.validate()
+
+        if len(package.errors):
+            QtGui.QMessageBox.critical(self,
+                    _('PortableApps.com Development Toolkit'),
+                    _('There are errors in the package. You must fix them before making a release.'),
+                    QtGui.QMessageBox.Ok)
+            self.window.set_page('test')
+            self.window.page_test.go_to_tab('validate')
+            return
+        elif len(package.warnings):
+            answer = QtGui.QMessageBox.warning(self,
+                    _('PortableApps.com Development Toolkit'),
+                    _('There are warnings in the package validation. You should fix them before making a release.'),
+                    QtGui.QMessageBox.Cancel, QtGui.QMessageBox.Ignore)
+            if answer == QtGui.QMessageBox.Cancel:
+                self.window.set_page('test')
+                self.window.page_test.go_to_tab('validate')
+                return
+
+        installer_path = self.window.page_options.find_installer_path()
+
+        if installer_path is None:
+            return  # User told about it in find_installer_path
+
+        package.installer.build()  # Can use returned bool if needed
+        self.update_contents()
+        # If it didn't build, they got an error from the Installer wizard,
+        # so no need to complain. When the Installer is integrated in here,
+        # we will need to handle it in here.
+
+    @assert_valid_package_path
+    def update_contents(self):
+        """Enable or disable the controls which depend on the installer being built."""
+        filename = self.installer_path
+        state = os.path.isfile(filename)
+        self.results_groupbox.setEnabled(state)
+        self.upload_groupbox.setEnabled(state)
+
+        if state:  # Got it, now update the info about it
+            f = open(filename, 'rb')
+            md5 = hashlib.md5()
+            size = 0  # Doing it this way to save a file size stat
+            while True:
+                data = f.read(16384)  # Multiple of 128; somewhat arbitrary.
+                size += len(data)
+                if len(data) == 0:
+                    break
+                md5.update(data)
+            self.md5.setText(md5.hexdigest())
+            self.size.setText('%.1f MB' % round(size / 1048576., 1))
+            self.size_installed.setText('TODO')
+        else:
+            self.md5.setText('')
+            self.size.setText('')
+            self.size_installed.setText('')
+
+    @property
+    def installer_path(self):
+        """The full path to the installer when built. May or may not exist."""
+        return self.window.package.path('..', self.window.package.installer.filename)
+
+
+def _options_path_finder(thing):
+    def wrapped(self, silent=False):
+        path = config.get('Main', thing + 'Path')
+        if silent and path is not None:
+            return path
+
+        if not path or not os.path.isfile(path):
+            # Try intelligently guessing if in PAF structure
+            portableapps_dir = os.path.dirname(
+                    config.ROOT_DIR.rpartition(
+                        os.path.sep + 'App' + os.path.sep)[0])
+            path = os.path.join(portableapps_dir,
+                    'PortableApps.com' + thing,
+                    'PortableApps.com%s.exe' % thing)
+            if silent:
+                return path if portableapps_dir and os.path.isfile(path) else ''
+            if not portableapps_dir or not os.path.isfile(path):
+                path = QtGui.QFileDialog.getOpenFileName(self,
+                        _('Select the path to the PortableApps.com ' + thing),
+                        config.ROOT_DIR,
+                        'PortableApps.com %s (PortableApps.com%s.exe)' % (thing, thing))
+
+            if path and os.path.isfile(path):
+                config.settings.Main[thing + 'Path'] = path
+            else:
+                QtGui.QMessageBox.critical(self,
+                        _('PortableApps.com Development Toolkit'),
+                        _('Unable to locate the PortableApps.com %s.' % thing),
+                        QtGui.QMessageBox.Ok)
+                self.statusBar.clearMessage()
+                return
+        return path
+    wrapped.func_name = wrapped.__name__ = 'find_%s_path' % thing.lower()
+    return wrapped
 
 
 class PageOptions(WindowPage, Ui_PageOptions):
-    pass
+    find_installer_path = _options_path_finder('Installer')
+    find_launcher_path = _options_path_finder('Launcher')
+    find_appcompactor_path = _options_path_finder('AppCompactor')
+
+    def enter(self):
+        self.installer.setText(self.find_installer_path(True))
+        self.launcher.setText(self.find_launcher_path(True))
+        self.appcompactor.setText(self.find_appcompactor_path(True))
+
+    def leave(self, closing=False):
+        config.settings.Main.InstallerPath = self.installer.text()
+        config.settings.Main.LauncherPath = self.launcher.text()
+        config.settings.Main.AppCompactorPath = self.appcompactor.text()
+
+    # TODO: Browse buttons
 
 
 class PageAbout(WindowPage, Ui_PageAbout):
