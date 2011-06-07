@@ -12,7 +12,7 @@ from PyQt4 import QtGui
 from utils import center_window
 import config
 import warn
-from frontend.guiqt import MainWindow
+from gui import MainWindow
 
 
 def main(page=None):
@@ -57,7 +57,7 @@ def validate_gui():
 
 def validate_cli():
     """Just run the validator (command-line version)."""
-    from frontend.cli.validate import validate
+    from cli.validate import validate
     return validate(sys.argv[2])
 
 

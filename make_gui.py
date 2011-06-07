@@ -15,10 +15,10 @@ def main():
         print 'Invalid build target, leave blank or specify "pyside" or "pyqt4".'
         sys.exit(1)
 
-    tools.compile_rc('resources/resources.qrc', 'frontend/guiqt/ui/resources_rc.py')
+    tools.compile_rc('resources/resources.qrc', 'gui/ui/resources_rc.py')
 
     for f in uic_files:
-        tools.compile_ui('frontend/guiqt/ui/%s.ui' % f, 'frontend/guiqt/ui/%s.py' % f)
+        tools.compile_ui('gui/ui/%s.ui' % f, 'gui/ui/%s.py' % f)
 
     tools.finish()
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'frontend/guiqt/ui/pagecompact.ui'
+# Form implementation generated from reading ui file 'gui/ui/pagecompact.ui'
 #
 #      by: pyside-uic 0.2.9 running on PySide 1.0.3
 #

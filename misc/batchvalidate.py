@@ -5,7 +5,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from frontend.cli.validate import validate
+from cli.validate import validate
 
 
 for path in os.listdir(sys.argv[1]):
