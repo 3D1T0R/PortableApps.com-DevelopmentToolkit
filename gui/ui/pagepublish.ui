@@ -51,7 +51,7 @@
        <widget class="QLineEdit" name="filename">
         <property name="minimumSize">
          <size>
-          <width>300</width>
+          <width>450</width>
           <height>0</height>
          </size>
         </property>

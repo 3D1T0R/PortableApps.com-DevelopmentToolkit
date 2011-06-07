@@ -28,7 +28,7 @@ class Ui_PagePublish(object):
         self.filename_label.setObjectName("filename_label")
         self.formLayout_6.setWidget(0, QtGui.QFormLayout.LabelRole, self.filename_label)
         self.filename = QtGui.QLineEdit(self.results_groupbox)
-        self.filename.setMinimumSize(QtCore.QSize(300, 0))
+        self.filename.setMinimumSize(QtCore.QSize(450, 0))
         self.filename.setReadOnly(True)
         self.filename.setObjectName("filename")
         self.formLayout_6.setWidget(0, QtGui.QFormLayout.FieldRole, self.filename)

@@ -7,10 +7,16 @@ from utils import _
 
 
 class PagePublish(WindowPage, Ui_PagePublish):
+    def __init__(self, *args, **kwargs):
+        super(PagePublish, self).__init__(*args, **kwargs)
+        # No automatic uploads yet, kill the QGroupBox
+        self.upload_groupbox.deleteLater()
+        del self.upload_groupbox
+
     @assert_valid_package_path
     def enter(self):
         self.update_contents()
-        self.filename.setText(self.installer_path)
+        self.filename.setText(self.window.package.installer.filename)
 
     @QtCore.Slot()
     @assert_valid_package_path
@@ -51,12 +57,12 @@ class PagePublish(WindowPage, Ui_PagePublish):
     @assert_valid_package_path
     def update_contents(self):
         """Enable or disable the controls which depend on the installer being built."""
-        filename = self.installer_path
-        state = os.path.isfile(filename)
+        state = os.path.isfile(self.window.package.installer.filename)
         self.results_groupbox.setEnabled(state)
-        self.upload_groupbox.setEnabled(state)
+        #self.upload_groupbox.setEnabled(state)
 
         if state:  # Got it, now update the info about it
+            filename = self.installer_path
             f = open(filename, 'rb')
             md5 = hashlib.md5()
             size = 0  # Doing it this way to save a file size stat
