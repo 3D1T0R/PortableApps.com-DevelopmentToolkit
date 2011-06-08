@@ -22,9 +22,11 @@ class Ui_MainWindow(object):
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
         self.nav = QtGui.QWidget(self.centralwidget)
+        self.nav.setMinimumSize(QtCore.QSize(960, 55))
+        self.nav.setMaximumSize(QtCore.QSize(960, 55))
         self.nav.setStyleSheet("#nav{background:#202429 url(:/headerbar.png) no-repeat}\n"
-"QLabel{color:rgba(255,255,255,51);font-size:10px}\n"
-"QPushButton{border:none;background:none;font-weight:bold;color:#fff;padding:10px}\n"
+"QLabel{background:url(:/smallarrow.png)}\n"
+"QPushButton{border:none;background:none;font-weight:bold;color:#fff;padding:10px;font-size:14px}\n"
 "QPushButton:!enabled{color:#707070}\n"
 "QPushButton:checked{color:#ff8000}\n"
 "#nav_options,#nav_about{padding:0;height:14px;font-size:11px;font-weight:normal;color:#ccc}\n"
@@ -49,6 +51,9 @@ class Ui_MainWindow(object):
         self.nav_start.setObjectName("nav_start")
         self.nav_layout.addWidget(self.nav_start)
         self.nav_arrow_1 = QtGui.QLabel(self.nav)
+        self.nav_arrow_1.setMinimumSize(QtCore.QSize(7, 7))
+        self.nav_arrow_1.setMaximumSize(QtCore.QSize(7, 7))
+        self.nav_arrow_1.setText("")
         self.nav_arrow_1.setObjectName("nav_arrow_1")
         self.nav_layout.addWidget(self.nav_arrow_1)
         self.nav_details = QtGui.QPushButton(self.nav)
@@ -63,6 +68,9 @@ class Ui_MainWindow(object):
         self.nav_details.setObjectName("nav_details")
         self.nav_layout.addWidget(self.nav_details)
         self.nav_arrow_2 = QtGui.QLabel(self.nav)
+        self.nav_arrow_2.setMinimumSize(QtCore.QSize(7, 7))
+        self.nav_arrow_2.setMaximumSize(QtCore.QSize(7, 7))
+        self.nav_arrow_2.setText("")
         self.nav_arrow_2.setObjectName("nav_arrow_2")
         self.nav_layout.addWidget(self.nav_arrow_2)
         self.nav_launcher = QtGui.QPushButton(self.nav)
@@ -77,6 +85,9 @@ class Ui_MainWindow(object):
         self.nav_launcher.setObjectName("nav_launcher")
         self.nav_layout.addWidget(self.nav_launcher)
         self.nav_arrow_3 = QtGui.QLabel(self.nav)
+        self.nav_arrow_3.setMinimumSize(QtCore.QSize(7, 7))
+        self.nav_arrow_3.setMaximumSize(QtCore.QSize(7, 7))
+        self.nav_arrow_3.setText("")
         self.nav_arrow_3.setObjectName("nav_arrow_3")
         self.nav_layout.addWidget(self.nav_arrow_3)
         self.nav_compact = QtGui.QPushButton(self.nav)
@@ -91,6 +102,9 @@ class Ui_MainWindow(object):
         self.nav_compact.setObjectName("nav_compact")
         self.nav_layout.addWidget(self.nav_compact)
         self.nav_arrow_4 = QtGui.QLabel(self.nav)
+        self.nav_arrow_4.setMinimumSize(QtCore.QSize(7, 7))
+        self.nav_arrow_4.setMaximumSize(QtCore.QSize(7, 7))
+        self.nav_arrow_4.setText("")
         self.nav_arrow_4.setObjectName("nav_arrow_4")
         self.nav_layout.addWidget(self.nav_arrow_4)
         self.nav_test = QtGui.QPushButton(self.nav)
@@ -105,6 +119,9 @@ class Ui_MainWindow(object):
         self.nav_test.setObjectName("nav_test")
         self.nav_layout.addWidget(self.nav_test)
         self.nav_arrow_5 = QtGui.QLabel(self.nav)
+        self.nav_arrow_5.setMinimumSize(QtCore.QSize(7, 7))
+        self.nav_arrow_5.setMaximumSize(QtCore.QSize(7, 7))
+        self.nav_arrow_5.setText("")
         self.nav_arrow_5.setObjectName("nav_arrow_5")
         self.nav_layout.addWidget(self.nav_arrow_5)
         self.nav_publish = QtGui.QPushButton(self.nav)
@@ -147,15 +164,10 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "PortableApps.com Development Toolkit", None, QtGui.QApplication.UnicodeUTF8))
         self.nav_start.setText(QtGui.QApplication.translate("MainWindow", "Start", None, QtGui.QApplication.UnicodeUTF8))
-        self.nav_arrow_1.setText(QtGui.QApplication.translate("MainWindow", "▶", None, QtGui.QApplication.UnicodeUTF8))
         self.nav_details.setText(QtGui.QApplication.translate("MainWindow", "Details", None, QtGui.QApplication.UnicodeUTF8))
-        self.nav_arrow_2.setText(QtGui.QApplication.translate("MainWindow", "▶", None, QtGui.QApplication.UnicodeUTF8))
         self.nav_launcher.setText(QtGui.QApplication.translate("MainWindow", "Launcher", None, QtGui.QApplication.UnicodeUTF8))
-        self.nav_arrow_3.setText(QtGui.QApplication.translate("MainWindow", "▶", None, QtGui.QApplication.UnicodeUTF8))
         self.nav_compact.setText(QtGui.QApplication.translate("MainWindow", "Compact", None, QtGui.QApplication.UnicodeUTF8))
-        self.nav_arrow_4.setText(QtGui.QApplication.translate("MainWindow", "▶", None, QtGui.QApplication.UnicodeUTF8))
         self.nav_test.setText(QtGui.QApplication.translate("MainWindow", "Test", None, QtGui.QApplication.UnicodeUTF8))
-        self.nav_arrow_5.setText(QtGui.QApplication.translate("MainWindow", "▶", None, QtGui.QApplication.UnicodeUTF8))
         self.nav_publish.setText(QtGui.QApplication.translate("MainWindow", "Publish", None, QtGui.QApplication.UnicodeUTF8))
         self.nav_options.setText(QtGui.QApplication.translate("MainWindow", "Options", None, QtGui.QApplication.UnicodeUTF8))
         self.nav_about.setText(QtGui.QApplication.translate("MainWindow", "About", None, QtGui.QApplication.UnicodeUTF8))

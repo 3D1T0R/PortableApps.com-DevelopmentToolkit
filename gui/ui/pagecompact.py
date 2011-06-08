@@ -9,18 +9,18 @@
 from PyQt4 import QtCore, QtGui
 
 class Ui_PageCompact(object):
-    def setupUi(self, pagecompact):
-        pagecompact.setObjectName("pagecompact")
-        pagecompact.setGeometry(QtCore.QRect(0, 0, 960, 445))
-        self.verticalLayout = QtGui.QVBoxLayout(pagecompact)
+    def setupUi(self, PageCompact):
+        PageCompact.setObjectName("PageCompact")
+        PageCompact.resize(960, 445)
+        self.verticalLayout = QtGui.QVBoxLayout(PageCompact)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.start_button = QtGui.QCommandLinkButton(pagecompact)
+        self.start_button = QtGui.QCommandLinkButton(PageCompact)
         self.start_button.setObjectName("start_button")
         self.verticalLayout.addWidget(self.start_button)
-        self.output = QtGui.QTextBrowser(pagecompact)
+        self.output = QtGui.QTextBrowser(PageCompact)
         self.output.setObjectName("output")
         self.verticalLayout.addWidget(self.output)
-        self.advanced_groupbox = QtGui.QGroupBox(pagecompact)
+        self.advanced_groupbox = QtGui.QGroupBox(PageCompact)
         self.advanced_groupbox.setObjectName("advanced_groupbox")
         self.formLayout_3 = QtGui.QFormLayout(self.advanced_groupbox)
         self.formLayout_3.setObjectName("formLayout_3")
@@ -47,10 +47,10 @@ class Ui_PageCompact(object):
         self.additionalextensionsexcluded_label.setBuddy(self.additionalextensionsexcluded)
         self.additionalextensionsincluded_label.setBuddy(self.additionalextensionsincluded)
 
-        self.retranslateUi(pagecompact)
-        QtCore.QMetaObject.connectSlotsByName(pagecompact)
+        self.retranslateUi(PageCompact)
+        QtCore.QMetaObject.connectSlotsByName(PageCompact)
 
-    def retranslateUi(self, pagecompact):
+    def retranslateUi(self, PageCompact):
         self.start_button.setText(QtGui.QApplication.translate("PageCompact", "Start compacting app", None, QtGui.QApplication.UnicodeUTF8))
         self.advanced_groupbox.setTitle(QtGui.QApplication.translate("PageCompact", "Advanced configuration", None, QtGui.QApplication.UnicodeUTF8))
         self.filesexcluded_label.setText(QtGui.QApplication.translate("PageCompact", "&Files to exclude:", None, QtGui.QApplication.UnicodeUTF8))

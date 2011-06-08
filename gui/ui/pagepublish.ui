@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>PagePublish</class>
- <widget class="QWidget" name="pagepublish">
+ <widget class="QWidget" name="PagePublish">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,6 +11,9 @@
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <property name="verticalSpacing">
+    <number>25</number>
+   </property>
    <item row="5" column="1">
     <spacer name="spacer_bottom">
      <property name="orientation">

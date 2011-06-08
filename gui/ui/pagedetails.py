@@ -9,14 +9,14 @@
 from PyQt4 import QtCore, QtGui
 
 class Ui_PageDetails(object):
-    def setupUi(self, pagedetails):
-        pagedetails.setObjectName("pagedetails")
-        pagedetails.setGeometry(QtCore.QRect(0, 0, 960, 445))
-        self.gridLayout = QtGui.QGridLayout(pagedetails)
+    def setupUi(self, PageDetails):
+        PageDetails.setObjectName("PageDetails")
+        PageDetails.resize(960, 445)
+        self.gridLayout = QtGui.QGridLayout(PageDetails)
         self.gridLayout.setObjectName("gridLayout")
         self.left_column = QtGui.QVBoxLayout()
         self.left_column.setObjectName("left_column")
-        self.DetailsGroupBox = QtGui.QGroupBox(pagedetails)
+        self.DetailsGroupBox = QtGui.QGroupBox(PageDetails)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(1)
         sizePolicy.setVerticalStretch(0)
@@ -241,7 +241,7 @@ class Ui_PageDetails(object):
         self.Trademarks.setObjectName("Trademarks")
         self.formLayout_4.setWidget(7, QtGui.QFormLayout.FieldRole, self.Trademarks)
         self.left_column.addWidget(self.DetailsGroupBox)
-        self.VersionGroupBox = QtGui.QGroupBox(pagedetails)
+        self.VersionGroupBox = QtGui.QGroupBox(PageDetails)
         self.VersionGroupBox.setObjectName("VersionGroupBox")
         self.formLayout_2 = QtGui.QFormLayout(self.VersionGroupBox)
         self.formLayout_2.setFieldGrowthPolicy(QtGui.QFormLayout.AllNonFixedFieldsGrow)
@@ -323,7 +323,7 @@ class Ui_PageDetails(object):
         self.gridLayout.addLayout(self.left_column, 2, 2, 1, 1)
         self.right_column = QtGui.QVBoxLayout()
         self.right_column.setObjectName("right_column")
-        self.LicenseGroupBox = QtGui.QGroupBox(pagedetails)
+        self.LicenseGroupBox = QtGui.QGroupBox(PageDetails)
         self.LicenseGroupBox.setObjectName("LicenseGroupBox")
         self.formLayout_5 = QtGui.QFormLayout(self.LicenseGroupBox)
         self.formLayout_5.setFieldGrowthPolicy(QtGui.QFormLayout.AllNonFixedFieldsGrow)
@@ -341,7 +341,7 @@ class Ui_PageDetails(object):
         self.CommercialUse.setObjectName("CommercialUse")
         self.formLayout_5.setWidget(3, QtGui.QFormLayout.LabelRole, self.CommercialUse)
         self.right_column.addWidget(self.LicenseGroupBox)
-        self.AdvancedGroupBox = QtGui.QGroupBox(pagedetails)
+        self.AdvancedGroupBox = QtGui.QGroupBox(PageDetails)
         self.AdvancedGroupBox.setObjectName("AdvancedGroupBox")
         self.formLayout_7 = QtGui.QFormLayout(self.AdvancedGroupBox)
         self.formLayout_7.setFieldGrowthPolicy(QtGui.QFormLayout.AllNonFixedFieldsGrow)
@@ -400,10 +400,10 @@ class Ui_PageDetails(object):
         self.UsesDotNetVersionLabel.setBuddy(self.UsesDotNetVersion)
         self.EULAVersionLabel.setBuddy(self.EULAVersion)
 
-        self.retranslateUi(pagedetails)
-        QtCore.QMetaObject.connectSlotsByName(pagedetails)
+        self.retranslateUi(PageDetails)
+        QtCore.QMetaObject.connectSlotsByName(PageDetails)
 
-    def retranslateUi(self, pagedetails):
+    def retranslateUi(self, PageDetails):
         self.DetailsGroupBox.setTitle(QtGui.QApplication.translate("PageDetails", "App details", None, QtGui.QApplication.UnicodeUTF8))
         self.NameLabel.setText(QtGui.QApplication.translate("PageDetails", "Portable app &name", None, QtGui.QApplication.UnicodeUTF8))
         self.AppIDLabel.setText(QtGui.QApplication.translate("PageDetails", "&App ID", None, QtGui.QApplication.UnicodeUTF8))

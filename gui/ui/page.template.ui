@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Page.template</class>
- <widget class="QWidget" name="page.template">
+ <class>PageTemplate</class>
+ <widget class="QWidget" name="PageTemplate">
   <property name="geometry">
    <rect>
     <x>0</x>

@@ -9,10 +9,10 @@
 from PyQt4 import QtCore, QtGui
 
 class Ui_PageAbout(object):
-    def setupUi(self, pageabout):
-        pageabout.setObjectName("pageabout")
-        pageabout.setGeometry(QtCore.QRect(0, 0, 960, 445))
-        self.gridLayout = QtGui.QGridLayout(pageabout)
+    def setupUi(self, PageAbout):
+        PageAbout.setObjectName("PageAbout")
+        PageAbout.resize(960, 445)
+        self.gridLayout = QtGui.QGridLayout(PageAbout)
         self.gridLayout.setObjectName("gridLayout")
         spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridLayout.addItem(spacerItem, 8, 1, 1, 1)
@@ -22,7 +22,7 @@ class Ui_PageAbout(object):
         self.gridLayout.addItem(spacerItem2, 1, 2, 7, 1)
         spacerItem3 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridLayout.addItem(spacerItem3, 0, 1, 1, 1)
-        self.about_productname = QtGui.QLabel(pageabout)
+        self.about_productname = QtGui.QLabel(PageAbout)
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setWeight(75)
@@ -30,29 +30,29 @@ class Ui_PageAbout(object):
         self.about_productname.setFont(font)
         self.about_productname.setObjectName("about_productname")
         self.gridLayout.addWidget(self.about_productname, 1, 1, 1, 1)
-        self.about_version = QtGui.QLabel(pageabout)
+        self.about_version = QtGui.QLabel(PageAbout)
         self.about_version.setObjectName("about_version")
         self.gridLayout.addWidget(self.about_version, 2, 1, 1, 1)
-        self.about_copyright = QtGui.QLabel(pageabout)
+        self.about_copyright = QtGui.QLabel(PageAbout)
         self.about_copyright.setObjectName("about_copyright")
         self.gridLayout.addWidget(self.about_copyright, 3, 1, 1, 1)
         spacerItem4 = QtGui.QSpacerItem(20, 30, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         self.gridLayout.addItem(spacerItem4, 4, 1, 1, 1)
-        self.about_description = QtGui.QLabel(pageabout)
+        self.about_description = QtGui.QLabel(PageAbout)
         self.about_description.setObjectName("about_description")
         self.gridLayout.addWidget(self.about_description, 5, 1, 1, 1)
         spacerItem5 = QtGui.QSpacerItem(20, 30, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         self.gridLayout.addItem(spacerItem5, 6, 1, 1, 1)
-        self.about_links = QtGui.QLabel(pageabout)
+        self.about_links = QtGui.QLabel(PageAbout)
         self.about_links.setOpenExternalLinks(True)
         self.about_links.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByKeyboard|QtCore.Qt.LinksAccessibleByMouse)
         self.about_links.setObjectName("about_links")
         self.gridLayout.addWidget(self.about_links, 7, 1, 1, 1)
 
-        self.retranslateUi(pageabout)
-        QtCore.QMetaObject.connectSlotsByName(pageabout)
+        self.retranslateUi(PageAbout)
+        QtCore.QMetaObject.connectSlotsByName(PageAbout)
 
-    def retranslateUi(self, pageabout):
+    def retranslateUi(self, PageAbout):
         self.about_productname.setText(QtGui.QApplication.translate("PageAbout", "PortableApps.com Development Toolkit", None, QtGui.QApplication.UnicodeUTF8))
         self.about_version.setText(QtGui.QApplication.translate("PageAbout", "Version 1.0 Alpha 2", None, QtGui.QApplication.UnicodeUTF8))
         self.about_copyright.setText(QtGui.QApplication.translate("PageAbout", "© 2011 PortableApps.com (Chris Morgan)", None, QtGui.QApplication.UnicodeUTF8))

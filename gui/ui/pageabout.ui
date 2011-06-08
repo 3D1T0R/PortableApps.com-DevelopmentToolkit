@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>PageAbout</class>
- <widget class="QWidget" name="pageabout">
+ <widget class="QWidget" name="PageAbout">
   <property name="geometry">
    <rect>
     <x>0</x>

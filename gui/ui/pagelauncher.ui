@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>PageLauncher</class>
- <widget class="QWidget" name="pagelauncher">
+ <widget class="QWidget" name="PageLauncher">
   <property name="geometry">
    <rect>
     <x>0</x>

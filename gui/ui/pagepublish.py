@@ -9,17 +9,18 @@
 from PyQt4 import QtCore, QtGui
 
 class Ui_PagePublish(object):
-    def setupUi(self, pagepublish):
-        pagepublish.setObjectName("pagepublish")
-        pagepublish.setGeometry(QtCore.QRect(0, 0, 960, 445))
-        self.gridLayout = QtGui.QGridLayout(pagepublish)
+    def setupUi(self, PagePublish):
+        PagePublish.setObjectName("PagePublish")
+        PagePublish.resize(960, 445)
+        self.gridLayout = QtGui.QGridLayout(PagePublish)
+        self.gridLayout.setVerticalSpacing(25)
         self.gridLayout.setObjectName("gridLayout")
         spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridLayout.addItem(spacerItem, 5, 1, 1, 1)
-        self.build_installer = QtGui.QCommandLinkButton(pagepublish)
+        self.build_installer = QtGui.QCommandLinkButton(PagePublish)
         self.build_installer.setObjectName("build_installer")
         self.gridLayout.addWidget(self.build_installer, 1, 1, 1, 1)
-        self.results_groupbox = QtGui.QGroupBox(pagepublish)
+        self.results_groupbox = QtGui.QGroupBox(PagePublish)
         self.results_groupbox.setEnabled(False)
         self.results_groupbox.setObjectName("results_groupbox")
         self.formLayout_6 = QtGui.QFormLayout(self.results_groupbox)
@@ -54,7 +55,7 @@ class Ui_PagePublish(object):
         self.md5.setObjectName("md5")
         self.formLayout_6.setWidget(3, QtGui.QFormLayout.FieldRole, self.md5)
         self.gridLayout.addWidget(self.results_groupbox, 2, 1, 1, 1)
-        self.upload_groupbox = QtGui.QGroupBox(pagepublish)
+        self.upload_groupbox = QtGui.QGroupBox(PagePublish)
         self.upload_groupbox.setEnabled(False)
         self.upload_groupbox.setObjectName("upload_groupbox")
         self.gridLayout_3 = QtGui.QGridLayout(self.upload_groupbox)
@@ -81,10 +82,10 @@ class Ui_PagePublish(object):
         spacerItem3 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridLayout.addItem(spacerItem3, 0, 1, 1, 1)
 
-        self.retranslateUi(pagepublish)
-        QtCore.QMetaObject.connectSlotsByName(pagepublish)
+        self.retranslateUi(PagePublish)
+        QtCore.QMetaObject.connectSlotsByName(PagePublish)
 
-    def retranslateUi(self, pagepublish):
+    def retranslateUi(self, PagePublish):
         self.build_installer.setText(QtGui.QApplication.translate("PagePublish", "Build installer", None, QtGui.QApplication.UnicodeUTF8))
         self.results_groupbox.setTitle(QtGui.QApplication.translate("PagePublish", "Results", None, QtGui.QApplication.UnicodeUTF8))
         self.filename_label.setText(QtGui.QApplication.translate("PagePublish", "Filename:", None, QtGui.QApplication.UnicodeUTF8))

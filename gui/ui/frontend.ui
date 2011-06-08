@@ -14,7 +14,7 @@
    <string>PortableApps.com Development Toolkit</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../../resources/resources.qrc">
+   <iconset resource="../../resources/resources.qrc">
     <normaloff>:/icon.png</normaloff>:/icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -27,10 +27,22 @@
     </property>
     <item>
      <widget class="QWidget" name="nav" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>960</width>
+        <height>55</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>960</width>
+        <height>55</height>
+       </size>
+      </property>
       <property name="styleSheet">
        <string notr="true">#nav{background:#202429 url(:/headerbar.png) no-repeat}
-QLabel{color:rgba(255,255,255,51);font-size:10px}
-QPushButton{border:none;background:none;font-weight:bold;color:#fff;padding:10px}
+QLabel{background:url(:/smallarrow.png)}
+QPushButton{border:none;background:none;font-weight:bold;color:#fff;padding:10px;font-size:14px}
 QPushButton:!enabled{color:#707070}
 QPushButton:checked{color:#ff8000}
 #nav_options,#nav_about{padding:0;height:14px;font-size:11px;font-weight:normal;color:#ccc}
@@ -83,8 +95,20 @@ QPushButton:checked{color:#ff8000}
        </item>
        <item>
         <widget class="QLabel" name="nav_arrow_1">
+         <property name="minimumSize">
+          <size>
+           <width>7</width>
+           <height>7</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>7</width>
+           <height>7</height>
+          </size>
+         </property>
          <property name="text">
-          <string>▶</string>
+          <string/>
          </property>
         </widget>
        </item>
@@ -112,8 +136,20 @@ QPushButton:checked{color:#ff8000}
        </item>
        <item>
         <widget class="QLabel" name="nav_arrow_2">
+         <property name="minimumSize">
+          <size>
+           <width>7</width>
+           <height>7</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>7</width>
+           <height>7</height>
+          </size>
+         </property>
          <property name="text">
-          <string>▶</string>
+          <string/>
          </property>
         </widget>
        </item>
@@ -141,8 +177,20 @@ QPushButton:checked{color:#ff8000}
        </item>
        <item>
         <widget class="QLabel" name="nav_arrow_3">
+         <property name="minimumSize">
+          <size>
+           <width>7</width>
+           <height>7</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>7</width>
+           <height>7</height>
+          </size>
+         </property>
          <property name="text">
-          <string>▶</string>
+          <string/>
          </property>
         </widget>
        </item>
@@ -170,8 +218,20 @@ QPushButton:checked{color:#ff8000}
        </item>
        <item>
         <widget class="QLabel" name="nav_arrow_4">
+         <property name="minimumSize">
+          <size>
+           <width>7</width>
+           <height>7</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>7</width>
+           <height>7</height>
+          </size>
+         </property>
          <property name="text">
-          <string>▶</string>
+          <string/>
          </property>
         </widget>
        </item>
@@ -199,8 +259,20 @@ QPushButton:checked{color:#ff8000}
        </item>
        <item>
         <widget class="QLabel" name="nav_arrow_5">
+         <property name="minimumSize">
+          <size>
+           <width>7</width>
+           <height>7</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>7</width>
+           <height>7</height>
+          </size>
+         </property>
          <property name="text">
-          <string>▶</string>
+          <string/>
          </property>
         </widget>
        </item>
@@ -278,7 +350,7 @@ QPushButton:checked{color:#ff8000}
   </widget>
  </widget>
  <resources>
-  <include location="../../../resources/resources.qrc"/>
+  <include location="../../resources/resources.qrc"/>
  </resources>
  <connections/>
 </ui>

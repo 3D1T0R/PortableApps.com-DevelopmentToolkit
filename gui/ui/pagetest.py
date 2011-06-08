@@ -9,12 +9,12 @@
 from PyQt4 import QtCore, QtGui
 
 class Ui_PageTest(object):
-    def setupUi(self, pagetest):
-        pagetest.setObjectName("pagetest")
-        pagetest.setGeometry(QtCore.QRect(0, 0, 960, 445))
-        self.horizontalLayout = QtGui.QHBoxLayout(pagetest)
+    def setupUi(self, PageTest):
+        PageTest.setObjectName("PageTest")
+        PageTest.resize(960, 445)
+        self.horizontalLayout = QtGui.QHBoxLayout(PageTest)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.tabwidget = QtGui.QTabWidget(pagetest)
+        self.tabwidget = QtGui.QTabWidget(PageTest)
         self.tabwidget.setObjectName("tabwidget")
         self.validate_tab = QtGui.QWidget()
         self.validate_tab.setObjectName("validate_tab")
@@ -99,11 +99,11 @@ class Ui_PageTest(object):
         self.tabwidget.addTab(self.checklist_tab, "")
         self.horizontalLayout.addWidget(self.tabwidget)
 
-        self.retranslateUi(pagetest)
+        self.retranslateUi(PageTest)
         self.tabwidget.setCurrentIndex(0)
-        QtCore.QMetaObject.connectSlotsByName(pagetest)
+        QtCore.QMetaObject.connectSlotsByName(PageTest)
 
-    def retranslateUi(self, pagetest):
+    def retranslateUi(self, PageTest):
         self.label_2.setText(QtGui.QApplication.translate("PageTest", "HTML output (for putting in PortableApps.com forums)", None, QtGui.QApplication.UnicodeUTF8))
         self.tabwidget.setTabText(self.tabwidget.indexOf(self.validate_tab), QtGui.QApplication.translate("PageTest", "Validation", None, QtGui.QApplication.UnicodeUTF8))
         self.launcher_groupbox.setTitle(QtGui.QApplication.translate("PageTest", "Launcher", None, QtGui.QApplication.UnicodeUTF8))

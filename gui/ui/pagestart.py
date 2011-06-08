@@ -9,21 +9,21 @@
 from PyQt4 import QtCore, QtGui
 
 class Ui_PageStart(object):
-    def setupUi(self, pagestart):
-        pagestart.setObjectName("pagestart")
-        pagestart.setGeometry(QtCore.QRect(0, 0, 960, 445))
-        self.gridLayout = QtGui.QGridLayout(pagestart)
+    def setupUi(self, PageStart):
+        PageStart.setObjectName("PageStart")
+        PageStart.resize(960, 445)
+        self.gridLayout = QtGui.QGridLayout(PageStart)
         self.gridLayout.setObjectName("gridLayout")
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.gridLayout.addItem(spacerItem, 1, 0, 1, 1)
         self.content_box = QtGui.QVBoxLayout()
         self.content_box.setSpacing(40)
         self.content_box.setObjectName("content_box")
-        self.label = QtGui.QLabel(pagestart)
+        self.label = QtGui.QLabel(PageStart)
         self.label.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.label.setObjectName("label")
         self.content_box.addWidget(self.label)
-        self.open_groupbox = QtGui.QGroupBox(pagestart)
+        self.open_groupbox = QtGui.QGroupBox(PageStart)
         self.open_groupbox.setObjectName("open_groupbox")
         self.horizontalLayout_2 = QtGui.QHBoxLayout(self.open_groupbox)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
@@ -38,7 +38,7 @@ class Ui_PageStart(object):
         self.open_browse.setObjectName("open_browse")
         self.horizontalLayout_2.addWidget(self.open_browse)
         self.content_box.addWidget(self.open_groupbox)
-        self.create_groupbox = QtGui.QGroupBox(pagestart)
+        self.create_groupbox = QtGui.QGroupBox(PageStart)
         self.create_groupbox.setObjectName("create_groupbox")
         self.hboxlayout = QtGui.QHBoxLayout(self.create_groupbox)
         self.hboxlayout.setObjectName("hboxlayout")
@@ -53,8 +53,6 @@ class Ui_PageStart(object):
         self.create_browse.setObjectName("create_browse")
         self.hboxlayout.addWidget(self.create_browse)
         self.create_button = QtGui.QPushButton(self.create_groupbox)
-        self.create_button.setAutoDefault(True)
-        self.create_button.setDefault(True)
         self.create_button.setObjectName("create_button")
         self.hboxlayout.addWidget(self.create_button)
         self.content_box.addWidget(self.create_groupbox)
@@ -68,10 +66,10 @@ class Ui_PageStart(object):
         self.open_label.setBuddy(self.open)
         self.create_label.setBuddy(self.create)
 
-        self.retranslateUi(pagestart)
-        QtCore.QMetaObject.connectSlotsByName(pagestart)
+        self.retranslateUi(PageStart)
+        QtCore.QMetaObject.connectSlotsByName(PageStart)
 
-    def retranslateUi(self, pagestart):
+    def retranslateUi(self, PageStart):
         self.label.setText(QtGui.QApplication.translate("PageStart", "I want to...", None, QtGui.QApplication.UnicodeUTF8))
         self.open_groupbox.setTitle(QtGui.QApplication.translate("PageStart", "Open an existing package", None, QtGui.QApplication.UnicodeUTF8))
         self.open_label.setText(QtGui.QApplication.translate("PageStart", "&Path:", None, QtGui.QApplication.UnicodeUTF8))
@@ -79,5 +77,5 @@ class Ui_PageStart(object):
         self.create_groupbox.setTitle(QtGui.QApplication.translate("PageStart", "Create a new portable app", None, QtGui.QApplication.UnicodeUTF8))
         self.create_label.setText(QtGui.QApplication.translate("PageStart", "P&ath:", None, QtGui.QApplication.UnicodeUTF8))
         self.create_browse.setText(QtGui.QApplication.translate("PageStart", "B&rowse...", None, QtGui.QApplication.UnicodeUTF8))
-        self.create_button.setText(QtGui.QApplication.translate("PageStart", "Create", None, QtGui.QApplication.UnicodeUTF8))
+        self.create_button.setText(QtGui.QApplication.translate("PageStart", "&Create", None, QtGui.QApplication.UnicodeUTF8))
 

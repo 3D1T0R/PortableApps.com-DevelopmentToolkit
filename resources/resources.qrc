@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/">
+    <file>smallarrow.png</file>
     <file>icon.png</file>
     <file>sidebar.png</file>
     <file>headerbar.png</file>

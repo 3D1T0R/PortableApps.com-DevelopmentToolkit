@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>PageStart</class>
- <widget class="QWidget" name="pagestart">
+ <widget class="QWidget" name="PageStart">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -111,13 +111,7 @@
         <item>
          <widget class="QPushButton" name="create_button">
           <property name="text">
-           <string>Create</string>
-          </property>
-          <property name="autoDefault">
-           <bool>true</bool>
-          </property>
-          <property name="default">
-           <bool>true</bool>
+           <string>&amp;Create</string>
           </property>
          </widget>
         </item>
