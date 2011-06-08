@@ -3,7 +3,7 @@ import hashlib
 from ._base import WindowPage, assert_valid_package_path
 from ..ui.pagepublish import Ui_PagePublish
 from PyQt4 import QtCore, QtGui
-from utils import _
+from utils import _, size_string_megabytes
 
 
 class PagePublish(WindowPage, Ui_PagePublish):
@@ -15,8 +15,8 @@ class PagePublish(WindowPage, Ui_PagePublish):
 
     @assert_valid_package_path
     def enter(self):
-        self.update_contents()
         self.filename.setText(self.window.package.installer.filename)
+        self.update_contents_async()
 
     @QtCore.Slot()
     @assert_valid_package_path
@@ -49,10 +49,16 @@ class PagePublish(WindowPage, Ui_PagePublish):
             return  # User told about it in find_installer_path
 
         package.installer.build()  # Can use returned bool if needed
-        self.update_contents()
+        self.update_contents_async()
         # If it didn't build, they got an error from the Installer wizard,
         # so no need to complain. When the Installer is integrated in here,
         # we will need to handle it in here.
+
+    def update_contents_async(self):
+        self.update_contents()
+        # TODO: use QThread to make it non-blocking while still being safe.
+        # (threading.Thread causes deadlock fairly often this way.)
+        #threading.Thread(target=self.update_contents).start()
 
     @assert_valid_package_path
     def update_contents(self):
@@ -62,6 +68,9 @@ class PagePublish(WindowPage, Ui_PagePublish):
         #self.upload_groupbox.setEnabled(state)
 
         if state:  # Got it, now update the info about it
+            self.md5.setText('Calculating...')
+            self.size.setText('Calculating...')
+            self.size_installed.setText('Calculating...')
             filename = self.installer_path
             f = open(filename, 'rb')
             md5 = hashlib.md5()
@@ -73,8 +82,13 @@ class PagePublish(WindowPage, Ui_PagePublish):
                     break
                 md5.update(data)
             self.md5.setText(md5.hexdigest())
-            self.size.setText('%.1f MB' % round(size / 1048576., 1))
-            self.size_installed.setText('TODO')
+            # + 0.05 is to round up
+            self.size.setText(size_string_megabytes(size))
+            minsize, maxsize = [size_string_megabytes(s) for s in self.window.package.installed_size()]
+            if minsize == maxsize:
+                self.size_installed.setText(minsize)
+            else:
+                self.size_installed.setText('%s-%s' % (minsize, maxsize))
         else:
             self.md5.setText('')
             self.size.setText('')

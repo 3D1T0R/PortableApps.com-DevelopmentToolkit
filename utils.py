@@ -16,6 +16,56 @@ def get_ini_str(ini, section, key, default=None):
     return ini[section][key] if key in ini[section] else default
 
 
+def ini_list_from_numbered(container, matches):
+    '''
+    Get numbered items from an INI object in a list.
+
+    This returns a list of (match, object) tuples, i.e. (key, value) or
+    (section name, section).
+
+    ``container`` should be an INIConfig or INISection.
+    ``matches`` should be a sprintf-style formatting string. It will be given a
+    single int for its values, so ``%i`` is generally optimal.
+
+    Given an INIConfig like this::
+
+        >>> from iniparse import INIConfig
+        >>> from cStringIO import StringIO
+        >>> ini = INIConfig(StringIO("""
+        ... [Section1]
+        ... Key1=value1
+        ... Key2=value2
+        ... Magic=First section
+        ... [Section2]
+        ... Magic=Second section
+        ... """))
+
+    We can get a list of 'Key1', 'Key2', etc. with this method:
+
+        >>> ini_list_from_numbered(ini.Section1, 'Key%i')
+        ['value1', 'value2']
+
+    Numbered sections can be got easily, too::
+
+        >>> sections = ini_list_from_numbered(ini, 'Section%i')
+        >>> sections  # doctest: +NORMALIZE_WHITESPACE,+ELLIPSIS
+        [<iniparse.ini.INISection object at ...>,
+         <iniparse.ini.INISection object at ...>]
+
+    The sections can be treated normally::
+
+        >>> [section.Magic for section in sections]
+        ['First section', 'Second section']
+    '''
+
+    result = []
+    i = 1
+    while matches % i in container:
+        result.append(container[matches % i])
+        i += 1
+    return result
+
+
 def center_window(window):
     """Center a window on the screen."""
     s = QDesktopWidget().screenGeometry()
@@ -32,15 +82,15 @@ def path_insensitive(path):
     >>> path_insensitive('/Home/chris')
     '/home/chris'
     >>> path_insensitive('/HoME/CHris/')
-    '/home/chris/
+    '/home/chris/'
     >>> path_insensitive('/home/CHRIS')
-    '/home/chris
+    '/home/chris'
     >>> path_insensitive('/Home/CHRIS/.gtk-bookmarks')
-    '/home/chris/.gtk-bookmarks
+    '/home/chris/.gtk-bookmarks'
     >>> path_insensitive('/home/chris/.GTK-bookmarks')
-    '/home/chris/.gtk-bookmarks
+    '/home/chris/.gtk-bookmarks'
     >>> path_insensitive('/HOME/Chris/.GTK-bookmarks')
-    '/home/chris/.gtk-bookmarks
+    '/home/chris/.gtk-bookmarks'
     >>> path_insensitive("/HOME/Chris/I HOPE this doesn't exist")
     "/HOME/Chris/I HOPE this doesn't exist"
     """
@@ -137,3 +187,18 @@ def path_windows(path, absolute=False):
             raise OSError('Wine is not installed')
     else:
         return path.replace('/', '\\')
+
+
+def size_string_megabytes(size_in_bytes):
+    """
+    Get a representation of a file size in megabytes, rounded up to one decimal
+    place.
+
+    >>> size_string_megabytes(0)
+    u'0.0 MB'
+    >>> size_string_megabytes(1024 * 1024)
+    u'1.0 MB'
+    >>> size_string_megabytes(4.73 * 1024 * 1024)
+    u'4.8 MB'
+    """
+    return _('%.1f MB') % round((size_in_bytes - 1) / 1048576. + 0.05, 1)

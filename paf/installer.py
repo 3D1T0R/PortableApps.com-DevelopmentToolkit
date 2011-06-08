@@ -10,7 +10,7 @@ import re
 from orderedset import OrderedSet
 from languages import LANG
 import config
-from utils import win32
+from utils import win32, path_local, ini_list_from_numbered
 from validator.engine.factory import bool_check
 from validator.engine import (INIManager, SectionValidator, FileMeta, SectionMeta,
         ValidatorError, ValidatorWarning)
@@ -157,6 +157,26 @@ class Installer(INIManager):
             filename += '_online'
 
         return '%s.paf.exe' % filename
+
+    def optional_component_directories(self):
+        """
+        Get a list of directories in the optional component. Paths are relative
+        to the base of the package (package.path()) and are in Windows form.
+        """
+        if self.ini.OptionalComponents.OptionalComponents != 'true':
+            return []
+        else:
+            return ini_list_from_numbered(self.ini, 'OptionalComponents', 'OptionalDirectory%i')
+
+    def optional_component_files(self):
+        """
+        Get a list of files in the optional component. Paths are relative to
+        the base of the package (package.path()) and are in Windows form.
+        """
+        if self.ini.OptionalComponents.OptionalComponents != 'true':
+            return []
+        else:
+            return ini_list_from_numbered(self.ini, 'OptionalComponents', 'OptionalFile%i')
 
 
 class CheckRunning(SectionValidator):

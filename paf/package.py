@@ -3,7 +3,7 @@
 from os.path import exists, isdir, isfile, join, abspath
 import os
 import config
-from utils import path_insensitive, _
+from utils import path_insensitive, path_local, _
 from languages import LANG
 from shutil import copy2 as copy
 import paf
@@ -293,6 +293,38 @@ class Package(object):
                 return '%s.%s' % (eula_path, extension)
 
         return None
+
+    def installed_size(self):
+        """
+        Get the installed size of a package based on the current directory
+        contents. Returns (size without optional component, size with optional
+        component) in bytes. For packages with no optional component, these
+        figures will naturally be the same.
+        """
+
+        size_with_optional = 0
+        size_without_optional = 0
+        optional_dirs = [self.path(path_local(p)) for p in self.installer.optional_component_directories()]
+        optional_files = [self.path(path_local(p)) for p in self.installer.optional_component_files()]
+        data_dir = self.path('Data')
+        for path, dirnames, filenames in os.walk(self.path()):
+            dir_optional = any(path == dir or path.startswith(dir + os.path.sep) for dir in optional_dirs)
+            # Optional components can include stuff in Data, but for the rest
+            # Data is excluded.  So bear that in mind when making calculations.
+            in_data = path == data_dir or path.startswith(data_dir + os.path.sep)
+            for _f in filenames:
+                file_name = os.path.join(path, _f)
+                file_size = os.path.getsize(file_name)
+                if dir_optional or file_name in optional_files:
+                    # Component: no increase when not installed, increase
+                    # regardless of whether in Data when installed.
+                    size_with_optional += file_size
+                elif not in_data:
+                    # Main portion: always installed, but Data not included
+                    size_without_optional += file_size
+                    size_with_optional += file_size
+
+        return size_without_optional, size_with_optional
 
 
 def create_package(path, create_if_not_exist=False, require_empty=True):
