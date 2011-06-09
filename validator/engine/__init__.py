@@ -84,8 +84,14 @@ class INIManager(object):
         iniw.close()
 
     def delete(self):
-        """Deletes the INI file; for use when it's empty."""
-        remove(self.path())
+        """
+        Deletes the INI file; for use when it's empty.
+        Does nothing if the file doesn't exist.
+        """
+
+        path = self.path_abs()
+        if isfile(path):
+            remove(path)
 
     def validate(self):
         """
