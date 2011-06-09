@@ -13,7 +13,7 @@ def assert_valid_ini(func):
     """A decorator to ensure the INI file is set up."""
     @wraps(func)
     def decorate(self, *args, **kwargs):
-        if not (self.path() and self.ini):
+        if not self.path() or self.ini is None:
             # Naturally though this should never happen.
             raise PAFException(LANG.GENERAL.PACKAGE_NOT_INITIALISED)
 
