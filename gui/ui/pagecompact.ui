@@ -28,51 +28,51 @@
      </property>
      <layout class="QFormLayout" name="formLayout_3">
       <item row="0" column="0">
-       <widget class="QLabel" name="filesexcluded_label">
+       <widget class="QLabel" name="files_excluded_label">
         <property name="text">
          <string>&amp;Files to exclude:</string>
         </property>
         <property name="buddy">
-         <cstring>filesexcluded</cstring>
+         <cstring>files_excluded</cstring>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QLineEdit" name="filesexcluded">
+       <widget class="QLineEdit" name="files_excluded">
         <property name="toolTip">
          <string>&lt;p&gt;Enter a pipe-separated list of filenames to exclude from compression.  Wildcards are not accepted.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt; &lt;code&gt;msvcm90.dll|msvcp90.dll|mscvr90.dll&lt;/code&gt;&lt;/p&gt;</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="additionalextensionsexcluded_label">
+       <widget class="QLabel" name="additional_extensions_excluded_label">
         <property name="text">
          <string>Additional extensions &amp;excluded:</string>
         </property>
         <property name="buddy">
-         <cstring>additionalextensionsexcluded</cstring>
+         <cstring>additional_extensions_excluded</cstring>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="additionalextensionsexcluded">
+       <widget class="QLineEdit" name="additional_extensions_excluded">
         <property name="toolTip">
          <string>&lt;p&gt;Enter a pipe-separated list of file extensions to exclude from compression.  Wildcards are not accepted.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt; &lt;code&gt;pyd|irc&lt;/code&gt;&lt;/p&gt;</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="additionalextensionsincluded_label">
+       <widget class="QLabel" name="additional_extensions_included_label">
         <property name="text">
          <string>Additional extensions &amp;included:</string>
         </property>
         <property name="buddy">
-         <cstring>additionalextensionsincluded</cstring>
+         <cstring>additional_extensions_included</cstring>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLineEdit" name="additionalextensionsincluded">
+       <widget class="QLineEdit" name="additional_extensions_included">
         <property name="toolTip">
          <string>&lt;p&gt;Enter a pipe-separated list of additional file extensions to compress.  Wildcards are not accepted.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt; &lt;code&gt;example|beta&lt;/code&gt;&lt;/p&gt;</string>
         </property>
