@@ -28,10 +28,11 @@ class PageStart(WindowPage, Ui_PageStart):
         something without being overly hacky.
         """
 
-        from ..frontend import pages
+        from . import pages
         valid = paf.valid_package(string)
-        for p in pages[1:-2]:  # Don't disable Start, Options or About
-            getattr(self.window, 'nav_%s' % p).setEnabled(valid)
+        for p in pages:
+            if p not in ('start', 'options', 'about'):
+                getattr(self.window, 'nav_%s' % p).setEnabled(valid)
 
     @QtCore.Slot()
     def on_open_browse_clicked(self):

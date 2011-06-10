@@ -1,11 +1,7 @@
 from PyQt4 import QtCore, QtGui
 from .ui import Ui_MainWindow
-from pages import (PageStart, PageDetails, PageLauncher, PageCompact, PageTest,
-        PagePublish, PageOptions, PageAbout)
+from pages import pages
 import config
-
-
-pages = ('start', 'details', 'launcher', 'compact', 'test', 'publish', 'options', 'about')
 
 
 class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
@@ -13,15 +9,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
 
-        # Added to self.pages in WindowPage.__init__
-        self.page_start = PageStart(self.pages, self)
-        self.page_details = PageDetails(self.pages, self)
-        self.page_launcher = PageLauncher(self.pages, self)
-        self.page_compact = PageCompact(self.pages, self)
-        self.page_test = PageTest(self.pages, self)
-        self.page_publish = PagePublish(self.pages, self)
-        self.page_options = PageOptions(self.pages, self)
-        self.page_about = PageAbout(self.pages, self)
+        for name, cls in pages.iteritems():
+            setattr(self, 'page_' + name, cls(self.pages, self))
 
         self.page_start.open.setFocus()
         self.page_start.on_open_textChanged(self.page_start.open.text())
@@ -41,7 +30,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             self.current_nav.setChecked(False)
         self.current_nav = getattr(self, 'nav_%s' % name)
         self.current_page = getattr(self, 'page_%s' % name)
-        self.pages.setCurrentIndex(pages.index(name))
+        self.pages.setCurrentWidget(self.current_page)
         self.current_nav.setChecked(True)
         self.current_page.enter()
 
@@ -50,34 +39,6 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.current_page.leave(True)
         config.settings.Main.Package = self.page_start.open.text()
 
-    @QtCore.Slot()
-    def on_nav_start_clicked(self):
-        self.set_page('start')
-
-    @QtCore.Slot()
-    def on_nav_details_clicked(self):
-        self.set_page('details')
-
-    @QtCore.Slot()
-    def on_nav_launcher_clicked(self):
-        self.set_page('launcher')
-
-    @QtCore.Slot()
-    def on_nav_compact_clicked(self):
-        self.set_page('compact')
-
-    @QtCore.Slot()
-    def on_nav_test_clicked(self):
-        self.set_page('test')
-
-    @QtCore.Slot()
-    def on_nav_publish_clicked(self):
-        self.set_page('publish')
-
-    @QtCore.Slot()
-    def on_nav_options_clicked(self):
-        self.set_page('options')
-
-    @QtCore.Slot()
-    def on_nav_about_clicked(self):
-        self.set_page('about')
+for page in pages:
+    fn_name = 'on_nav_%s_clicked' % page
+    setattr(MainWindow, fn_name, QtCore.Slot(name=fn_name)((lambda page: lambda self: self.set_page(page))(page)))

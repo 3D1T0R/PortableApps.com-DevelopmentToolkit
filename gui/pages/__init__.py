@@ -9,5 +9,9 @@ from .options import PageOptions
 from .about import PageAbout
 
 
-__all__ = ['WindowPage', 'PageStart', 'PageDetails', 'PageLauncher',
+__all__ = ['pages', 'WindowPage', 'PageStart', 'PageDetails', 'PageLauncher',
         'PageCompact', 'PageTest', 'PagePublish', 'PageOptions', 'PageAbout']
+
+pages = dict(start=PageStart, details=PageDetails, launcher=PageLauncher,
+        compact=PageCompact, test=PageTest, publish=PagePublish,
+        options=PageOptions, about=PageAbout)
