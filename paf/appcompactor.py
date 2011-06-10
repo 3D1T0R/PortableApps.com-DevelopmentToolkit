@@ -14,6 +14,9 @@ from validator.engine import INIManager, SectionValidator, FileMeta, SectionMeta
 __all__ = ['AppCompactor']
 
 
+DEFAULT_CUTOFF = 4096
+
+
 class AppCompactor(INIManager):
     "The manager for the AppCompactor data (appcompactor.ini)."
 
@@ -87,6 +90,12 @@ class AppCompactor(INIManager):
         if self.additional_extensions_excluded == ['']:
             del self.additional_extensions_excluded[0]
 
+        try:
+            self.compression_file_size_cut_off = int(get_ini_str(self.ini,
+                'PortableApps.comAppCompactor', 'CompressionFileSizeCutOff', DEFAULT_CUTOFF))
+        except ValueError:
+            self.compression_file_size_cut_off = DEFAULT_CUTOFF
+
     def save(self):
         # TODO: rethink slightly the INIManager.fix() method which is more what
         # some of this should be. Perhaps def save(self, fix=True)?
@@ -104,6 +113,11 @@ class AppCompactor(INIManager):
             self.ini['PortableApps.comAppCompactor'].AdditionalExtensionsExcluded = '|'.join(self.additional_extensions_excluded)
         elif 'AdditionalExtensionsExcluded' in self.ini['PortableApps.comAppCompactor']:
             del self.ini['PortableApps.comAppCompactor'].AdditionalExtensionsExcluded
+
+        if self.compression_file_size_cut_off != DEFAULT_CUTOFF:
+            self.ini['PortableApps.comAppCompactor'].CompressionFileSizeCutOff = self.compression_file_size_cut_off
+        elif 'CompressionFileSizeCutOff' in self.ini['PortableApps.comAppCompactor']:
+            del self.ini['PortableApps.comAppCompactor'].CompressionFileSizeCutOff
 
         if 'PortableApps.comAppCompactor' in self.ini and len(self.ini['PortableApps.comAppCompactor']) == 0:
             del self.ini['PortableApps.comAppCompactor']

@@ -11,6 +11,7 @@ class PageCompact(WindowPage, Ui_PageCompact):
         self.files_excluded.setText('|'.join(self.appcompactor.files_excluded))
         self.additional_extensions_included.setText('|'.join(self.appcompactor.additional_extensions_included))
         self.additional_extensions_excluded.setText('|'.join(self.appcompactor.additional_extensions_excluded))
+        self.compression_file_size_cut_off.setValue(self.appcompactor.compression_file_size_cut_off)
 
     def leave(self, closing=True):
         self.save()
@@ -34,5 +35,7 @@ class PageCompact(WindowPage, Ui_PageCompact):
         self.appcompactor.additional_extensions_excluded = self.additional_extensions_excluded.text().split('|')
         if self.appcompactor.additional_extensions_excluded == ['']:
             del self.appcompactor.additional_extensions_excluded[0]
+
+        self.appcompactor.compression_file_size_cut_off = self.compression_file_size_cut_off.value()
 
         self.appcompactor.save()

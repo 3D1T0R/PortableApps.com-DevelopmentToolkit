@@ -14,7 +14,7 @@
    <item>
     <widget class="QCommandLinkButton" name="start_button">
      <property name="text">
-      <string>Start compacting app</string>
+      <string>Start &amp;compacting app</string>
      </property>
     </widget>
    </item>
@@ -26,7 +26,7 @@
      <property name="title">
       <string>Advanced configuration</string>
      </property>
-     <layout class="QFormLayout" name="formLayout_3">
+     <layout class="QGridLayout" name="advanced_layout" columnstretch="0,1,1,0,0,2">
       <item row="0" column="0">
        <widget class="QLabel" name="files_excluded_label">
         <property name="text">
@@ -37,7 +37,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
+      <item row="0" column="1" colspan="2">
        <widget class="QLineEdit" name="files_excluded">
         <property name="toolTip">
          <string>&lt;p&gt;Enter a pipe-separated list of filenames to exclude from compression.  Wildcards are not accepted.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt; &lt;code&gt;msvcm90.dll|msvcp90.dll|mscvr90.dll&lt;/code&gt;&lt;/p&gt;</string>
@@ -45,6 +45,52 @@
        </widget>
       </item>
       <item row="1" column="0">
+       <widget class="QLabel" name="compression_file_size_cut_off_label">
+        <property name="text">
+         <string>&amp;Size cutoff:</string>
+        </property>
+        <property name="buddy">
+         <cstring>compression_file_size_cut_off</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="compression_file_size_cut_off">
+        <property name="toolTip">
+         <string>&lt;p&gt;Enter the minimum file size in bytes for files which will be compressed.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Default:&lt;/strong&gt; 4096 (files 4 KB and under will be ignored.)&lt;/p&gt;</string>
+        </property>
+        <property name="maximum">
+         <number>1073741824</number>
+        </property>
+        <property name="value">
+         <number>4096</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="compression_file_size_cut_off_unit_label">
+        <property name="text">
+         <string>bytes</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3" rowspan="2">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="4">
        <widget class="QLabel" name="additional_extensions_excluded_label">
         <property name="text">
          <string>Additional extensions &amp;excluded:</string>
@@ -54,14 +100,14 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="0" column="5">
        <widget class="QLineEdit" name="additional_extensions_excluded">
         <property name="toolTip">
          <string>&lt;p&gt;Enter a pipe-separated list of file extensions to exclude from compression.  Wildcards are not accepted.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt; &lt;code&gt;pyd|irc&lt;/code&gt;&lt;/p&gt;</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="1" column="4">
        <widget class="QLabel" name="additional_extensions_included_label">
         <property name="text">
          <string>Additional extensions &amp;included:</string>
@@ -71,7 +117,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="1" column="5">
        <widget class="QLineEdit" name="additional_extensions_included">
         <property name="toolTip">
          <string>&lt;p&gt;Enter a pipe-separated list of additional file extensions to compress.  Wildcards are not accepted.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt; &lt;code&gt;example|beta&lt;/code&gt;&lt;/p&gt;</string>
