@@ -106,7 +106,7 @@ class Installer(INIManager):
         if isfile(full_target):
             remove(full_target)
 
-        proc = Popen([installer_path, path_windows(self.package.path())])
+        proc = Popen([installer_path, path_windows(self.package.path(), True)])
         if block:
             proc.wait()
             return isfile(full_target)

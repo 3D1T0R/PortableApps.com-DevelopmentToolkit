@@ -53,7 +53,7 @@ class Launcher(object):
         if isfile(full_target):
             remove(full_target)
 
-        proc = Popen([generator_path, path_windows(self.package.path())])
+        proc = Popen([generator_path, path_windows(self.package.path(), True)])
         if block:
             proc.wait()
             return isfile(full_target)

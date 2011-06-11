@@ -54,7 +54,7 @@ class AppCompactor(INIManager):
         if not appcompactor_path or not os.path.isfile(appcompactor_path):
             return False
 
-        proc = Popen([appcompactor_path, path_windows(self.package.path())])
+        proc = Popen([appcompactor_path, path_windows(self.package.path(), True)])
         if block:
             proc.wait()
 
