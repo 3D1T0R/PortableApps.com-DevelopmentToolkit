@@ -44,7 +44,7 @@ class Launcher(object):
             # Hopeless case, the Generator needs an AppID to work on.
             raise PAFException("Can't build Launcher, AppID is not set.")
 
-        generator_path = config.get('Main', 'LauncherGeneratorPath')
+        generator_path = config.get('Main', 'LauncherPath')
         if not generator_path or not isfile(generator_path):
             return False
 
