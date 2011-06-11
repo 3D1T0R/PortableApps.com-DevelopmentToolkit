@@ -43,16 +43,18 @@ class PagePublish(WindowPage, Ui_PagePublish):
                 self.window.page_test.go_to_tab('validate')
                 return
 
-        installer_path = self.window.page_options.find_installer_path()
+        if self.window.page_options.find_installer_path():
+            # If not found, user told about it in find_installer_path
 
-        if installer_path is None:
-            return  # User told about it in find_installer_path
+            self._installer_thread = InstallerThread(self)
+            self._installer_thread.update_contents_async.connect(self.update_contents_async)
+            self._installer_thread.start()
 
-        package.installer.build()  # Can use returned bool if needed
-        self.update_contents_async()
-        # If it didn't build, they got an error from the Installer wizard,
-        # so no need to complain. When the Installer is integrated in here,
-        # we will need to handle it in here.
+            #package.installer.build()  # Can use returned bool if needed
+            #self.update_contents_async()
+            ## If it didn't build, they got an error from the Installer wizard,
+            ## so no need to complain. When the Installer is integrated in here,
+            ## we will need to handle it in here.
 
     @assert_valid_package_path
     def update_contents_async(self):
@@ -84,19 +86,31 @@ class StatUpdaterThread(QtCore.QThread):
 
     def run(self):
         filename = self.page.installer_path
-        f = open(filename, 'rb')
-        md5 = hashlib.md5()
-        size = 0  # Doing it this way to save a file size stat
-        while True:
-            data = f.read(16384)  # Multiple of 128; somewhat arbitrary.
-            size += len(data)
-            if len(data) == 0:
-                break
-            md5.update(data)
-        self.update_stats.emit({'md5': md5.hexdigest(), 'size': size_string_megabytes(size)})
-        minsize, maxsize = [size_string_megabytes(s) for s in self.page.window.package.installed_size()]
-        if minsize == maxsize:
-            size_installed = minsize
+        if os.path.isfile(filename):
+            f = open(filename, 'rb')
+            md5 = hashlib.md5()
+            size = 0  # Doing it this way to save a file size stat
+            while True:
+                data = f.read(16384)  # Multiple of 128; somewhat arbitrary.
+                size += len(data)
+                if len(data) == 0:
+                    break
+                md5.update(data)
+            self.update_stats.emit({'md5': md5.hexdigest(), 'size': size_string_megabytes(size)})
         else:
-            size_installed = '%s-%s' % (minsize, maxsize)
-        self.update_stats.emit({'size_installed': size_installed})
+            self.update_stats.emit({'md5': '', 'size': ''})
+
+        size = [size_string_megabytes(s) for s in self.page.window.package.installed_size()]
+        self.update_stats.emit({'size_installed': size[0] if size[0] == size[1] else '%s-%s' % size})
+
+
+class InstallerThread(QtCore.QThread):
+    update_contents_async = QtCore.Signal()
+
+    def __init__(self, page, *args, **kwargs):
+        self.page = page
+        super(InstallerThread, self).__init__(*args, **kwargs)
+
+    def run(self):
+        self.page.window.package.installer.build()
+        self.update_contents_async.emit()
