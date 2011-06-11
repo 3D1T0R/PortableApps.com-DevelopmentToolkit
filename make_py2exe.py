@@ -8,7 +8,7 @@ import sys
 import shutil
 import glob
 from collections import defaultdict
-from paf import create_package
+from paf import create_package, AppCompactor
 from config import ROOT_DIR
 
 
@@ -170,7 +170,8 @@ def do_all():
         print "(Please run and configure this before trying to build it.)"
         return
     print "Scrunching it up..."
-    if not package.appcompactor.compact():
+    appcompactor = AppCompactor(package)
+    if not appcompactor.compact():
         print "Couldn't find PortableApps.com AppCompactor!",
         print "(Please run and configure this before trying to build it.)"
         return
