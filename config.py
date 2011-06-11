@@ -11,7 +11,7 @@ ROOT_DIR = os.path.abspath(os.path.dirname(unicode(sys.executable
 settings = None
 
 try:
-    dirname = os.path.join(os.environ['PAL:DataDir'], 'AppInfo')
+    dirname = os.path.join(os.environ['PAL:AppDir'], 'AppInfo')
 except KeyError:
     dirname = os.path.join(ROOT_DIR, 'resources')
 with open(os.path.join(dirname, 'appinfo.ini')) as fp:
