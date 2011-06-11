@@ -5,12 +5,12 @@
 from os import remove
 from os.path import isfile, join
 import sys
-from subprocess import Popen, PIPE
+from subprocess import Popen
 import re
 from orderedset import OrderedSet
 from languages import LANG
 import config
-from utils import win32, path_local, ini_list_from_numbered
+from utils import path_windows, ini_list_from_numbered
 from validator.engine.factory import bool_check
 from validator.engine import (INIManager, SectionValidator, FileMeta, SectionMeta,
         ValidatorError, ValidatorWarning)
@@ -83,37 +83,35 @@ class Installer(INIManager):
         else:
             return join('App', 'AppInfo', 'installer.ini')
 
-    def build(self):
+    def build(self, block=True):
         """
         Builds the PortableApps.com Installer.
 
-        Raises an ``OSError`` if run on Linux/OS X and Wine is not installed.
+        Raises an ``OSError`` if run on Linux/OS X and Wine is not installed or
+        PortableApps.comInstaller.exe does not have mode +x.
 
-        Returns True on success, or False if either the PortableApps.com
-        Installer was not found or the installer fails to build.
+        Returns True on success, or False if either the
+        PortableApps.com Installer was not found or the installer fails to
+        build. If the parameter ``block`` is set to ``False``, this will be an
+        asynchronous call and the ``subprocess.Popen`` process handle will be
+        returned.
         """
 
         installer_path = config.get('Main', 'InstallerPath')
         if not installer_path or not isfile(installer_path):
             return False
 
-        package_path = self.package.path()
-        # On Linux we can execute it with a Linux path, as Wine will take care
-        # of that, but it still expects a Windows path out the other side. Use
-        # winepath to convert it to the right Windows path.
-        if not win32:
-            # Blocking call; throws an OSError if winepath isn't found
-            package_path = Popen(['winepath', '-w', package_path],
-                    stdout=PIPE).communicate()[0].strip()
-
         full_target = self.package.path('..', self.filename)
         # Make sure it's not there from a previous build.
         if isfile(full_target):
             remove(full_target)
 
-        Popen([installer_path, package_path]).wait()
-
-        return isfile(full_target)
+        proc = Popen([installer_path, path_windows(self.package.path())])
+        if block:
+            proc.wait()
+            return isfile(full_target)
+        else:
+            return proc
 
     @property
     def filename(self):

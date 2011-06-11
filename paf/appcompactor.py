@@ -4,10 +4,10 @@
 
 import os
 import sys
-from subprocess import Popen, PIPE
+from subprocess import Popen
 from orderedset import OrderedSet
 import config
-from utils import win32, get_ini_str
+from utils import path_windows, get_ini_str
 from validator.engine import INIManager, SectionValidator, FileMeta, SectionMeta, ValidatorError, StringMapping
 
 
@@ -54,16 +54,7 @@ class AppCompactor(INIManager):
         if not appcompactor_path or not os.path.isfile(appcompactor_path):
             return False
 
-        package_path = self.package.path()
-        # On Linux we can execute it with a Linux path, as Wine will take care
-        # of that, but it still expects a Windows path out the other side. Use
-        # winepath to convert it to the right Windows path.
-        if not win32:
-            # Blocking call; throws an OSError if winepath isn't found
-            package_path = Popen(['winepath', '-w', package_path],
-                    stdout=PIPE).communicate()[0].strip()
-
-        proc = Popen([appcompactor_path, package_path])
+        proc = Popen([appcompactor_path, path_windows(self.package.path())])
         if block:
             proc.wait()
 
