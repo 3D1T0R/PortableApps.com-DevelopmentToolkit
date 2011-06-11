@@ -10,17 +10,30 @@
     <height>445</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1">
+   <item>
+    <widget class="QCommandLinkButton" name="build_launcher">
+     <property name="text">
+      <string>&amp;Build launcher</string>
+     </property>
+    </widget>
+   </item>
    <item>
     <widget class="QLabel" name="label_6">
      <property name="text">
-      <string>&lt;p&gt;A really advanced sort of editor and manager for PortableApps.com Launcher configuration will go here.&lt;/p&gt;&lt;p&gt;Unfortunately, it's going to be &lt;em&gt;so&lt;/em&gt; powerful that it's not ready yet.&lt;/p&gt;</string>
+      <string>&lt;p&gt;A really advanced sort of editor and manager for PortableApps.com Launcher configuration will go here.&lt;/p&gt;&lt;p&gt;Unfortunately, it's going to be &lt;em&gt;so&lt;/em&gt; powerful that it's not ready yet.&lt;/p&gt;&lt;p&gt;In the mean time, refer to the &lt;a href=&quot;http://portableapps.com/manuals/PortableApps.comLauncher/&quot;&gt;PortableApps.com Launcher manual&lt;/a&gt; for information on what to do.&lt;/p&gt;</string>
      </property>
      <property name="textFormat">
       <enum>Qt::AutoText</enum>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
+     </property>
+     <property name="openExternalLinks">
+      <bool>true</bool>
+     </property>
+     <property name="textInteractionFlags">
+      <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse</set>
      </property>
     </widget>
    </item>
