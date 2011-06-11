@@ -35,7 +35,6 @@ def _options_path_finder(thing):
                         _('PortableApps.com Development Toolkit'),
                         _('Unable to locate the PortableApps.com %s.' % thing),
                         QtGui.QMessageBox.Ok)
-                self.statusBar.clearMessage()
                 return
         return path
     wrapped.func_name = wrapped.__name__ = 'find_%s_path' % thing.lower()
