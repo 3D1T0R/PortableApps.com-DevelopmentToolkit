@@ -54,6 +54,11 @@ class PageStart(WindowPage, Ui_PageStart):
     def on_create_button_clicked(self):
         """Create a package."""
         package = self.create.text()
+        if not package:
+            # Nothing in the field, get a path from the user first
+            self.on_create_browse_clicked()
+            package = self.create.text()
+
         if package:
             package = path_local(package)
             try:
