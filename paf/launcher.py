@@ -2,8 +2,7 @@
 Package details pertaining to the launcher.
 """
 
-from os import remove
-from os.path import isfile
+import os
 from subprocess import Popen
 import config
 from utils import path_windows
@@ -24,6 +23,9 @@ class Launcher(object):
         """Simple constructor; takes a Package."""
         self.package = package
 
+    def path(self):
+        return os.path.join('App', 'AppInfo', 'Launcher', '%s.ini' % self.package.ini)
+
     def build(self, block=True):
         """
         Builds a launcher with the PortableApps.com Launcher Generator.
@@ -41,21 +43,24 @@ class Launcher(object):
         """
 
         if self.package.appid is None:
-            # Hopeless case, the Generator needs an AppID to work on.
+            # It's a hopeless case, as you can see
+            # And in your place I would not be
+            # But don't blame me, I'm sorry to be
+            # Of your pleasure a diminutioner.
             raise PAFException("Can't build Launcher, AppID is not set.")
 
         generator_path = config.get('Main', 'LauncherPath')
-        if not generator_path or not isfile(generator_path):
+        if not generator_path or not os.path.isfile(generator_path):
             return False
 
         full_target = self.package.path('%s.exe' % self.package.appid)
         # Make sure it's not there from a previous build.
-        if isfile(full_target):
-            remove(full_target)
+        if os.path.isfile(full_target):
+            os.remove(full_target)
 
         proc = Popen([generator_path, path_windows(self.package.path(), True)])
         if block:
             proc.wait()
-            return isfile(full_target)
+            return os.path.isfile(full_target)
         else:
             return proc
