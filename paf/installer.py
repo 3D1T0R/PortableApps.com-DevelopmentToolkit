@@ -164,7 +164,7 @@ class Installer(INIManager):
         if self.ini.OptionalComponents.OptionalComponents != 'true':
             return []
         else:
-            return ini_list_from_numbered(self.ini, 'OptionalComponents', 'OptionalDirectory%i')
+            return ini_list_from_numbered(self.ini.OptionalComponents, 'OptionalDirectory%i')
 
     def optional_component_files(self):
         """
@@ -174,7 +174,7 @@ class Installer(INIManager):
         if self.ini.OptionalComponents.OptionalComponents != 'true':
             return []
         else:
-            return ini_list_from_numbered(self.ini, 'OptionalComponents', 'OptionalFile%i')
+            return ini_list_from_numbered(self.ini.OptionalComponents, 'OptionalFile%i')
 
 
 class CheckRunning(SectionValidator):
