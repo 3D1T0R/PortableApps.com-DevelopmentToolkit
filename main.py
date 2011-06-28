@@ -15,9 +15,11 @@ import warn
 from gui import MainWindow
 
 
-def main(page=None):
+def main(path=None, page=None):
     """Run the normal interface."""
     app = QtGui.QApplication(sys.argv)
+    if path is not None:
+        config.settings.Main.Package = path
     window = MainWindow()
     if page is not None:
         window.set_page(page)
@@ -37,10 +39,13 @@ def prepare_quit(window):
     config.save()
 
 
-def cli_help():
+def cli_help(*args):
     """Help for command-line usage."""
     print "PortableApps.com Development Toolkit"
     print "Launch without command line arguments to run normally."
+    print
+    print 'Open with a given package loaded:'
+    print '  %s <package>' % sys.argv[0]
     print
     print 'Validate a package (GUI):'
     print '  %s validate <package>' % sys.argv[0]
@@ -50,15 +55,15 @@ def cli_help():
     return 0
 
 
-def validate_gui():
+def validate_gui(command, path):
     """Run the validator (GUI version)."""
-    return main('test')
+    return main(path, 'test')
 
 
-def validate_cli():
+def validate_cli(command, path):
     """Just run the validator (command-line version)."""
     from cli.validate import validate
-    return validate(sys.argv[2])
+    return validate(path)
 
 
 def select_action():
@@ -76,4 +81,4 @@ def select_action():
         return main
 
 if __name__ == "__main__":
-    sys.exit(select_action()())
+    sys.exit(select_action()(*sys.argv[1:]))
