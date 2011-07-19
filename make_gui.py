@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 import sys
 import subprocess
+import pyqt4pysideimporter
+pyqt4pysideimporter.autoselect()
+from gui.pages import pages
 
 
 def main():
-    # TODO import from somewhere
-    pages = ('start', 'details', 'launcher', 'compact', 'test', 'publish',
-            'options', 'about')
-
     uic_files = ['frontend'] + ['page' + s for s in pages]
 
     tools = Tools.create_from_argv(sys.argv)
