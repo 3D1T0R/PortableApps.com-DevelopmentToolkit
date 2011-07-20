@@ -101,6 +101,17 @@ class PySideTools(Tools):
     uic = 'pyside-uic'
     pymod = 'PySide'
 
+    def compile_ui(self, from_, to):
+        """Compile a Qt UI file to a Python module."""
+        from pysideuic import compileUi
+        with open(to, 'w') as out:
+            try:
+                compileUi(from_, out)
+            except:
+                import traceback
+                traceback.print_exc()
+        self._common(to)
+
 
 class PyQt4Tools(Tools):
     rcc = 'pyrcc4'
