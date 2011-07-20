@@ -1,25 +1,68 @@
 #!/usr/bin/env python
 import sys
+import os
 import subprocess
+import time
 import pyqt4pysideimporter
 pyqt4pysideimporter.autoselect()
 from gui.pages import pages
 
 
+def calc_mtimes(filenames):
+    return dict((f, os.stat(f).st_mtime) for f in filenames)
+
+
+def write_polling(actions):
+    print 'Processing all...'
+    write(actions)
+    mtimes = calc_mtimes(actions)
+    while True:
+        changed = None
+        for sfile, mtime in mtimes.iteritems():
+            if os.stat(sfile).st_mtime != mtime:
+                changed = sfile
+                break
+        if changed:
+            print 'Change detected to %s, processing...' % changed
+            write(actions, changed)
+            mtimes = calc_mtimes(actions)
+
+        time.sleep(0.5)
+
+def write(actions, item=None):
+    if item is None:
+        for item in actions:
+            write(actions, item)
+    else:
+        action = actions[item]
+        if isinstance(action, tuple):
+            action[0](item, *action[1:])
+        else:
+            action(item)
+
+
+def update_uic(from_, to):
+    tools.compile_ui(from_, to)
+
+
+def update_qrc(from_, to):
+    tools.compile_rc(from_, to)
+
+
 def main():
     uic_files = ['frontend'] + ['page' + s for s in pages]
+    actions = {}
+    actions.update(('gui/ui/%s.ui' % f, (tools.compile_ui, 'gui/ui/%s.py' % f)) for f in uic_files)
+    actions['resources/resources.qrc'] = tools.compile_rc, 'gui/ui/resources_rc.py'
 
-    tools = Tools.create_from_argv(sys.argv)
-    if tools == None:
+    if tools is None:
         print 'Invalid build target, leave blank or specify "pyside" or "pyqt4".'
         sys.exit(1)
 
-    tools.compile_rc('resources/resources.qrc', 'gui/ui/resources_rc.py')
-
-    for f in uic_files:
-        tools.compile_ui('gui/ui/%s.ui' % f, 'gui/ui/%s.py' % f)
-
-    tools.finish()
+    try:
+        write_polling(actions)
+    except KeyboardInterrupt:
+        print  # Get a blank line
 
 
 def do(*args):
@@ -27,30 +70,20 @@ def do(*args):
 
 
 class Tools(object):
-    def __init__(self):
-        # Process these things all in one shot at the end
-        self.files_rc = []
-        self.files_ui = []
-
     def compile_rc(self, from_, to):
         """Compile an QRC file to a Python module."""
         do(self.rcc, from_, '-o', to)
-        self.files_rc.append(to)
+        self._common(to)
 
     def compile_ui(self, from_, to):
         """Compile a Qt UI file to a Python module."""
         do(self.uic, from_, '-o', to)
-        self.files_ui.append(to)
+        self._common(to)
 
-    def finish(self):
-        """Update module references and finish processing all resources."""
-
-        # Scrap the timestamp from RCC files as it clutters commits.
-        do('sed', '-i', r'N; s/^# Created: .*\n//', *self.files_rc + self.files_ui)
-
-        # Change PySide imports to use PyQt4 (due to use of import redirector)
+    def _common(self, to):
+        do('sed', '-i', r'N; s/^# Created: .*\n//', to)
         if self.pymod != 'PyQt4':
-            do('sed', '-i', 's/from %s import /from PyQt4 import /' % self.pymod, *self.files_rc + self.files_ui)
+            do('sed', '-i', 's/from %s import /from PyQt4 import /' % self.pymod, to)
 
     @staticmethod
     def create_from_argv(argv, *args, **kwargs):
@@ -75,4 +108,5 @@ class PyQt4Tools(Tools):
 
 
 if __name__ == '__main__':
+    tools = Tools.create_from_argv(sys.argv)
     main()
