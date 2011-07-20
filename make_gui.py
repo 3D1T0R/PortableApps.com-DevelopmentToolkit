@@ -3,9 +3,10 @@ import sys
 import os
 import subprocess
 import time
-import pyqt4pysideimporter
-pyqt4pysideimporter.autoselect()
-from gui.pages import pages
+
+
+pages = ('start', 'details', 'launcher', 'compact', 'test', 'publish',
+        'options', 'about')
 
 
 def calc_mtimes(filenames):
