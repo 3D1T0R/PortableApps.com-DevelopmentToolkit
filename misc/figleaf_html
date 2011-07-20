@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+cd `dirname $( dirname $0 )`
+figleaf2html -x .figleafignore -d figleaf-report

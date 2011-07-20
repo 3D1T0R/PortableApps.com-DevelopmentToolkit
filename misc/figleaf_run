@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+cd `dirname $( dirname $0 )`
+echo pwd=$PWD
+figleaf -i main.py

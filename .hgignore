@@ -6,3 +6,5 @@ settings.ini
 build/
 dist/
 dist-paf/
+.figleaf
+figleaf-report/
