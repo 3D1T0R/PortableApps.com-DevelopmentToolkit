@@ -78,7 +78,12 @@ class Tools(object):
 
     def compile_ui(self, from_, to):
         """Compile a Qt UI file to a Python module."""
-        do(self.uic, from_, '-o', to)
+        with open(to, 'w') as out:
+            try:
+                self.uic.compileUi(from_, out)
+            except:
+                import traceback
+                traceback.print_exc()
         self._common(to)
 
     def _common(self, to):
@@ -91,31 +96,20 @@ class Tools(object):
         if len(argv) == 1 or argv[1].lower() == 'pyside':
             return PySideTools(*args, **kwargs)
         elif argv[1].lower() == 'pyqt4':
-            return PySideTools(*args, **kwargs)
+            return PyQt4Tools(*args, **kwargs)
         else:
             return None
 
 
 class PySideTools(Tools):
     rcc = 'pyside-rcc'
-    uic = 'pyside-uic'
+    import pysideuic as uic
     pymod = 'PySide'
-
-    def compile_ui(self, from_, to):
-        """Compile a Qt UI file to a Python module."""
-        from pysideuic import compileUi
-        with open(to, 'w') as out:
-            try:
-                compileUi(from_, out)
-            except:
-                import traceback
-                traceback.print_exc()
-        self._common(to)
 
 
 class PyQt4Tools(Tools):
     rcc = 'pyrcc4'
-    uic = 'pyuic4'
+    from PyQt4 import uic
     pymod = 'PyQt4'
 
 
