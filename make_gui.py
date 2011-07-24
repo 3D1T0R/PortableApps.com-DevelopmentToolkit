@@ -42,14 +42,6 @@ def write(actions, item=None):
             action(item)
 
 
-def update_uic(from_, to):
-    tools.compile_ui(from_, to)
-
-
-def update_qrc(from_, to):
-    tools.compile_rc(from_, to)
-
-
 def main():
     uic_files = ['frontend'] + ['page' + s for s in pages]
     actions = {}
