@@ -248,19 +248,26 @@ class ValidatorInfo(ValidatorItem):
     pass
 
 
-class StringMapping(object):
+class Mapping(object):
     def __init__(self, matcher, target):
         self.matcher = matcher
         self.target = target
 
+    def match(self, value):
+        raise NotImplementedError()
+
+
+class StringMapping(Mapping):
     def match(self, value):
         return self.matcher == value
 
 
-class RegExMapping(object):
-    def __init__(self, matcher, target):
-        self.matcher = matcher
-        self.target = target
-
+class RegExMapping(Mapping):
     def match(self, value):
         return re.match(self.matcher, value)
+
+
+class NumberedMapping(RegExMapping):
+    def __init__(self, matcher, target):
+        super(self, NumberedMapping).__init__(matcher, target)
+        self.matcher = re.escape(matcher).replace(r'\#', r'[0-9]\d*')
