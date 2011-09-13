@@ -24,7 +24,7 @@ class Launcher(object):
         self.package = package
 
     def path(self):
-        return os.path.join('App', 'AppInfo', 'Launcher', '%s.ini' % self.package.ini)
+        return os.path.join('App', 'AppInfo', 'Launcher', '%s.ini' % self.package.appid)
 
     def build(self, block=True):
         """
