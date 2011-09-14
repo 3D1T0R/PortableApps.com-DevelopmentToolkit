@@ -7,6 +7,7 @@ from subprocess import Popen
 import config
 from utils import path_windows
 from paf import PAFException
+from glob import glob
 
 __all__ = ('Launcher',)
 
@@ -24,7 +25,20 @@ class Launcher(object):
         self.package = package
 
     def path(self):
-        return os.path.join('App', 'AppInfo', 'Launcher', '%s.ini' % self.package.appid)
+        """Get the path to the first INI file in App\\AppInfo\\Launcher."""
+        try:
+            path = self.paths()[0]
+        except IndexError:
+            raise PAFException('Unable to find any launcher INI files in %s' %
+                    self.package.path('App', 'AppInfo', 'Launcher'))
+        return path
+
+    def paths(self):
+        """Find all launcher INI files in App\\AppInfo\\Launcher."""
+        # TODO: this doesn't really belong here. We need a LauncherManager or
+        # similar, perhaps just make this Package.launcher_paths() and have
+        # Package.launchers = {basename: Launcher()}?
+        return glob(self.package.path('App', 'AppInfo', 'Launcher', '*.ini'))
 
     def build(self, block=True):
         """
