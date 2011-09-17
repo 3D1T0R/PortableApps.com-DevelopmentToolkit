@@ -2,8 +2,8 @@
 
 import os
 import sys
-from iniparse import INIConfig, tidy
-from utils import get_ini_str
+from iniparse import tidy
+from utils import get_ini_str, iniopen
 
 ROOT_DIR = os.path.abspath(os.path.dirname(unicode(sys.executable
     if hasattr(sys, 'frozen') else __file__, sys.getfilesystemencoding())))
@@ -14,10 +14,9 @@ try:
     dirname = os.path.join(os.environ['PAL:AppDir'], 'AppInfo')
 except KeyError:
     dirname = os.path.join(ROOT_DIR, 'resources')
-with open(os.path.join(dirname, 'appinfo.ini')) as fp:
-    ini = INIConfig(fp)
-padt_version_info = ini.Version.DisplayVersion
-del dirname, ini
+padt_version_info = iniopen(os.path.join(dirname,
+        'appinfo.ini')).Version.DisplayVersion
+del dirname
 
 
 def settings_path(filename=''):
@@ -30,9 +29,9 @@ def load():
     global settings
     settings_file = settings_path('settings.ini')
     if os.path.isfile(settings_file):
-        settings = INIConfig(open(settings_file))
+        settings = iniopen(settings_file)
     else:
-        settings = INIConfig()
+        settings = iniopen()
 
 
 def save():
