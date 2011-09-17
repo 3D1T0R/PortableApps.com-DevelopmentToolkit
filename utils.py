@@ -235,10 +235,12 @@ def smartopen(name, mode='r', buffering=-1):
     return f
 
 
-def iniopen(name):
+def iniopen(name=None):
     '''
     Produces an INIConfig from the given filename, but also taking care of
     UTF-16LE decoding for UTF-16LE files.
     '''
+    if name is None:
+        return INIConfig()
     with smartopen(name) as f:
         return INIConfig(f)
