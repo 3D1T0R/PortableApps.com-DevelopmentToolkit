@@ -9,6 +9,10 @@ from paf import PAFException
 from languages import LANG
 
 
+# TODO: currently ValidatorList isn't used, but it should be useful eventually.
+# Similarly the Mapping classes aren't used.
+
+
 def assert_valid_ini(func):
     """A decorator to ensure the INI file is set up."""
     @wraps(func)
@@ -20,6 +24,70 @@ def assert_valid_ini(func):
         return func(self, *args, **kwargs)
 
     return decorate
+
+
+RegExType = type(re.compile(''))
+
+
+def regexify_numbered(inp):
+    r'''
+    Convert a string with hashes representing numbers to a safe regular
+    expression string. The string is all escaped, so no regex magic will happen
+    by mistake.
+
+    >>> regexify_numbered('FooBar#')
+    'FooBar[0-9]\\d*'
+    >>> regexify_numbered('# apples')
+    '[0-9]\\d*\\ apples'
+
+    '''
+    return re.escape(inp).replace(r'\#', r'[0-9]\d*')
+
+
+def maybe_numbered_equals(item, other):
+    '''
+    Basic string comparison of ``item`` and ``other`` but which matches a
+    number greater than zero in ``other`` to a ``#`` in ``item``.
+
+    >>> maybe_numbered_equals('Foo', 'Foo')
+    True
+    >>> maybe_numbered_equals('Foo', 'Bar')
+    False
+    >>> maybe_numbered_equals('Foo#', 'Foo')
+    False
+    >>> maybe_numbered_equals('Foo#', 'Bar3')
+    False
+    >>> maybe_numbered_equals('Foo#', 'Foo3')
+    True
+    >>> maybe_numbered_equals('Foo#', 'Foo0')
+    True
+    >>> maybe_numbered_equals('Foo#', 'Foo30')
+    True
+    >>> maybe_numbered_equals('# apples', '3 apples')
+    True
+    >>> maybe_numbered_equals('Foo#', 'Bar3')
+    False
+    >>> maybe_numbered_equals('Foo#', 'Bar3')
+    False
+    '''
+
+    if '#' in item:
+        return re.match(regexify_numbered(item), other)
+    else:
+        return item == other
+
+
+class ValidatorList(list):
+    def __contains__(self, other):
+        for item in self:
+            if isinstance(item, RegExType):
+                if item.match(other):
+                    return True
+            elif isinstance(item, basestring):
+                if maybe_numbered_equals(item, other):
+                    return True
+
+        return super(ValidatorList, self).__contains__(other)
 
 
 class INIManager(object):
@@ -270,4 +338,4 @@ class RegExMapping(Mapping):
 class NumberedMapping(RegExMapping):
     def __init__(self, matcher, target):
         super(self, NumberedMapping).__init__(matcher, target)
-        self.matcher = re.escape(matcher).replace(r'\#', r'[0-9]\d*')
+        self.matcher = regexify_numbered(matcher)
