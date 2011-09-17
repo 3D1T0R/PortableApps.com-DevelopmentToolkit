@@ -4,6 +4,8 @@ from PyQt4.QtGui import QApplication, QDesktopWidget
 import os
 import sys
 from subprocess import Popen, PIPE
+import codecs
+from iniparse import INIConfig
 
 _ = lambda x: QApplication.translate("MainWindow", x, None,
         QApplication.UnicodeUTF8)
@@ -202,3 +204,40 @@ def size_string_megabytes(size_in_bytes):
     u'4.8 MB'
     """
     return _('%.1f MB') % round((size_in_bytes - 1) / 1048576. + 0.05, 1)
+
+
+def smartopen(name, mode='r', buffering=-1):
+    """
+    ``open()`` (for reading only) plus smartness for automatically decoding .
+
+    There are a few caveats to be aware of in the current implementation when
+    this is used to read UTF-16LE files:
+
+    - ``file.read()`` etc. will produce ``unicode``\ s rather than ``str``\ s.
+
+    - ``file.seek()`` still applies on the non-decoded data, so if you seek an
+      odd position you will get garbage or a ``UnicodeDecodeError``.
+
+    - the file object does not start at position 0, in order to hide the BOM;
+      ``file.seek(0)`` will put ``u'\\ufeff'`` at the start of what you read.
+    """
+
+    if 'w' in mode or 'a' in mode:
+        raise ValueError('smartopen() only works for reading')
+
+    f = open(name, mode, buffering)
+    bom = f.read(2)
+    if bom == codecs.BOM_UTF16_LE:
+        # Note we don't seek(0) first because otherwise it will leave u'\ufeff'
+        # in the file.
+        return codecs.getreader('utf_16_le')(f)
+    f.seek(0)
+    return f
+
+
+def iniopen(name):
+    '''
+    Produces an INIConfig from the given filename, but also taking care of
+    UTF-16LE decoding for UTF-16LE files.
+    '''
+    return INIConfig(smartopen(name))
