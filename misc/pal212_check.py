@@ -84,7 +84,6 @@ def check_launcher(launcher_path, title):
         maybe_bad[title] = (last_file, first_dir)
 
 
-
 def main(containing_directory):
     for path in os.listdir(containing_directory):
         check_package(os.path.abspath(os.path.join(containing_directory, path)))
