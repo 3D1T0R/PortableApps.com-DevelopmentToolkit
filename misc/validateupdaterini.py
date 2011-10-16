@@ -36,7 +36,8 @@ required = ['Name', 'Description', 'Category', 'SubCategory', 'URL',
 'PackageVersion', 'DisplayVersion', 'DownloadFile', 'Hash', 'DownloadSize',
 'InstallSize']
 
-optional = ['DownloadPath', 'ReleaseDate', 'UpdateDate', 'InstallSizeTo', 'UpdateOnly']
+optional = ['DownloadPath', 'ReleaseDate', 'UpdateDate', 'InstallSizeTo',
+        'UpdateOnly', 'Advanced', 'License', 'Type']
 optional += ['%s_%s' % (p, s) for p in ('DownloadFile', 'Hash',
     'PackageVersion', 'DisplayVersion') for s in paf.LANGUAGES]
 
@@ -102,6 +103,15 @@ def checker(section, appid, semaphore=None):
             status = url_status(path)
             if status != '200 OK':
                 print '[%s] download file %s does not exist (%s)' % (appid, path, status)
+
+    if 'Advanced' in section and section.Advanced not in ('true',):
+        print '[%s]:Advanced is invalid' % appid
+
+    if 'License' in section and section.License not in ('freeware',):
+        print '[%s]:License is invalid' % appid
+
+    if 'Type' in section and section.Type not in ('Plugin',):
+        print '[%s]:Type is invalid' % appid
 
     if semaphore is not None:
         semaphore.release()
