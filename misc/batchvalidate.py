@@ -9,6 +9,7 @@ from cli.validate import validate
 
 
 for path in os.listdir(sys.argv[1]):
+    path = os.path.abspath(os.path.join(sys.argv[1], path))
     if not os.path.isdir(path) or os.path.basename(path) == 'PortableApps.com':
         # Skip files and the "PortableApps.com" directory (Platform etc.)
         continue
