@@ -6,6 +6,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import datetime
 import urllib2
 import paf
+from utils import path_insensitive
 from iniparse import INIConfig
 from urlparse import urlparse
 from httplib import HTTPConnection
@@ -15,9 +16,15 @@ from httplib import HTTPConnection
 CONCURRENCY_TECHNIQUE = None
 CONCURRENCY_LIMIT = 4
 
+PACKAGES_ROOT = '/home/chris/portableapps-all/PortableApps'
+
 # With further optimisation (multiple connections per site), httplib could be better. At present there's no
 # discernible difference, and portableapps.com/bouncer checks get 403 Forbidden which they don't with urllib2.
 USE_HTTPLIB = False
+
+# A full run with all links checked takes many minutes. Without, it takes very
+# little time at all.
+DUMMY_HTTP = False
 
 if CONCURRENCY_TECHNIQUE == 'multiprocessing':
     from multiprocessing import BoundedSemaphore, Process as Thread
@@ -47,7 +54,20 @@ def checker(section, appid, semaphore=None):
         semaphore.acquire()
 
     if not paf.appinfo.valid_appid(appid)[0]:
-        print '[%s] has an invalid AppID.'
+        print '[%s] has an invalid AppID.' % appid
+
+    pkg = None
+    pkg_path = path_insensitive(os.path.join(PACKAGES_ROOT, appid))
+    if os.path.isdir(pkg_path):
+        try:
+            pkg = paf.Package(pkg_path)
+        except paf.PAFException, e:
+            print '(Hit PAFException during %s: %s)' % (appid, e)
+        else:
+            if pkg.appid is not None and pkg.appid != appid:
+                print '[%s] has incorrect case, should be %r' % (appid, pkg.appid)
+    elif os.path.isdir(PACKAGES_ROOT) and section.Type != 'Plugin':
+        print '[%s]: unable to find package, section name is probably wrong' % appid
 
     for key in required:
         require(section, key)
@@ -71,6 +91,18 @@ def checker(section, appid, semaphore=None):
     if 'InstallSize' in section and any(c not in '0123456789' for c in section.InstallSize):
         print '[%s]:InstallSize is invalid' % appid
 
+    if 'Category' in section and section.Category != 'None':
+        # For some reason, update.ini uses 'and' instead of '&'
+        category = section.Category.replace(' and ', ' & ')
+        if category not in paf.CATEGORIES:
+            print '[%s]:Category is invalid' % appid
+        elif pkg is not None:
+            ini = pkg.appinfo.ini
+            if ini is not None and 'Category' in ini.Details:
+                pkg_category = ini.Details.Category
+                if pkg_category in paf.CATEGORIES and category != pkg_category:
+                    print '[%s]:Category %r doesn\'t match package\'s category %r' % (appid, section.Category, pkg_category)
+
     for key in ('ReleaseDate', 'UpdateDate'):
         if key in section:
             value = section[key]
@@ -87,7 +119,7 @@ def checker(section, appid, semaphore=None):
     if 'URL' in section:
         parsed = urlparse(section.URL)
         if parsed.scheme != 'http':
-            print "[%s]:URL isn't an http link."
+            print "[%s]:URL isn't an http link." % appid
         else:
             status = url_status(section.URL)
             if status != '200 OK':
@@ -98,7 +130,7 @@ def checker(section, appid, semaphore=None):
         path = root + section.DownloadFile
         parsed = urlparse(path)
         if parsed.scheme != 'http':
-            print "[%s]:URL isn't an http link."
+            print "[%s]:URL isn't an http link." % appid
         else:
             status = url_status(path)
             if status != '200 OK':
@@ -133,6 +165,11 @@ if USE_HTTPLIB:
             # Hazard: no recursion checking
         return '%s %s' % (response.status, response.reason)
 
+elif DUMMY_HTTP:
+
+    def url_status(url):
+        return '200 OK'
+
 else:
 
     class HeadRequest(urllib2.Request):
@@ -148,6 +185,9 @@ else:
 
 
 def main():
+    if not os.path.isdir(PACKAGES_ROOT):
+        print 'Packages root %r does not exist, unable to verify categories.' % PACKAGES_ROOT
+
     iniconfig = INIConfig(urllib2.urlopen('http://portableapps.com/updater/update.ini'))
     if CONCURRENCY_TECHNIQUE in ('multiprocessing', 'threading'):
         main_threaded(iniconfig)
