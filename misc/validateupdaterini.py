@@ -24,7 +24,7 @@ USE_HTTPLIB = False
 
 # A full run with all links checked takes many minutes. Without, it takes very
 # little time at all.
-DUMMY_HTTP = False
+DUMMY_HTTP = 'quick' in sys.argv
 
 if CONCURRENCY_TECHNIQUE == 'multiprocessing':
     from multiprocessing import BoundedSemaphore, Process as Thread
