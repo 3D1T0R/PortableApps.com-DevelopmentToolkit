@@ -133,8 +133,8 @@ def _path_insensitive(path):
 
     baselow = base.lower()
     try:
-        basefinal = [fl for fl in files if fl.lower() == baselow][0]
-    except IndexError:
+        basefinal = next(fl for fl in files if fl.lower() == baselow)
+    except StopIteration:
         return
 
     if basefinal:
