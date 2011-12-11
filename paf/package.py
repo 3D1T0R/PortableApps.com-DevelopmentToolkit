@@ -67,7 +67,7 @@ class Package(object):
                 ('Other', 'Help', 'Images', 'help_background_footer.png'),
                 ('Other', 'Help', 'Images', 'help_background_header.png'),
                 ('Other', 'Source', 'Readme.txt'),
-                ('Other', 'Source', 'License.txt')]
+                ('Other', 'Source', 'LauncherLicense.txt')]
         return files
 
     _suggested_files = [
