@@ -10,7 +10,7 @@ pages = ('start', 'details', 'launcher', 'compact', 'test', 'publish',
 
 
 def calc_mtimes(filenames):
-    return dict((f, os.stat(f).st_mtime) for f in filenames)
+    return {f: os.stat(f).st_mtime for f in filenames}
 
 
 def write_polling(actions):
