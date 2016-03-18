@@ -1,5 +1,5 @@
 import os
-from PyQt4 import QtGui
+from PyQt4 import QtCore, QtGui
 from ._base import WindowPage
 from ..ui.pageoptions import Ui_PageOptions
 import config
@@ -65,4 +65,23 @@ class PageOptions(WindowPage, Ui_PageOptions):
         config.settings.Main.LauncherPath = self.launcher.text()
         config.settings.Main.AppCompactorPath = self.appcompactor.text()
 
-    # TODO: Browse buttons
+    @QtCore.Slot()
+    def on_installer_browse_clicked(self):
+        """PortableApps.com Installer Path."""
+        text_box = self.installer
+        current_path = text_box.text()
+        text_box.setText(self.find_installer_path() or current_path)
+
+    @QtCore.Slot()
+    def on_launcher_browse_clicked(self):
+        """PortableApps.com Launcher Path."""
+        text_box = self.launcher
+        current_path = text_box.text()
+        text_box.setText(self.find_launcher_path() or current_path)
+
+    @QtCore.Slot()
+    def on_appcompactor_browse_clicked(self):
+        """PortableApps.com AppCompactor Path."""
+        text_box = self.appcompactor
+        current_path = text_box.text()
+        text_box.setText(self.find_appcompactor_path() or current_path)
