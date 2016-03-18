@@ -1,0 +1,9 @@
+*.pyc
+settings.ini
+.*.swo
+.*.swp
+build/
+dist/
+dist-paf/
+.figleaf
+figleaf-report/
