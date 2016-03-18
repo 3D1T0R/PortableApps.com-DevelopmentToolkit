@@ -3,7 +3,7 @@ from PyQt4 import QtGui
 from ._base import WindowPage
 from ..ui.pageoptions import Ui_PageOptions
 import config
-from utils import _
+from utils import _, path_local
 
 
 def _options_path_finder(thing):
@@ -27,7 +27,7 @@ def _options_path_finder(thing):
             if silent:
                 return path if portableapps_dir and os.path.isfile(path) else ''
             if not portableapps_dir or not os.path.isfile(path):
-                path = QtGui.QFileDialog.getOpenFileName(self,
+                path = path_local(QtGui.QFileDialog.getOpenFileName(self,
                         _('Select the path to the PortableApps.com ' + thing),
                         config.ROOT_DIR,
                         'PortableApps.com %s (PortableApps.com%s.exe)' % (thing,
@@ -35,7 +35,7 @@ def _options_path_finder(thing):
                         _('Select the path to the PortableApps.com ' + thing),
                         config.ROOT_DIR,
                         'PortableApps.com %s (PortableApps.com%s.exe PortableApps.com%sGenerator.exe)' % (thing,
-                        thing, thing))
+                        thing, thing)))
 
             if path and os.path.isfile(path):
                 config.settings.Main[thing + 'Path'] = path
