@@ -20,13 +20,22 @@ def _options_path_finder(thing):
             path = os.path.join(portableapps_dir,
                     'PortableApps.com' + thing,
                     'PortableApps.com%s.exe' % thing)
+            if not os.path.isfile(path):
+                path = os.path.join(portableapps_dir,
+                    'PortableApps.com' + thing,
+                    'PortableApps.com%sGenerator.exe' % thing)
             if silent:
                 return path if portableapps_dir and os.path.isfile(path) else ''
             if not portableapps_dir or not os.path.isfile(path):
                 path = QtGui.QFileDialog.getOpenFileName(self,
                         _('Select the path to the PortableApps.com ' + thing),
                         config.ROOT_DIR,
-                        'PortableApps.com %s (PortableApps.com%s.exe)' % (thing, thing))
+                        'PortableApps.com %s (PortableApps.com%s.exe)' % (thing,
+                        thing)) if not thing == "Launcher" else QtGui.QFileDialog.getOpenFileName(self,
+                        _('Select the path to the PortableApps.com ' + thing),
+                        config.ROOT_DIR,
+                        'PortableApps.com %s (PortableApps.com%s.exe PortableApps.com%sGenerator.exe)' % (thing,
+                        thing, thing))
 
             if path and os.path.isfile(path):
                 config.settings.Main[thing + 'Path'] = path
