@@ -105,7 +105,7 @@ class Format(SectionValidator):
 
     def Version(self, value):
         if value != FORMAT_VERSION:
-            if value in ('0.90', '0.91', '0.9.8', '1.0'):
+            if value < FORMAT_VERSION:
                 return ValidatorWarning(LANG.APPINFO.OLD_FORMAT_VERSION
                     % dict(old_version=value, current_version=FORMAT_VERSION))
             else:
