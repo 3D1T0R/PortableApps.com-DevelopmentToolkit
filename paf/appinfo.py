@@ -222,7 +222,7 @@ class Dependencies(SectionValidator):
                     dict(filename=self.validator.path(), section='Dependencies', key='UsesJava',
                         default='false'))
         elif value != 'true':
-            return ValidatorError(LANG.APPINFO.DEPENDENCIES_JAVA_BAD)
+            return ValidatorError(LANG.APPINFO.DEPENDENCIES_USESJAVA_BAD)
 
     def UsesDotNetVersion(self, value):
         if value not in ('1.1', '2.0', '3.0', '3.5', '4.0'):
