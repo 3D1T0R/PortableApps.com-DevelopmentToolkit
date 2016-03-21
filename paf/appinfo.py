@@ -213,8 +213,16 @@ class SpecialPaths(SectionValidator):
 
 class Dependencies(SectionValidator):
     class Meta(SectionMeta):
-        optional = OrderedSet(('UsesJava', 'UsesDotNetVersion'))
-        order = OrderedSet(('UsesJava', 'UsesDotNetVersion'))
+        optional = OrderedSet(('UsesGhostscript', 'UsesJava', 'UsesDotNetVersion'))
+        order = OrderedSet(('UsesGhostscript', 'UsesJava', 'UsesDotNetVersion'))
+
+    def UsesGhostscript(self, value):
+        if value == 'no':
+            return ValidatorWarning(LANG.INIVALIDATOR.OMIT_DEFAULT %
+                    dict(filename=self.validator.path(), section='Dependencies', key='UsesGhostscript',
+                        default='no'))
+        elif value not in ('yes', 'optional'):
+            return ValidatorError(LANG.APPINFO.DEPENDENCIES_USESGHOSTSCRIPT_BAD)
 
     def UsesJava(self, value):
         if value == 'no':
