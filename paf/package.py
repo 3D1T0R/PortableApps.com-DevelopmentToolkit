@@ -88,13 +88,13 @@ class Package(object):
         files = [
             # Files from the template
             ('App', 'readme.txt'),
-            ('Other', 'Help', 'Images', 'donation_button.png'),
-            ('Other', 'Help', 'Images', 'favicon.ico'),
-            ('Other', 'Help', 'Images', 'help_background_footer.png'),
-            ('Other', 'Help', 'Images', 'help_background_header.png'),
-            ('Other', 'Help', 'Images', 'help_logo_top.png'),
+            ('Other', 'Help', 'Images', 'Donation_Button.png'),
+            ('Other', 'Help', 'Images', 'Favicon.ico'),
+            ('Other', 'Help', 'Images', 'Help_Background_Footer.png'),
+            ('Other', 'Help', 'Images', 'Help_Background_Header.png'),
+            ('Other', 'Help', 'Images', 'Help_Logo_Top.png'),
             ('Other', 'Source', 'AppNamePortable.ini'),
-            ('Other', 'Source', 'License.txt'),
+            ('Other', 'Source', 'LauncherLicense.txt'),
             ('Other', 'Source', 'Readme.txt')]
         if self.appid is not None:
             # If the AppID isn't set we don't want to complain about
