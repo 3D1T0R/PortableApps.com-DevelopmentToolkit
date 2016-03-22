@@ -310,6 +310,8 @@ class Control(SectionValidator):
         if not os.path.isfile(self.package.path(value)):
             return ValidatorError(LANG.APPINFO.CONTROL_FILE_NOT_EXIST %
                     dict(section='Control', key='ExtractIcon'))
+        else:
+            return ValidatorWarning(LANG.APPINFO.CONTROL_EXTRACTICON_OMIT_UNLESS_REQUIRED)
 
     def Icons(self, value):
         try:
