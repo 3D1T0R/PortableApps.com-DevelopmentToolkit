@@ -116,8 +116,8 @@ class Format(SectionValidator):
 class Details(SectionValidator):
     class Meta(SectionMeta):
         mandatory = OrderedSet(('Name', 'AppID', 'Publisher', 'Homepage', 'Category', 'Description'))
-        optional = OrderedSet(('Language', 'Trademarks', 'InstallType', 'PluginType'))
-        order = OrderedSet(('Name', 'AppID', 'Publisher', 'Homepage', 'Category', 'Description',
+        optional = OrderedSet(('Language', 'Donate', 'Trademarks', 'InstallType', 'PluginType'))
+        order = OrderedSet(('Name', 'AppID', 'Publisher', 'Homepage', 'Donate', 'Category', 'Description',
             'Language', 'Trademarks', 'PluginType', 'InstallType'))
 
     # Name: no validation
@@ -132,7 +132,13 @@ class Details(SectionValidator):
 
     def Homepage(self, value):
         if value.lower().startswith('http://'):
-            return ValidatorInfo(LANG.APPINFO.DETAILS_HOMEPAGE_HTTP)
+            return ValidatorInfo(LANG.APPINFO.DETAILS_NO_HTTP % dict(key='Homepage'))
+
+    # Donate: again, no real validation
+    # TODO: warn if Donate is missing that it should be there if possible
+    def Donate(self, value):
+        if value.lower().startswith('http://'):
+            return ValidatorInfo(LANG.APPINFO.DETAILS_NO_HTTP % dict(key='Donate'))
 
     def Category(self, value):
         if value not in CATEGORIES:
