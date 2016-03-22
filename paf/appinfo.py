@@ -217,11 +217,19 @@ class Dependencies(SectionValidator):
         order = OrderedSet(('UsesJava', 'UsesDotNetVersion'))
 
     def UsesJava(self, value):
-        if value == 'false':
+        if value == 'no':
             return ValidatorWarning(LANG.INIVALIDATOR.OMIT_DEFAULT %
                     dict(filename=self.validator.path(), section='Dependencies', key='UsesJava',
-                        default='false'))
-        elif value != 'true':
+                        default='no'))
+        elif value in ('true', 'false'):
+            if value == 'true':
+                new_value = 'yes'
+            elif value == 'false':
+                new_value = 'no'
+            return ValidatorError(LANG.INIVALIDATOR.VALUE_DEPRECATED %
+                    dict(filename=self.validator.path(),section='Dependencies', key='UsesJava',
+                        old_value=value, new_value=new_value))
+        elif value not in ('yes', 'optional'):
             return ValidatorError(LANG.APPINFO.DEPENDENCIES_USESJAVA_BAD)
 
     def UsesDotNetVersion(self, value):
