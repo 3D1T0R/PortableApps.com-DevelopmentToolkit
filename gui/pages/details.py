@@ -195,7 +195,7 @@ class PageDetails(WindowPage, Ui_PageDetails):
         appinfo = self.appinfo
 
         appinfo.Format.Type = 'PortableApps.comFormat'
-        appinfo.Format.Version = '2.0'
+        appinfo.Format.Version = '3.0'
 
         appinfo.Details.Name = self.Name.text()
         appinfo.Details.AppID = self.AppID.text()

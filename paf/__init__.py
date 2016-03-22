@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-FORMAT_VERSION = '2.0'
+FORMAT_VERSION = '3.0'
 
 CATEGORIES = ('Accessibility', 'Development', 'Education', 'Games',
         'Graphics & Pictures', 'Internet', 'Music & Video', 'Office',
