@@ -87,7 +87,8 @@
    <item row="3" column="1">
     <widget class="QLabel" name="about_copyright">
      <property name="text">
-      <string>© 2011 PortableApps.com (Chris Morgan)</string>
+      <string>© 2011 PortableApps.com (Chris Morgan)
+	  © 2016 PortableApps.com</string>
      </property>
     </widget>
    </item>
