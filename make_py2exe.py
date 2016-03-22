@@ -131,6 +131,7 @@ def paffify():
     copy('appicon.ico', ('App', 'AppInfo'))
     copy('appicon_16.png', ('App', 'AppInfo'))
     copy('appicon_32.png', ('App', 'AppInfo'))
+	copy('appicon_75.png', ('App', 'AppInfo')
     copy('appicon_128.png', ('App', 'AppInfo'))
 
     # Replace help.html
