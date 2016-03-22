@@ -71,6 +71,7 @@ class Package(object):
         return files
 
     _suggested_files = [
+			('App', 'AppInfo', 'appicon_75.png'),
             ('App', 'AppInfo', 'appicon_128.png'),
     ]
 
