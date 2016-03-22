@@ -115,8 +115,8 @@ class Format(SectionValidator):
 
 class Details(SectionValidator):
     class Meta(SectionMeta):
-        mandatory = OrderedSet(('Name', 'AppID', 'Publisher', 'Homepage', 'Category', 'Description'))
-        optional = OrderedSet(('Language', 'Donate', 'Trademarks', 'InstallType', 'PluginType'))
+        mandatory = OrderedSet(('Name', 'AppID', 'Publisher', 'Homepage', 'Category', 'Description', 'Language'))
+        optional = OrderedSet(('Donate', 'Trademarks', 'InstallType', 'PluginType'))
         order = OrderedSet(('Name', 'AppID', 'Publisher', 'Homepage', 'Donate', 'Category', 'Description',
             'Language', 'Trademarks', 'PluginType', 'InstallType'))
 
