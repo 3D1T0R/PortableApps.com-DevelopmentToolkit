@@ -139,7 +139,7 @@ def paffify():
     copy('help.html', ())
 
     # At the present we wish to remove the splash screen.
-    os.remove(join(paf_path, 'App', 'AppInfo', 'Launcher', 'splash.jpg'))
+    os.remove(join(paf_path, 'App', 'AppInfo', 'Launcher', 'Splash.jpg'))
     copy('pal.ini', ('App', 'AppInfo', 'Launcher',
         'PortableApps.comDevelopmentToolkit.ini'))
     os.rename(join(ROOT_DIR, 'dist'),

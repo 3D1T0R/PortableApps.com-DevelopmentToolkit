@@ -80,7 +80,7 @@ class Package(object):
     ]
 
     _pal_recommended_files = [
-            ('App', 'AppInfo', 'Launcher', 'splash.jpg'),
+            ('App', 'AppInfo', 'Launcher', 'Splash.jpg'),
     ]
 
     @property
