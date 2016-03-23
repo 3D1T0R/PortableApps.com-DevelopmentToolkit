@@ -73,6 +73,7 @@ class Package(object):
     _suggested_files = [
             ('App', 'AppInfo', 'appicon_75.png'),
             ('App', 'AppInfo', 'appicon_128.png'),
+            ('Other', 'Source', 'License.txt'),
     ]
 
     _pal_dirs = [
