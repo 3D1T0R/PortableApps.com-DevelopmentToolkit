@@ -1,6 +1,6 @@
 <style>dt{font-weight:bold}</style>
 
-<p>Here is a checklist of some things to check over before releasing a portable app. For any other issues, try going through <a href="http://portableapps.com/manuals/PortableApps.comLauncher/troubleshooting#troubleshooting">Troubleshooting</a>. This also makes a good checklist for testers.</p>
+<p>Here is a checklist of some things to check over before releasing a portable app. For any other issues, try going through <a href="http://portableapps.com/manuals/PortableApps.comLauncher/troubleshooting.html">Troubleshooting</a>. This also makes a good checklist for testers.</p>
 
 <dl>
 <dt>Does it validate against the <a href="http://portableapps.com/development/portableapps.com_format">PortableApps.com Format&trade; Specification</a>?</dt>
@@ -10,7 +10,7 @@
 <dd>There&#8217;s not much point in releasing a package which doesn&#8217;t work. Try to test it (or at least run it) on as many computers and operating systems as you can, with the software installed locally and not, 32-bit and 64-bit, and so on.</dd>
 
 <dt>Does it run from the PortableApps.com Platform?</dt>
-<dd>If not, a common cause of failure is having the wrong value in <a href="http://portableapps.com/development/portableapps.com_format#appinfo">appinfo.ini, [Control]</a>.</dd>
+<dd>If not, a common cause of failure is having the wrong value in <a href="http://portableapps.com/manuals/PortableApps.comLauncher/ref/paf/appinfo.html#paf-appinfo-control">appinfo.ini, [Control]</a>.</dd>
 
 <dt>Does it run by running the launcher executable directly?</dt>
 <dd>Many users don&#8217;t use the PortableApps.com Platform. Thus it&#8217;s a good idea to make sure that it works without it.</dd>
@@ -28,7 +28,7 @@
 <dd>Run the installer and install to an empty directory. Then try running the app and make sure it works. If it doesn&#8217;t, make sure that the app and data are properly separated.</dd>
 
 <dt>Does nothing go wrong in upgrading from a previous version?</dt>
-<dd>Try running the installer and installing over another installation of the portable app. No settings should be lost by doing this, and the app should run properly. If anything goes wrong, you may need to use <a href="http://portableapps.com/development/portableapps.com_format#installer">custom installer code</a> to update paths, or you may just need to make sure data isn&#8217;t stored in the App directory (see the above two points).</dd>
+<dd>Try running the installer and installing over another installation of the portable app. No settings should be lost by doing this, and the app should run properly. If anything goes wrong, you may need to use <a href="http://portableapps.com/manuals/PortableApps.comLauncher/ref/paf/installer.html#paf-installer-custom">custom installer code</a> to update paths, or you may just need to make sure data isn&#8217;t stored in the App directory (see the above two points).</dd>
 
 <dt>Does it run from a different drive letter?</dt>
 <dd>A key feature for portable applications is being able to run from different drive letters. If your app can&#8217;t do that, you&#8217;re in trouble.  A <a href="http://portableapps.com/manuals/PortableApps.comLauncher/ref/launcher.ini/filewriten.html"><code>[FileWriteN]</code></a> <code>Replace</code> section tends to be the way this is achieved.</dd>
