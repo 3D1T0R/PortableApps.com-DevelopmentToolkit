@@ -57,6 +57,7 @@ class Ui_PageAbout(object):
         self.about_version.setText(QtGui.QApplication.translate("PageAbout", "Version 1.0 Alpha 1.2", None, QtGui.QApplication.UnicodeUTF8))
         self.about_copyright.setText(QtGui.QApplication.translate("PageAbout", "© 2011 PortableApps.com (Chris Morgan)\n© 2016 PortableApps.com", None, QtGui.QApplication.UnicodeUTF8))
         self.about_description.setText(QtGui.QApplication.translate("PageAbout", "A utility to assist in the creation of high quality portable apps.", None, QtGui.QApplication.UnicodeUTF8))
-        self.about_links.setText(QtGui.QApplication.translate("PageAbout", "<p>If you find bugs or have suggestions to make, please contact us.</p>\n" "<p><strong>Links:</strong><br><a href=\"http://portableapps.com\">PortableApps.com</a><br>\n"
-"<a href=\"http://portableapps.com/development\">PortableApps.com/Development</a></p>", None, QtGui.QApplication.UnicodeUTF8))
+        self.about_links.setText(QtGui.QApplication.translate("PageAbout", "<p>If you find bugs or have suggestions to make, please contact us.</p>\n"
+            "<p><strong>Links:</strong><br><a href=\"http://portableapps.com\">PortableApps.com</a><br>\n"
+            "<a href=\"http://portableapps.com/development\">PortableApps.com/Development</a></p>", None, QtGui.QApplication.UnicodeUTF8))
 
