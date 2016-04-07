@@ -101,7 +101,7 @@ class StatUpdaterThread(QtCore.QThread):
             self.update_stats.emit({'md5': '', 'size': ''})
 
         size = [size_string_megabytes(s) for s in self.page.window.package.installed_size()]
-        self.update_stats.emit({'size_installed': size[0] if size[0] == size[1] else '%s-%s' % size})
+        self.update_stats.emit({'size_installed': size[0] if size[0] == size[1] else '%s-%s' % tuple(size)})
 
 
 class InstallerThread(QtCore.QThread):
