@@ -281,7 +281,7 @@ class Control(SectionValidator):
 
         @property
         def optional(self):
-            base = ['ExtractIcons']
+            base = ['ExtractIcon']
             icons = self.__icons()
             if icons > 1:
                 return OrderedSet(base + ['ExtractIcon%i' % i for i in xrange(1, icons + 1)])
